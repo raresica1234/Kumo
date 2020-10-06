@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %} Index {% endblock %}
+
+{% block content %}
+
+    {% for file in files %}
+        <h1> <a href="/explorer/{% if baseurl != '' %}{{ baseurl + '/' }}{% endif %}{{ file }}">{{ file }}</a></h1>
+    {% endfor %}
+{% endblock %}

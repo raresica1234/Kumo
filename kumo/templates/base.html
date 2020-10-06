@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %} - Kumo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <h1>Kumo</h1>
+        <ul>
+            {% if g.user %}
+            <li><span>{{ g.user["username"] }}</span></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+            {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% for error in get_flashed_messages() %}
+        {% for message in error.split("\n") %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+        <br>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+</body>
+</html>
