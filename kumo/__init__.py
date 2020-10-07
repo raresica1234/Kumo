@@ -1,5 +1,5 @@
 import os
-from flask import Flask, g
+from flask import Flask
 from . import auth, explorer
 from kumo.models import db, init_db_command
 
