@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask
+from flask import Flask, render_template
 from kumo import auth, explorer, config
 from kumo.models import db, init_db_command
 from kumo.media_directories import update_media_command
@@ -45,5 +45,9 @@ def create_app(test_config=None):
     app.logger.debug("Registered explorer blueprint")
 
     app.add_url_rule("/", endpoint="index")
+
+    @app.route("/")
+    def index():
+        return render_template("index.html")
 
     return app
