@@ -2,19 +2,11 @@
 
 {% block title %} Index {% endblock %}
 
+{% block javascript %} <script src="{{ url_for('static', filename='explorer.js') }}"></script>{% endblock %}
+
 {% block content %}
 
-    {% for file_data in files %}
-        {% set file = file_data[0] %}
-        {% set is_dir = file_data[1] %}
-        <h1>
-            <a href="/explorer/{% if baseurl != '' %}{{ baseurl + '/' }}{% endif %}{{ file }}">
-        {% if is_dir == True %}
-            Dir: {{ file }}
-        {% else %}
-            File: {{ file }}
-        {% endif %}
-            </a>
-        </h1>
-    {% endfor %}
+   <div id="explorer">
+
+   </div>
 {% endblock %}

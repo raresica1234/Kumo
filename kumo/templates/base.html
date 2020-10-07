@@ -3,6 +3,7 @@
 <head>
     <title>{% block title %}{% endblock %} - Kumo</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block javascript %} {% endblock %}
 </head>
 <body>
     <nav>

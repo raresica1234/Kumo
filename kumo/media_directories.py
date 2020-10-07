@@ -9,7 +9,11 @@ def check_read_permission(directory):
     if g.user is None:
         return False
     if g.user.admin == 1:
-        return True
+        media_dirs = MediaDirectory.query.all()
+        for media_dir in media_dirs:
+            if directory.startswith(media_dir.path):
+                return True
+        return False
     else:
         permissions = MediaPermissions.query.filter_by(user_id=g.user.id).all()
         media_dirs = []
@@ -17,7 +21,28 @@ def check_read_permission(directory):
             if permission.read_permission:
                 media_dirs.append(MediaDirectory.query.filter_by(id=permission.media_id))
 
+        for media_dir in media_dirs:
+            if directory == media_dir.path:
+                return True
+
         return False
+
+
+def get_readable_directories():
+    if g.user is None:
+        return []
+    if g.user.admin == 1:
+        media_dirs = []
+        for media_dir in MediaDirectory.query.all():
+            media_dirs.append(media_dir.path)
+        return media_dirs
+    else:
+        permissions = MediaPermissions.query.filter_by(user_id=g.user.id).all()
+        media_dirs = []
+        for permission in permissions:
+            if permission.read_permission:
+                media_dirs.append(MediaDirectory.query.filter_by(id=permission.media_id))
+        return media_dirs
 
 
 @click.command("update-media")
