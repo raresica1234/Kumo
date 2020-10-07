@@ -9,6 +9,7 @@ To set up the database you need to do `flask init-db`. Then you can simply run t
 
 ### Configuration
 In the folder `instance` create a file called `config.json` this file will contain all the root media directories you want the cloud to handle.
+
 **Note:** The media paths must be absolute paths.
 
 ```json
@@ -21,6 +22,7 @@ In the folder `instance` create a file called `config.json` this file will conta
 ```
 
 `file_logging` represents whether the logging should happen in files or be displayed in the console.
+
 Once you set the media directories, in order to update them run `flask update-media`.
 
 ### Runtime change through environment variables
