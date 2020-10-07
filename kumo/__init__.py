@@ -24,7 +24,8 @@ def create_app(test_config=None):
 
     if os.environ.get("KUMO_FILE_LOGGING") == 1:
         logging.basicConfig(filename="log/" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".txt", level=logging.DEBUG)
-
+    else:
+        logging.basicConfig(level=logging.DEBUG)
     app.logger.debug("Initializing config")
     init_config(app)
 
