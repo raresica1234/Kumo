@@ -1,7 +1,9 @@
 import functools
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
-from kumo.db import get_db
+from flask_sqlalchemy import SQLAlchemy
+from kumo.models import db, User
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -12,7 +14,6 @@ def register():
     if request.method == 'POST':
         username = request.form["username"]
         password = request.form["password"]
-        db = get_db()
 
         error = ""
         if not username:
@@ -21,12 +22,13 @@ def register():
             error += "Password is required.\n"
 
         if error == "":
-            if db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone() is not None:
+            if User.query.filter_by(username=username).first() is not None:
                 error += "User {} is already registered.\n".format(username)
 
         if error == "":
-            db.execute("insert into users (username, password) values (?, ?)", (username, generate_password_hash(password)))
-            db.commit()
+            user = User(username=username, password=generate_password_hash(password))
+            db.session.add(user)
+            db.session.commit()
 
             return redirect(url_for('auth.login'))
 
@@ -40,7 +42,6 @@ def login():
     if request.method == 'POST':
         username = request.form["username"]
         password = request.form["password"]
-        db = get_db()
 
         error = ""
         if not username:
@@ -49,17 +50,17 @@ def login():
             error += "Password is required\n"
 
         if error == "":
-            user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+            user = User.query.filter_by(username=username).first()
             print(user)
             if user is None:
                 error += "Username does not exist.\n"
-            elif not check_password_hash(user["password"], password):
+            elif not check_password_hash(user.password, password):
                 error += "Incorrect password. \n"
 
-        if error == "":
-            session.clear()
-            session["user_id"] = user["id"]
-            return redirect(url_for("index"))
+            if error == "":
+                session.clear()
+                session["user_id"] = user.id
+                return redirect(url_for("index"))
 
         flash(error)
 
@@ -72,7 +73,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        g.user = User.query.filter_by(id=user_id).first()
 
 
 @bp.route("/logout")
