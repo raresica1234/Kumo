@@ -1,48 +1,8 @@
 import click
 from flask.cli import with_appcontext
-from flask import current_app, g
+from flask import current_app
 from kumo import config
-from kumo.models import MediaDirectory, MediaPermissions, db
-
-
-def check_read_permission(directory):
-    if g.user is None:
-        return False
-    if g.user.admin == 1:
-        media_dirs = MediaDirectory.query.all()
-        for media_dir in media_dirs:
-            if directory.startswith(media_dir.path):
-                return True
-        return False
-    else:
-        permissions = MediaPermissions.query.filter_by(user_id=g.user.id).all()
-        media_dirs = []
-        for permission in permissions:
-            if permission.read_permission:
-                media_dirs.append(MediaDirectory.query.filter_by(id=permission.media_id))
-
-        for media_dir in media_dirs:
-            if directory == media_dir.path:
-                return True
-
-        return False
-
-
-def get_readable_directories():
-    if g.user is None:
-        return []
-    if g.user.admin == 1:
-        media_dirs = []
-        for media_dir in MediaDirectory.query.all():
-            media_dirs.append(media_dir.path)
-        return media_dirs
-    else:
-        permissions = MediaPermissions.query.filter_by(user_id=g.user.id).all()
-        media_dirs = []
-        for permission in permissions:
-            if permission.read_permission:
-                media_dirs.append(MediaDirectory.query.filter_by(id=permission.media_id))
-        return media_dirs
+from kumo.models import MediaDirectory, db
 
 
 @click.command("update-media")
@@ -60,7 +20,7 @@ def update_media_command():
 
         if not found:
             current_app.logger.info("Found new media directory" + directory)
-            new_media_directory = MediaDirectory(name=directory.split("/")[-1], path=directory)
+            new_media_directory = MediaDirectory(name=directory.split("/")[-1], path=directory, root=True)
             db.session.add(new_media_directory)
 
     db.session.commit()
