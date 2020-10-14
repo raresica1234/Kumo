@@ -27,5 +27,7 @@ def explore(subpath=None):
             if file_type:
                 if g.permission.has_permission(os.path.join(current_path, file), g.user.id, g.user.admin):
                     file_data.append((file, file_type))
+            else:
+                file_data.append((file, file_type))
 
     return jsonify(file_data)
