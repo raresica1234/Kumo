@@ -20,7 +20,7 @@ def explore(subpath=None):
             file_data.append((file, file_type))
     else:
         current_path = "/" + subpath
-        if os.path.exists(current_path):
+        if os.path.exists(current_path) and os.path.isdir(current_path):
             if g.permission.has_permission(current_path, g.user.id, g.user.admin):
                 files = os.listdir(current_path)
             for file in files:
