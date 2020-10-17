@@ -25,12 +25,12 @@ class UnixPermissions(Permission):
         if admin:
             for dir in self._media_dirs:
                 if dir.root:
-                    media_dir.append(dir.path)
+                    media_dir.append(dir.name)
         else:
             for dir in self._media_dirs:
                 if dir.root:
                     for permission in self._media_perms:
                         if permission.user_id == user_id and permission.media_id == dir.id and permission.permission_read:
-                            media_dir.append(dir.path)
+                            media_dir.append(dir.name)
 
         return media_dir
