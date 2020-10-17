@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "auth/authbase.html" %}
 
 {% block header %}
     <h1>{% block title %}Login {% endblock %}</h1>
 {% endblock %}
 
-{% block content %}
+{% block form %}
 
 <form method="post">
     <label for="username">Username</label>

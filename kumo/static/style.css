@@ -1,7 +1,17 @@
 html, body {
-    margin:0px;
-    padding:0px;
+    margin:0;
+    padding:0;
 
     background-color: #000;
     color: #aaa;
+    display: grid;
+}
+
+.auth-container {
+    margin: auto;
+
+}
+
+.auth-container > form {
+    /* grid-template-columns: 1fr 1fr; */
 }

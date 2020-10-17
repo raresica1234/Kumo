@@ -12,6 +12,8 @@
             {% if g.user %}
             <li><span>{{ g.user["username"] }}</span></li>
             <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+
+            <button id="clear" value="Clear" onclick="clearCookie()">Clear</button>
             {% else %}
             <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             <li><a href="{{ url_for('auth.login') }}">Login</a></li>
@@ -19,12 +21,7 @@
         </ul>
     </nav>
 
-    {% for error in get_flashed_messages() %}
-        {% for message in error.split("\n") %}
-            <div class="flash">{{ message }}</div>
-        {% endfor %}
-        <br>
-    {% endfor %}
+
 
     {% block content %}{% endblock %}
 </body>

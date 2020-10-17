@@ -1,16 +1,16 @@
-{% extends "base.html" %}
+{% extends "auth/authbase.html" %}
 
 {% block header %}
     <h1>{% block title %}Register{% endblock %}</h1>
 {% endblock %}
 
-{% block content %}
+{% block form %}
 
 <form method="post">
     <label for="username">Username</label>
-    <input name="username" id="username"> <br>
+    <input name="username" id="username">
     <label for="password">Password</label>
-    <input name="password" type="password" id="password"> <br>
+    <input name="password" type="password" id="password">
 
     <input type="submit" value="Register">
 
