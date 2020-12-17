@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from kumo import auth, explorer, config
 from kumo.models import db, init_db_command
 from kumo.media_directories import update_media_command
-from kumo.config import init_config
+from kumo.config import init_config, secret_key
 
 import logging
 
@@ -12,7 +12,6 @@ import logging
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY="dev",
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(app.instance_path, "kumo.sqlite")
     )
@@ -28,6 +27,8 @@ def create_app(test_config=None):
         logging.basicConfig(level=logging.DEBUG)
     app.logger.debug("Initializing config")
     init_config(app)
+
+    app.secret_key = secret_key
 
     db.init_app(app)
     app.logger.debug("Initialized database")
