@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block form %}
-
+<h1>Login</h1>
 <form method="post">
-    <label for="username">Username</label>
+    <label for="username">Username</label> <br>
     <input name="username" id="username"> <br>
-    <label for="password">Password</label>
+    <label for="password">Password</label> <br>
     <input name="password" type="password" id="password"> <br>
 
-    <input type="submit" value="Login">
+    <input class="auth-button" type="submit" value="Login">
 </form>
 
 {% endblock %}
