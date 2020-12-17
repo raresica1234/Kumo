@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block form %}
-<h1>Login</h1>
+    <img src="{{ url_for('static', filename='logo.png') }}">
 <form method="post">
     <label for="username">Username</label> <br>
-    <input name="username" id="username"> <br>
+    <input name="username" placeholder="username" id="username"> <br>
     <label for="password">Password</label> <br>
-    <input name="password" type="password" id="password"> <br>
+    <input name="password" placeholder="password" type="password" id="password"> <br>
 
     <input class="auth-button" type="submit" value="Login">
 </form>

@@ -1,27 +1,55 @@
 html, body {
     margin:0;
     padding:0;
-    background-color: #1c1c1c;
+    background-color: #9b2d2d;
     color: #aaa;
 
 }
 .auth-container {
-    top:50%;
-    left:50%;
-    position: absolute;
-    width:300px;
-    transform: translate(-50%, -50%);
-    border: 3px solid #777;
+    border: solid black 1px;
+    border-radius: 10px;
+    background-color: #670d0d;
+    padding: 10px;
 }
+
+.auth-container > img{
+    display: block;
+    margin: auto;
+}
+
 .auth-container h1 {
     color:#447711;
 }
 
 .auth-container form {
-    margin:10px;
-    padding:0;
+    display: grid;
+    row-gap: 0.7em;
 }
 
+.auth-container > form > label {
+    display: none;
+}
+
+
 .auth-container > form > input {
-    width:100%;
+    font-size: 1.5em;
+}
+
+#authwrapper {
+
+}
+
+/*@TODO set up better rules */
+@media (orientation: landscape) {
+    .auth-container{
+        margin:auto 30%;
+        top:50%;
+        left: 50%;
+    }
+}
+
+@media (orientation: portrait) {
+    .auth-container {
+        margin: 0 auto;
+    }
 }
