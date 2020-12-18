@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, g
 bp = Blueprint("explorer", __name__)
 
 
+@bp.route("/explore/")
 @bp.route("/explore")
 @bp.route("/explore/<path:subpath>")
 def explore(subpath=None):

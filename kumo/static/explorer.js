@@ -42,6 +42,6 @@ function process_request(data) {
 
 let previousLocation = getCookieLocation()
 
-fetch(decodeURIComponent(document.URL + "explore" + previousLocation))
+fetch(decodeURIComponent(document.URL + "explore/" + previousLocation))
     .then(res => res.json())
     .then(data => process_request(data));
