@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from kumo import auth, explorer, config
 from kumo.models import db, init_db_command
 from kumo.media_directories import update_media_command
-from kumo.config import init_config, secret_key
+from kumo.config import init_config
 
 import logging
 
@@ -28,8 +28,8 @@ def create_app(test_config=None):
     app.logger.debug("Initializing config")
     init_config(app)
 
-    app.secret_key = secret_key
-
+    app.secret_key = config.secret_key
+    
     db.init_app(app)
     app.logger.debug("Initialized database")
 
