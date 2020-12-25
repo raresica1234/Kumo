@@ -3,7 +3,8 @@ html, body {
     padding:0;
     background-color: #9b2d2d;
     color: #aaa;
-
+    height: 100%;
+    display: grid;
 }
 .auth-container {
     border: solid black 1px;
