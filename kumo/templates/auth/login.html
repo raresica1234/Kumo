@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block form %}
-    <img src="{{ url_for('static', filename='logo.png') }}">
 <form method="post">
     <label for="username">Username</label> <br>
     <input name="username" placeholder="username" id="username"> <br>
@@ -13,6 +12,11 @@
     <input name="password" placeholder="password" type="password" id="password"> <br>
 
     <input class="auth-button" type="submit" value="Login">
+    <div class="auth-links-container">
+        <a href="" class="auth-link">Forgot your password?</a>
+        <a href="{{ url_for('auth.register') }}" class="auth-link align-right">Don't have an account?</a>
+    </div>
+
 </form>
 
 {% endblock %}

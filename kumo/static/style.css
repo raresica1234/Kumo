@@ -31,26 +31,33 @@ html, body {
     display: none;
 }
 
-
 .auth-container > form > input {
     font-size: 1.5em;
 }
 
-#authwrapper {
+.auth-link {
+    font-size:1.2em;
+    color:#aaa5aa;
 
+}
+.auth-links-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.align-right {
+    text-align: right;
 }
 
 /*@TODO set up better rules */
 @media (orientation: landscape) {
     .auth-container{
         margin:auto 30%;
-        top:50%;
-        left: 50%;
     }
 }
 
 @media (orientation: portrait) {
     .auth-container {
-        margin: 0 auto;
+        margin: auto 0;
     }
 }
