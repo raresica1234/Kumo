@@ -5,6 +5,15 @@ from kumo import config
 from kumo.models import MediaDirectory, db
 
 
+def pick_non_empty_directory_name(dirname: str):
+    if dirname.startswith("/"):
+        if dirname.endswith("/"):
+            dirname = dirname[:-1]
+        return dirname.split("/")[-1]
+    else:
+        return dirname[:-1]
+
+
 @click.command("update-media")
 @with_appcontext
 def update_media_command():
@@ -20,7 +29,7 @@ def update_media_command():
 
         if not found:
             current_app.logger.info("Found new media directory" + directory)
-            new_media_directory = MediaDirectory(name=directory.split("/")[-1], path=directory, root=True)
+            new_media_directory = MediaDirectory(name=pick_non_empty_directory_name(directory), path=directory, root=True)
             db.session.add(new_media_directory)
 
     db.session.commit()
