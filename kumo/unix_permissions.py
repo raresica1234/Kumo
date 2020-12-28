@@ -7,15 +7,15 @@ class UnixPermissions(Permission):
 
     def has_permission(self, directory, user_id, admin):
         if admin:
-            for dir in self._media_dirs:
-                if dir.root and directory.startswith(dir.path):
+            for media_directory in self._media_dirs:
+                if media_directory.root and directory.startswith(media_directory.path):
                     return True
             return False
         else:
-            for dir in self._media_dirs:
-                if directory.startswith(dir.path):
+            for media_directory in self._media_dirs:
+                if directory.startswith(media_directory.path):
                     for permission in self._media_perms:
-                        if permission.user_id == user_id and permission.media_id == dir.id:
+                        if permission.user_id == user_id and permission.media_id == directory.id:
                             return permission.permission_read
             return False
 
@@ -23,14 +23,20 @@ class UnixPermissions(Permission):
         media_dir = []
 
         if admin:
-            for dir in self._media_dirs:
-                if dir.root:
-                    media_dir.append(dir.name)
+            for directory in self._media_dirs:
+                if directory.root:
+                    media_dir.append((directory.name, directory.path))
         else:
-            for dir in self._media_dirs:
-                if dir.root:
+            for directory in self._media_dirs:
+                if directory.root:
                     for permission in self._media_perms:
-                        if permission.user_id == user_id and permission.media_id == dir.id and permission.permission_read:
-                            media_dir.append(dir.name)
+                        if permission.user_id == user_id and permission.media_id == directory.id and permission.permission_read:
+                            media_dir.append((directory.name, directory.path))
 
         return media_dir
+
+    def get_root_directory_path(self, name):
+        for directory in self._media_dirs:
+            if directory.root:
+                if name == directory.name:
+                    return directory.path

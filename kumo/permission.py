@@ -13,4 +13,7 @@ class Permission:
     def get_readable_root_directories(self, user_id, admin):
         raise NotImplementedError()
 
+    def get_root_directory_path(self, name):
+        raise NotImplementedError()
+
 
