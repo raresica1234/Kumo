@@ -5,8 +5,27 @@
 {% block javascript %} <script src="{{ url_for('static', filename='explorer.js') }}"></script>{% endblock %}
 
 {% block content %}
+   {% if g.user %}
+       <div class="horizontal-nav">
+           <img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
+           <img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
+           <img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
+           <input type="text" class="path-textbox">
+           <img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
+
+      </div>
+
+           <ul>
+
+               <li><span>{{ g.user["username"] }}</span></li>
+               <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+
+               <button id="clear" value="Clear" onclick="clearCookie()">Clear</button>
+
+           </ul>
 
    <div id="explorer">
 
    </div>
+   {% endif %}
 {% endblock %}

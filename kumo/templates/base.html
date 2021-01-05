@@ -7,18 +7,7 @@
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 <body>
-{% if g.user %}
-    <nav>
-        <ul>
 
-            <li><span>{{ g.user["username"] }}</span></li>
-            <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
-
-            <button id="clear" value="Clear" onclick="clearCookie()">Clear</button>
-
-        </ul>
-    </nav>
-{% endif %}
 
 
     {% block content %}{% endblock %}
