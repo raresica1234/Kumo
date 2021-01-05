@@ -6,6 +6,7 @@ html, body {
     height: 100%;
     display: grid;
 }
+
 .auth-container {
     border: solid black 1px;
     border-radius: 10px;
@@ -40,6 +41,7 @@ html, body {
     color:#aaa5aa;
 
 }
+
 .auth-links-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -53,16 +55,23 @@ html, body {
     width:200px;
 }
 
-.navigation-button {
-    width:1.4em;
-}
-
 .path-textbox {
     font-size:1.4em;
 }
+
 .horizontal-nav  {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 25fr 1fr;
+    grid-template-columns: auto 1fr auto;
+}
+
+.navigation-controls{
+    display: inline-flex;
+    align-items: center;
+}
+
+.navigation-button{
+    height: 1.4em;
+    align-self: center;
 }
 
 /*@TODO set up better rules */

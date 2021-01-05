@@ -6,14 +6,17 @@
 
 {% block content %}
    {% if g.user %}
-       <div class="horizontal-nav">
-           <img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
-           <img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
-           <img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
+       <div class="content">
+       <nav class="horizontal-nav">
+           <div class="navigation-controls">
+               <img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
+               <img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
+               <img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
+           </div>
            <input type="text" class="path-textbox">
            <img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
 
-      </div>
+      </nav>
 
            <ul>
 
@@ -24,7 +27,7 @@
 
            </ul>
 
-   <div id="explorer">
+     <div id="explorer"/>
 
    </div>
    {% endif %}
