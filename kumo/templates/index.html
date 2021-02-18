@@ -3,40 +3,44 @@
 {% block title %} Index {% endblock %}
 
 {% block content %}
-   {% if g.user %}
-   <div class="content">
-       <nav class="horizontal-nav">
-           <div class="navigation-controls">
-               <img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
-               <img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
-               <img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
-           </div>
-           <input type="text" class="path-textbox">
-           <img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
+{% if g.user %}
+<div class="content">
+	<nav class="horizontal-nav">
+		<div class="navigation-controls">
+			<img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
+			<img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
+			<img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
+		</div>
+		{% if base_url != None %}
+			{% for folder in base_url.split("/") %}
+				<a>{{folder}}</a>
+			{% endfor %}
+		{% endif %}
+		<img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
 
-      </nav>
+	</nav>
 
-           <ul>
+	<ul>
 
-               <li><span>{{ g.user["username"] }}</span></li>
-               <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+		<li><span>{{ g.user["username"] }}</span></li>
+		<li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
 
-           </ul>
+	</ul>
 
-     <div id="explorer">
-         {% for file_data in files %}
-            {% set file = file_data[0] %}
-            {% set is_dir = file_data[1] %}
-            <h1>
-                {% if is_dir == True %}
-                    <a href="/{% if base_url != None %}{{ base_url + '/' }}{% endif %}{{ file }}">{{ file }}</a>
-                {% else %}
-                    <a>{{file}}</a>
-                {% endif %}
-            </h1>
-         {% endfor %}
-     </div>
+	<div id="explorer">
+		{% for file_data in files %}
+		{% set file = file_data[0] %}
+		{% set is_dir = file_data[1] %}
+		<h1>
+			{% if is_dir == True %}
+			<a href="/{% if base_url != None %}{{ base_url + '/' }}{% endif %}{{ file }}">{{ file }}</a>
+			{% else %}
+			<a>{{file}}</a>
+			{% endif %}
+		</h1>
+		{% endfor %}
+	</div>
 
-   </div>
-   {% endif %}
+</div>
+{% endif %}
 {% endblock %}

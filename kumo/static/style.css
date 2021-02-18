@@ -1,88 +1,88 @@
 html, body {
-    margin:0;
-    padding:0;
-    background-color: #222;
-    color: #aaa;
-    height: 100%;
-    display: grid;
+	margin: 0;
+	padding: 0;
+	background-color: #222;
+	color: #aaa;
+	height: 100%;
+	display: grid;
 }
 
 .auth-container {
-    border: solid black 1px;
-    border-radius: 10px;
-    background-color: #555;
-    padding: 10px;
+	border: solid black 1px;
+	border-radius: 10px;
+	background-color: #555;
+	padding: 10px;
 }
 
-.auth-container > img{
-    display: block;
-    margin: auto;
+.auth-container > img {
+	display: block;
+	margin: auto;
 }
 
 .auth-container h1 {
-    color:#447711;
+	color: #447711;
 }
 
 .auth-container form {
-    display: grid;
-    row-gap: 0.7em;
+	display: grid;
+	row-gap: 0.7em;
 }
 
 .auth-container > form > label {
-    display: none;
+	display: none;
 }
 
 .auth-container > form > input {
-    font-size: 1.5em;
+	font-size: 1.5em;
 }
 
 .auth-link {
-    font-size:1.2em;
-    color:#aaa5aa;
+	font-size: 1.2em;
+	color: #aaa5aa;
 
 }
 
 .auth-links-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 }
 
 .align-right {
-    text-align: right;
+	text-align: right;
 }
 
 .logo {
-    width:200px;
+	width: 200px;
 }
 
 .path-textbox {
-    font-size:1.4em;
+	font-size: 1.4em;
 }
 
-.horizontal-nav  {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+.horizontal-nav {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
 }
 
-.navigation-controls{
-    display: inline-flex;
-    align-items: center;
+.navigation-controls {
+	display: inline-flex;
+	align-items: center;
 }
 
-.navigation-button{
-    height: 1.4em;
-    align-self: center;
+.navigation-button {
+	height: 1.4em;
+	align-self: center;
 }
 
 /*@TODO set up better rules */
 @media (orientation: landscape) {
-    .auth-container{
-        margin:auto 30%;
-    }
+	.auth-container {
+		margin: auto 30%;
+	}
 }
 
 @media (orientation: portrait) {
-    .auth-container {
-        margin: auto 0;
-    }
+	.auth-container {
+		margin: auto 0;
+	}
 }

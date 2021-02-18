@@ -10,41 +10,42 @@ import logging
 
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(app.instance_path, "kumo.sqlite")
-    )
+	app = Flask(__name__, instance_relative_config=True)
+	app.config.from_mapping(
+		SQLALCHEMY_TRACK_MODIFICATIONS=False,
+		SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(app.instance_path, "kumo.sqlite")
+	)
 
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+	try:
+		os.makedirs(app.instance_path)
+	except OSError:
+		pass
 
-    if os.environ.get("KUMO_FILE_LOGGING") == 1:
-        logging.basicConfig(filename="log/" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".txt", level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.DEBUG)
-    app.logger.debug("Initializing config")
-    init_config(app)
+	if os.environ.get("KUMO_FILE_LOGGING") == 1:
+		logging.basicConfig(filename="log/" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".txt",
+							level=logging.DEBUG)
+	else:
+		logging.basicConfig(level=logging.DEBUG)
+	app.logger.debug("Initializing config")
+	init_config(app)
 
-    app.secret_key = config.secret_key
-    
-    db.init_app(app)
-    app.logger.debug("Initialized database")
+	app.secret_key = config.secret_key
 
-    app.cli.add_command(init_db_command)
-    app.logger.debug("Added db-init command")
+	db.init_app(app)
+	app.logger.debug("Initialized database")
 
-    app.cli.add_command(update_media_command)
-    app.logger.debug("Added update-media command")
+	app.cli.add_command(init_db_command)
+	app.logger.debug("Added db-init command")
 
-    app.register_blueprint(auth.bp)
-    app.logger.debug("Registered auth blueprint")
+	app.cli.add_command(update_media_command)
+	app.logger.debug("Added update-media command")
 
-    app.register_blueprint(explorer.bp)
-    app.logger.debug("Registered explorer blueprint")
+	app.register_blueprint(auth.bp)
+	app.logger.debug("Registered auth blueprint")
 
-    app.add_url_rule("/", endpoint="index")
+	app.register_blueprint(explorer.bp)
+	app.logger.debug("Registered explorer blueprint")
 
-    return app
+	app.add_url_rule("/", endpoint="index")
+
+	return app

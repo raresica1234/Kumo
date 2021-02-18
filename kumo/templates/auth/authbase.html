@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="auth-container">
-        {% for error in get_flashed_messages() %}
-            {% for message in error.split("\n") %}
-                <div class="flash">{{ message }}</div>
-            {% endfor %}
-            <br>
-        {% endfor %}
-        <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
-        {% block form %}
+<div class="auth-container">
+	{% for error in get_flashed_messages() %}
+	{% for message in error.split("\n") %}
+	<div class="flash">{{ message }}</div>
+	{% endfor %}
+	<br>
+	{% endfor %}
+	<img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+	{% block form %}
 
-        {% endblock %}
-    </div>
+	{% endblock %}
+</div>
 
 {% endblock %}

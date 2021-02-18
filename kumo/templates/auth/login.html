@@ -1,21 +1,21 @@
 {% extends "auth/authbase.html" %}
 
 {% block header %}
-    <h1>{% block title %}Login {% endblock %}</h1>
+<h1>{% block title %}Login {% endblock %}</h1>
 {% endblock %}
 
 {% block form %}
 <form method="post">
-    <label for="username">Username</label> <br>
-    <input name="username" placeholder="username" id="username"> <br>
-    <label for="password">Password</label> <br>
-    <input name="password" placeholder="password" type="password" id="password"> <br>
+	<label for="username">Username</label> <br>
+	<input name="username" placeholder="username" id="username"> <br>
+	<label for="password">Password</label> <br>
+	<input name="password" placeholder="password" type="password" id="password"> <br>
 
-    <input class="auth-button" type="submit" value="Login">
-    <div class="auth-links-container">
-        <a href="" class="auth-link">Forgot your password?</a>
-        <a href="{{ url_for('auth.register') }}" class="auth-link align-right">Don't have an account?</a>
-    </div>
+	<input class="auth-button" type="submit" value="Login">
+	<div class="auth-links-container">
+		<a href="" class="auth-link">Forgot your password?</a>
+		<a href="{{ url_for('auth.register') }}" class="auth-link align-right">Don't have an account?</a>
+	</div>
 
 </form>
 
