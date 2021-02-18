@@ -2,11 +2,9 @@
 
 {% block title %} Index {% endblock %}
 
-{% block javascript %} <script src="{{ url_for('static', filename='explorer.js') }}"></script>{% endblock %}
-
 {% block content %}
    {% if g.user %}
-       <div class="content">
+   <div class="content">
        <nav class="horizontal-nav">
            <div class="navigation-controls">
                <img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
@@ -23,11 +21,21 @@
                <li><span>{{ g.user["username"] }}</span></li>
                <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
 
-               <button id="clear" value="Clear" onclick="clearCookie()">Clear</button>
-
            </ul>
 
-     <div id="explorer"/>
+     <div id="explorer">
+         {% for file_data in files %}
+            {% set file = file_data[0] %}
+            {% set is_dir = file_data[1] %}
+            <h1>
+                {% if is_dir == True %}
+                    <a href="/{% if base_url != None %}{{ base_url + '/' }}{% endif %}{{ file }}">{{ file }}</a>
+                {% else %}
+                    <a>{{file}}</a>
+                {% endif %}
+            </h1>
+         {% endfor %}
+     </div>
 
    </div>
    {% endif %}

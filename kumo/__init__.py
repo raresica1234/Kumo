@@ -47,10 +47,4 @@ def create_app(test_config=None):
 
     app.add_url_rule("/", endpoint="index")
 
-    @app.route("/")
-    def index():
-        if g.user is None:
-            return redirect(url_for("auth.login"))
-        return render_template("index.html")
-
     return app

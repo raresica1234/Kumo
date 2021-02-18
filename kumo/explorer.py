@@ -1,14 +1,16 @@
 import os
 from kumo.unix_permissions import UnixPermissions
-from flask import Blueprint, jsonify, g
+from flask import Blueprint, jsonify, g, render_template, redirect, url_for
 
 bp = Blueprint("explorer", __name__)
 
 
-@bp.route("/explore/")
-@bp.route("/explore")
-@bp.route("/explore/<path:sub_path>")
+@bp.route("/")
+@bp.route("/<path:sub_path>")
 def explore(sub_path=None):
+    if g.user is None:
+        return redirect(url_for("auth.login"))
+
     if "permission" not in g:
         g.permission = UnixPermissions()
 
@@ -35,4 +37,4 @@ def explore(sub_path=None):
                     else:
                         file_data.append((file, file_type))
 
-    return jsonify(file_data)
+    return render_template("index.html", files=file_data, base_url=sub_path)
