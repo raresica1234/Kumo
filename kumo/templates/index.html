@@ -12,8 +12,9 @@
 			<img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
 		</div>
 		{% if base_url != None %}
-			{% for folder in base_url.split("/") %}
-				<a>{{folder}}</a>
+			{% set split_url = base_url.split("/") %}
+			{% for i in range(split_url|length)  %}
+				<a href="/{{split_url[0:i+1]|join('/')}}">{{split_url[i]}}</a>
 			{% endfor %}
 		{% endif %}
 		<img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
