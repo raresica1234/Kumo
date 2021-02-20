@@ -11,14 +11,16 @@
 			<img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
 			<img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
 		</div>
-		<div class="breadcrum">
-			<a href="/">/</a>
-			{% if base_url != None %}
-				{% set split_url = base_url.split("/") %}
-				{% for i in range(split_url|length)  %}
-					<a href="/{{split_url[0:i+1]|join('/')}}">{{split_url[i]}}</a>
-				{% endfor %}
-			{% endif %}
+		<div class="breadcrum-wrap">
+			<div class="breadcrum">
+				<a href="/">/</a>
+				{% if base_url != None %}
+					{% set split_url = base_url.split("/") %}
+					{% for i in range(split_url|length)  %}
+						<a href="/{{split_url[0:i+1]|join('/')}}">{{split_url[i]}}</a>
+					{% endfor %}
+				{% endif %}
+			</div>
 		</div>
 		<img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
 
@@ -31,17 +33,19 @@
 
 	</ul>
 
-	<div id="explorer">
+	<div class="explorer">
 		{% for file_data in files %}
 		{% set file = file_data[0] %}
 		{% set is_dir = file_data[1] %}
-		<h1>
+		<div class="item">
 			{% if is_dir == True %}
+			<img src="{{ url_for('static', filename='folder.png') }}" class="item-image"> <br>
 			<a href="/{% if base_url != None %}{{ base_url + '/' }}{% endif %}{{ file }}">{{ file }}</a>
 			{% else %}
+			<img src="{{ url_for('static', filename='file.png') }}" class="item-image"> <br>
 			<a>{{file}}</a>
 			{% endif %}
-		</h1>
+		</div>
 		{% endfor %}
 	</div>
 

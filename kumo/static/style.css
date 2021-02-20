@@ -74,6 +74,47 @@ html, body {
 	align-self: center;
 }
 
+.breadcrum-wrap {
+	margin:0;
+	border: solid #11557C;
+	background-color: white;
+}
+
+.breadcrum {
+	margin:0;
+	min-width: 50px;
+	padding: 0;
+	color:#11557C;
+	font-size:1.2em;
+}
+
+.breadcrum > a {
+	color:black;
+	font-size: 1em;
+}
+.breadcrum > a:hover {
+	color:white;
+	background-color:blue;
+}
+
+.explorer {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	grid-row-gap: 1.5em;
+	text-align: center;
+}
+.item {
+	text-align: center;
+}
+.item-image {
+	width:200px;
+}
+.item > a {
+	font-size:1.5em;
+	text-align: center;
+	word-wrap: break-word;
+}
+
 /*@TODO set up better rules */
 @media (orientation: landscape) {
 	.auth-container {
