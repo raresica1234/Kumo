@@ -118,6 +118,7 @@ html, body {
 .item > a:hover {
 	display: block;
 	height: auto;
+	overflow: no-display;
 }
 
 /*@TODO set up better rules */
