@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from flask import Flask, render_template, g, redirect, url_for
-from kumo import auth, explorer, config
+from kumo import auth, explorer, config, get_resource
 from kumo.models import db, init_db_command
 from kumo.media_directories import update_media_command
 from kumo.config import init_config
@@ -46,6 +46,15 @@ def create_app(test_config=None):
 	app.register_blueprint(explorer.bp)
 	app.logger.debug("Registered explorer blueprint")
 
+	app.register_blueprint(get_resource.bp)
+	app.logger.debug("Registered get resource blueprint")
+
 	app.add_url_rule("/", endpoint="index")
+
+	@app.route("/")
+	def index():
+		if g.user is None:
+			return redirect(url_for("auth.login"))
+		return redirect(url_for('explorer.explore'))
 
 	return app
