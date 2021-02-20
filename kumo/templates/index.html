@@ -39,11 +39,15 @@
 		{% set is_dir = file_data[1] %}
 		<div class="item">
 			{% if is_dir == True %}
+			<a href="/{% if base_url != None %}{{ base_url + '/' }}{% endif %}{{ file }}">
 			<img src="{{ url_for('static', filename='folder.png') }}" class="item-image"> <br>
-			<a href="/{% if base_url != None %}{{ base_url + '/' }}{% endif %}{{ file }}">{{ file }}</a>
+			<span>{{ file }}</span>
+			</a>
 			{% else %}
+			<a>
 			<img src="{{ url_for('static', filename='file.png') }}" class="item-image"> <br>
-			<a>{{file}}</a>
+			<span>{{ file }}</span>
+			</a>
 			{% endif %}
 		</div>
 		{% endfor %}

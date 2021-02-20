@@ -103,16 +103,21 @@ html, body {
 	grid-row-gap: 1.5em;
 	text-align: center;
 }
-.item {
+.item > a {
+	word-wrap: break-word;
 	text-align: center;
+	display:block;
+	height:250px;
+	overflow:hidden;
+	font-size:1.5em;
 }
 .item-image {
 	width:200px;
 }
-.item > a {
-	font-size:1.5em;
-	text-align: center;
-	word-wrap: break-word;
+
+.item > a:hover {
+	display: block;
+	height: auto;
 }
 
 /*@TODO set up better rules */
