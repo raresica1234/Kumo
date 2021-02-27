@@ -1,4 +1,4 @@
-from kumo.models import db, MediaDirectory, MediaPermissions
+from kumo.models import MediaDirectory, MediaPermissions
 
 
 class Permission:

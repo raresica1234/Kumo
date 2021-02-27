@@ -1,6 +1,6 @@
 import click
 from flask.cli import with_appcontext
-from flask import current_app
+from flask import current_app, g
 from kumo import config
 from kumo.models import MediaDirectory, db
 
@@ -12,6 +12,12 @@ def pick_non_empty_directory_name(dirname: str):
 		return dirname.split("/")[-1]
 	else:
 		return dirname[:-1]
+
+
+def resolve_path(sub_path: str):
+	root_directory_name = sub_path.split("/")[0]
+	root_directory_path = g.permission.get_root_directory_path(root_directory_name)
+	return root_directory_path + sub_path[len(root_directory_name):]
 
 
 @click.command("update-media")

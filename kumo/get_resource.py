@@ -1,6 +1,6 @@
-import os
 from kumo.unix_permissions import UnixPermissions
-from flask import Blueprint, jsonify, g, render_template, redirect, url_for, send_from_directory, abort
+from flask import Blueprint, g, send_from_directory, abort
+from kumo.media_directories import resolve_path
 
 bp = Blueprint("img", __name__)
 
@@ -14,15 +14,10 @@ def img(sub_path=None):
 
 	if g.user is not None:
 		if sub_path is not None:
-			root_directory_name = sub_path.split("/")[0]
-			root_directory_path = g.permission.get_root_directory_path(root_directory_name)
-			current_path = root_directory_path + sub_path[len(root_directory_name) + 1:]
-			print(current_path)
+			current_path = resolve_path(sub_path)
 			filename = current_path.split("/")[-1]
 			directory = current_path[0:len(current_path) - len(filename)]
-			print(filename, directory)
 			if g.permission.has_permission(current_path, g.user.id, g.user.admin):
-				print("a")
 				return send_from_directory(directory, filename=filename)
 
 	abort(404)

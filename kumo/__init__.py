@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, render_template, g, redirect, url_for
+from flask import Flask, g, redirect, url_for
 from kumo import auth, explorer, config, get_resource
 from kumo.models import db, init_db_command
 from kumo.media_directories import update_media_command
