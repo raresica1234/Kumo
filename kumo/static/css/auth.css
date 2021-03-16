@@ -45,6 +45,11 @@
 	width: 200px;
 }
 
+.auth-error {
+	color: indianred;
+	font-size:1.3em;
+}
+
 /*@TODO set up better rules */
 @media (orientation: landscape) {
 	.auth-container {

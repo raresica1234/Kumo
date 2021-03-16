@@ -44,9 +44,9 @@ def login():
 
 		error = ""
 		if not username:
-			error += "Username is required\n"
+			error += "Username is required!\n"
 		if not password:
-			error += "Password is required\n"
+			error += "Password is required!\n"
 
 		if error == "":
 			user = User.query.filter_by(username=username).first()

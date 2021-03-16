@@ -6,13 +6,13 @@
 
 {% block content %}
 <div class="auth-container">
+	<img src="{{ url_for('static', filename='icons/logo.png') }}" class="auth-logo">
 	{% for error in get_flashed_messages() %}
 	{% for message in error.split("\n") %}
-	<div class="flash">{{ message }}</div>
+	<div class="auth-error">{{ message }}</div>
 	{% endfor %}
 	<br>
 	{% endfor %}
-	<img src="{{ url_for('static', filename='icons/logo.png') }}" class="auth-logo">
 	{% block form %}
 
 	{% endblock %}
