@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block css %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="auth-container">
 	{% for error in get_flashed_messages() %}
@@ -8,7 +12,7 @@
 	{% endfor %}
 	<br>
 	{% endfor %}
-	<img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+	<img src="{{ url_for('static', filename='icons/logo.png') }}" class="auth-logo">
 	{% block form %}
 
 	{% endblock %}

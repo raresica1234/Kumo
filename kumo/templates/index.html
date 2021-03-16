@@ -2,14 +2,20 @@
 
 {% block title %} Index {% endblock %}
 
+{% block css %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/explorer/explorer.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/explorer/breadcrumb.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/explorer/navigation.css') }}">
+{% endblock %}
+
 {% block content %}
 {% if g.user %}
 <div class="content">
 	<nav class="horizontal-nav">
 		<div class="navigation-controls">
-			<img src="{{ url_for('static', filename='back_arrow.png') }}" class="navigation-button">
-			<img src="{{ url_for('static', filename='forward_arrow.png') }}" class="navigation-button">
-			<img src="{{ url_for('static', filename='up_arrow.png') }}" class="navigation-button">
+			<img src="{{ url_for('static', filename='icons/back_arrow.png') }}" class="navigation-button">
+			<img src="{{ url_for('static', filename='icons/forward_arrow.png') }}" class="navigation-button">
+			<img src="{{ url_for('static', filename='icons/up_arrow.png') }}" class="navigation-button">
 		</div>
 		<div class="breadcrumb-wrap">
 			<div class="breadcrumb">
@@ -22,7 +28,7 @@
 				{% endif %}
 			</div>
 		</div>
-		<img src="{{ url_for('static', filename='user.png') }}" class="navigation-button">
+		<img src="{{ url_for('static', filename='icons/user.png') }}" class="navigation-button">
 
 	</nav>
 
@@ -41,12 +47,12 @@
 		<div class="item">
 			{% if is_dir == True %}
 			<a href="/explore/{{base_url + '/' if base_url}}{{ file }}">
-			<img src="{{ url_for('static', filename='folder.png') }}" class="item-image"> <br>
+			<img src="{{ url_for('static', filename='icons/folder.png') }}" class="item-image"> <br>
 			<span>{{ file }}</span>
 			</a>
 			{% else %}
 			<a>
-			<img src="{% if is_img == True %}{{'/img/' + base_url +'/'+ file}}{% else %}{{ url_for('static', filename='file.png') }}{% endif %}" class="item-image"> <br>
+			<img src="{% if is_img == True %}{{'/img/' + base_url +'/'+ file}}{% else %}{{ url_for('static', filename='icons/file.png') }}{% endif %}" class="item-image"> <br>
 			<span>{{ file }}</span>
 			</a>
 			{% endif %}

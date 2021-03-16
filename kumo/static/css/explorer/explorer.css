@@ -1,0 +1,30 @@
+.explorer {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	grid-row-gap: 1.5em;
+	grid-column-gap: 1.5em;
+	text-align: center;
+}
+
+.item {
+	height:250px;
+	word-wrap: break-word;
+	text-align: center;
+	display:block;
+	font-size:1.5em;
+}
+
+.item > span {
+	overflow:hidden;
+}
+
+.item-image {
+	width:200px;
+	height:200px;
+}
+
+.item:hover {
+	display: block;
+	z-index:1;
+}
+

@@ -1,0 +1,59 @@
+.auth-container {
+	border: solid black 1px;
+	border-radius: 10px;
+	background-color: #555;
+	padding: 10px;
+}
+
+.auth-container > img {
+	display: block;
+	margin: auto;
+}
+
+.auth-container h1 {
+	color: #447711;
+}
+
+.auth-container form {
+	display: grid;
+	row-gap: 0.7em;
+}
+
+.auth-container > form > label {
+	display: none;
+}
+
+.auth-container > form > input {
+	font-size: 1.5em;
+}
+
+.auth-link {
+	font-size: 1.2em;
+	color: #aaa5aa;
+}
+
+.auth-links-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.auth-logo {
+	width: 200px;
+}
+
+/*@TODO set up better rules */
+@media (orientation: landscape) {
+	.auth-container {
+		margin: auto 30%;
+	}
+}
+
+@media (orientation: portrait) {
+	.auth-container {
+		margin: auto 0;
+	}
+}

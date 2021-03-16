@@ -1,0 +1,27 @@
+.breadcrumb-wrap {
+	margin:0;
+	border: solid #11557C;
+	background-color: white;
+}
+
+.breadcrumb {
+	margin:0;
+	min-width: 50px;
+	padding: 0;
+	color:#11557C;
+	font-size:1.2em;
+}
+
+.breadcrumb > a {
+	color:black;
+	font-size: 1em;
+}
+
+.breadcrumb > a:hover {
+	color:white;
+	background-color:blue;
+}
+
+.path-textbox {
+	font-size: 1.4em;
+}

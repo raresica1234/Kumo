@@ -1,0 +1,15 @@
+.horizontal-nav {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+}
+
+.navigation-controls {
+	display: inline-flex;
+	align-items: center;
+}
+
+.navigation-button {
+	height: 1.4em;
+	align-self: center;
+}
+
