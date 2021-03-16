@@ -5,11 +5,6 @@
 	padding: 10px;
 }
 
-.auth-container > img {
-	display: block;
-	margin: auto;
-}
-
 .auth-container h1 {
 	color: #447711;
 }
@@ -19,30 +14,30 @@
 	row-gap: 0.7em;
 }
 
-.auth-container > form > label {
+.auth-container form label {
 	display: none;
 }
 
-.auth-container > form > input {
+.auth-container form input {
 	font-size: 1.5em;
 }
 
 .auth-link {
-	font-size: 1.2em;
+	font-size: 1.1em;
 	color: #aaa5aa;
+	text-decoration: none;
 }
 
 .auth-links-container {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-}
-
-.align-right {
-	text-align: right;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
 .auth-logo {
 	width: 200px;
+	display: block;
+	margin: auto;
 }
 
 .auth-error {
