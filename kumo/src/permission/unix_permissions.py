@@ -1,4 +1,4 @@
-from kumo.permission import Permission
+from kumo.src.permission.permission import Permission
 
 
 class UnixPermissions(Permission):

@@ -1,10 +1,11 @@
 import os
 from datetime import datetime
 from flask import Flask, g, redirect, url_for
-from kumo import auth, explorer, config, get_resource
-from kumo.models import db, init_db_command
-from kumo.media_directories import update_media_command
-from kumo.config import init_config
+from kumo.src.pages import explorer, auth
+from kumo.src.util import config, get_resource
+from kumo.src.model.models import db, init_db_command
+from kumo.src.util.media_directories import update_media_command
+from kumo.src.util.config import init_config
 
 import logging
 

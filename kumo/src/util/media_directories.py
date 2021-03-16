@@ -1,8 +1,8 @@
 import click
 from flask.cli import with_appcontext
 from flask import current_app, g
-from kumo import config
-from kumo.models import MediaDirectory, db
+from kumo.src.util import config
+from kumo.src.model.models import MediaDirectory, db
 
 
 def pick_non_empty_directory_name(dirname: str):

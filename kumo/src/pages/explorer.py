@@ -1,7 +1,7 @@
 import os
-from kumo.unix_permissions import UnixPermissions
+from kumo.src.permission.unix_permissions import UnixPermissions
 from flask import Blueprint, g, render_template, redirect, url_for, request
-from kumo.media_directories import resolve_path
+from kumo.src.util.media_directories import resolve_path
 
 bp = Blueprint("explorer", __name__)
 

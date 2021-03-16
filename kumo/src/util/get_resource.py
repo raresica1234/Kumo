@@ -1,6 +1,6 @@
-from kumo.unix_permissions import UnixPermissions
+from kumo.src.permission.unix_permissions import UnixPermissions
 from flask import Blueprint, g, send_from_directory, abort
-from kumo.media_directories import resolve_path
+from kumo.src.util.media_directories import resolve_path
 
 bp = Blueprint("img", __name__)
 
