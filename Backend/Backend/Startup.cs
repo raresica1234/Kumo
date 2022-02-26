@@ -66,7 +66,14 @@ namespace Backend
 
 		private void ConfigureAuthentication(IServiceCollection services)
 		{
-			services.AddIdentity<User, IdentityRole>()
+			services.AddIdentity<User, IdentityRole>(options =>
+				{
+					options.Password.RequiredLength = 8;
+					options.Password.RequireLowercase = false;
+					options.Password.RequireUppercase = false;
+					options.Password.RequireNonAlphanumeric = false;
+					options.Password.RequireDigit = false;
+				})
 				.AddEntityFrameworkStores<DataContext>()
 				.AddDefaultTokenProviders();
 
