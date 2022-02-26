@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Backend.Dtos.Authentication;
 using Backend.Services;
 using Microsoft.AspNetCore.Identity;
@@ -20,9 +23,15 @@ namespace Backend.Controllers
 		[HttpPost("register")]
 		public async Task<IActionResult> RegisterUser(RegisterUserDto registerUserDto)
 		{
-			await _userService.RegisterAsync(registerUserDto);
-
-			return Ok();
+			try
+			{
+				await _userService.RegisterAsync(registerUserDto);
+				return Ok();
+			}
+			catch (ApplicationException exception)
+			{
+				return BadRequest(exception.Message);
+			}
 		}
 	}
 }
