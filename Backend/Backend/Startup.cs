@@ -1,6 +1,7 @@
 using System.Text;
 using Backend.Context;
 using Backend.Models;
+using Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +40,8 @@ namespace Backend
 			{
 				options.UseSqlite(Configuration.GetConnectionString(nameof(DataContext)));
 			});
+
+			services.AddTransient<IUserService, UserService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
