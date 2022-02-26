@@ -6,6 +6,7 @@ obj/
 /.pnp
 .pnp.js
 
+appsettings.json
 package-lock.json
 
 # testing

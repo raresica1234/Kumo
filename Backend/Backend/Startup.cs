@@ -22,8 +22,10 @@ namespace Backend
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			// services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-				// .AddJwtBearer()
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(options =>
+				{
+				});
 			
 			services.AddControllers();
 			services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Backend", Version = "v1"}); });
@@ -45,7 +47,7 @@ namespace Backend
 
 			app.UseAuthorization();
 
-			// app.UseAuthentication();
+			app.UseAuthentication();
 			
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
