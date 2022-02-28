@@ -34,7 +34,7 @@ const Register = () => {
 		else {
 			const errors = result.split("\n");
 			errors.forEach(error => {
-				if (error.toLowerCase().includes("email")) {
+				if (error.toLowerCase().includes("email") || error.toLowerCase().includes("username")) {
 					setEmailError(error)
 				}
 				if (error.toLowerCase().includes("match")) {
