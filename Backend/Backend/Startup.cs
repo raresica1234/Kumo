@@ -30,11 +30,14 @@ namespace Backend
 		public void ConfigureServices(IServiceCollection services)
 		{
 			ConfigureAuthentication(services);
-
+			
 			services.AddCors(config =>
 				config.AddDefaultPolicy(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-			services.AddControllers();
+			services.AddControllers().ConfigureApiBehaviorOptions(options =>
+			{
+				options.SuppressModelStateInvalidFilter = true;
+			});
 			services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Backend", Version = "v1"}); });
 			services.AddDbContext<DataContext>(options =>
 			{
@@ -58,9 +61,11 @@ namespace Backend
 
 			app.UseRouting();
 
+			app.UseCors();
+			
 			app.UseAuthentication();
 			app.UseAuthorization();
-
+			
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
 

@@ -33,6 +33,7 @@ namespace Backend.Services
 
 			if (!result.Succeeded)
 			{
+				Console.WriteLine(result.Errors.ToString());
 				IEnumerable<string> errorList = result.Errors.ToList().Select(error => error.Description);
 				string formattedErrors = string.Join("\n", errorList);
 				throw new ApplicationException(formattedErrors);
