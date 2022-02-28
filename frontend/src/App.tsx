@@ -1,26 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useContext, useEffect} from 'react';
 import './App.scss';
+import {AuthenticateContext} from "./infrastructure/authenticate";
+import {BrowserRouter} from "react-router-dom";
+import AccountRoutes from "./pages/accounts";
+import {createTheme, ThemeProvider} from "@mui/material";
+import {observer} from "mobx-react";
+import {blueGrey, green, grey, orange} from "@mui/material/colors";
 
 const App = () => {
-	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo"/>
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<a
-					className="App-link"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn React
-				</a>
-			</header>
-		</div>
-	);
-}
+	const {isUserLogged, init} = useContext(AuthenticateContext);
+	const theme = createTheme({
+		palette: {
+			mode: "dark",
+			primary: {
+				main: blueGrey[700]
+			},
+			secondary: {
+				main: orange[400]
+			}
+			// text: {
+			// 	primary: "#fff",
+			// 	secondary: "#ddd"
+			// },
+			// background: {
+			// 	paper: "#000"
+			// }
+		},
+		typography: {
+			allVariants: {
+				color: "white"
+			}
+		}
+	})
 
-export default App;
+	useEffect(() => {
+		init();
+	}, [init]);
+
+	if (isUserLogged === undefined) {
+		return null;
+	}
+
+	return <ThemeProvider theme={theme}>
+		<BrowserRouter>
+			{isUserLogged ? (
+				<></>
+			) : (
+				<AccountRoutes/>
+			)}
+		</BrowserRouter>
+	</ThemeProvider>
+};
+
+export default observer(App);
