@@ -1,13 +1,12 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 import Register from "./register";
-import CenterContainer from "../../components/center-container";
-import {Paper} from "@mui/material";
+import Login from "./login";
 
 const AccountRoutes = () => (
 	<Routes>
-		{/*<Route path="/login" element={<Login />}/>*/}
-		<Route path="/register" element={<Paper><CenterContainer><Register/></CenterContainer></Paper>}/>
-		<Route path="*" element={<Navigate to="/register"/>}/>
+		<Route path="/login" element={<Login />}/>
+		<Route path="/register" element={<Register/>}/>
+		<Route path="*" element={<Navigate to="/login"/>}/>
 	</Routes>
 );
 

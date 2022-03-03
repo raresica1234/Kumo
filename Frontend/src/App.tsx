@@ -3,33 +3,19 @@ import './App.scss';
 import {AuthenticateContext} from "./infrastructure/authenticate";
 import {BrowserRouter} from "react-router-dom";
 import AccountRoutes from "./pages/accounts";
-import {createTheme, ThemeProvider} from "@mui/material";
+import {createTheme, Grid, Paper, ThemeProvider} from "@mui/material";
 import {observer} from "mobx-react";
-import {blueGrey, green, grey, orange} from "@mui/material/colors";
+import {deepOrange, lightBlue, orange} from "@mui/material/colors";
+import CenterContainer from "./components/center-container";
+import MainRoutes from "./pages/main";
 
 const App = () => {
 	const {isUserLogged, init} = useContext(AuthenticateContext);
 	const theme = createTheme({
 		palette: {
 			mode: "dark",
-			primary: {
-				main: blueGrey[700]
-			},
-			secondary: {
-				main: orange[400]
-			}
-			// text: {
-			// 	primary: "#fff",
-			// 	secondary: "#ddd"
-			// },
-			// background: {
-			// 	paper: "#000"
-			// }
-		},
-		typography: {
-			allVariants: {
-				color: "white"
-			}
+			primary: deepOrange,
+			secondary: lightBlue
 		}
 	})
 
@@ -44,9 +30,19 @@ const App = () => {
 	return <ThemeProvider theme={theme}>
 		<BrowserRouter>
 			{isUserLogged ? (
-				<></>
+				<MainRoutes />
 			) : (
-				<AccountRoutes/>
+				<Paper square elevation={0}>
+					<Grid container>
+						<Grid item xs={0} sm={4}/>
+						<Grid item xs={12} sm={4}>
+								<CenterContainer>
+										<AccountRoutes/>
+								</CenterContainer>
+						</Grid>
+						<Grid item xs={0} sm={4}/>
+					</Grid>
+				</Paper>
 			)}
 		</BrowserRouter>
 	</ThemeProvider>

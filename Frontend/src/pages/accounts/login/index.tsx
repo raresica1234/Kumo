@@ -1,65 +1,57 @@
-import {observer} from "mobx-react";
-import styles from "./../accounts.module.scss"
 import {Button, Grid, Link, Paper, TextField, Typography} from "@mui/material";
+import styles from "./../accounts.module.scss"
 import {useContext, useState} from "react";
-import {RegisterContext} from "./register-store";
+import {LoginContext} from "./login-store";
 import {useNavigate} from "react-router-dom";
 
-const Register = () => {
+const Login = () => {
 	const navigate = useNavigate();
 
 	const {
 		setEmail,
 		setPassword,
-		setConfirmPassword,
-		register
-	} = useContext(RegisterContext)
+		login
+	} = useContext(LoginContext)
 
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState(<></>);
-	const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-	const handleRegister = async () => {
+	const handleLogin = async () => {
 		setEmailError("");
 		setPasswordError(<></>);
-		setConfirmPasswordError("");
 
-		const result = await register();
+		const result = await login();
 
-		if (result === "") {
-			// Successful login
-			navigate("/login");
+		console.log(result);
+
+		if (result == "") {
+			navigate("/");
 		} else {
 			const errors = result.split("\n");
 			errors.forEach(error => {
 				if (error.toLowerCase().includes("email") || error.toLowerCase().includes("username")) {
 					setEmailError(error)
 				}
-				if (error.toLowerCase().includes("match")) {
-					setConfirmPasswordError(error);
-				} else if (error.toLowerCase().includes("password")) {
+				if (error.toLowerCase().includes("password")) {
 					setPasswordError(passwordError => <>{passwordError}{error}<br/></>);
 				}
-			})
+			});
 		}
 	}
 
 	return <Paper elevation={1}
 				  component={Grid} container
-				  spacing={2}
+				  spacing={1}
 				  className={styles.container}
 				  direction={"column"}
 				  alignItems={"center"}
 				  maxWidth={"sm"}
 				  justifyContent={"center"}>
 		<Grid item>
-			<Typography variant="h3">Register</Typography>
+			<Typography variant="h3">Login</Typography>
 		</Grid>
 		<Grid item className={styles.inputContainer}>
-			<TextField fullWidth
-					   label="Email"
-					   variant="standard"
-					   type="email"
+			<TextField fullWidth label="Email" variant="standard" type="email"
 					   error={emailError !== ""}
 					   helperText={emailError}
 					   onChange={(e) => setEmail(e.target.value)}/>
@@ -73,26 +65,24 @@ const Register = () => {
 					   helperText={<>{passwordError}</>}
 					   onChange={(e) => setPassword(e.target.value)}/>
 		</Grid>
-		<Grid item xs className={styles.inputContainer}>
-			<TextField fullWidth
-					   type="password"
-					   label="Confirm Password"
-					   variant="standard"
-					   error={confirmPasswordError !== ""} helperText={confirmPasswordError}
-					   onChange={(e) => setConfirmPassword(e.target.value)}/>
-		</Grid>
+
 		<Grid item xs className={styles.inputContainer}>
 			<div className={styles.submit}>
-				<Button variant="contained" color="secondary" onClick={() => handleRegister()}>
-					Register
+				<Button variant="contained" color="secondary"
+						onClick={() => handleLogin()}>
+					Login
 				</Button>
 			</div>
 		</Grid>
 		<Grid item xs className={styles.inputContainer}>
-			<Link className={styles.helperText} href={"/login"} color={"inherit"} variant={"subtitle2"}>Already have an
-				account?</Link>
+			<Link className={styles.helperText}
+				  href={"/register"}
+				  color={"inherit"}
+				  variant={"subtitle2"}>
+				Don't have an account?
+			</Link>
 		</Grid>
 	</Paper>
 }
 
-export default observer(Register);
+export default Login;

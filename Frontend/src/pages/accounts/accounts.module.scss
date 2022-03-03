@@ -1,5 +1,4 @@
 .container {
-	background-color: #282c34;
 	padding: 3em;
 
 	.text {
@@ -10,9 +9,13 @@
 		width: 100%;
 
 		.submit {
-			margin:2em 0 0 0;
+			margin: 2em 0 0 0;
 			width: 100%;
 			text-align: center;
+		}
+
+		.helperText {
+			float: right;
 		}
 	}
 }

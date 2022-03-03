@@ -42,5 +42,28 @@ namespace Backend.Controllers
 				return BadRequest(exception.Message);
 			}
 		}
+
+		[HttpPost("login")]
+		public async Task<IActionResult> LoginUser(LoginUserDto loginUserDto)
+		{
+			var errors = ModelErrorParser.GetErrors(ModelState);
+			if (errors.Length != 0)
+			{
+				return BadRequest(errors);
+			}
+
+			try
+			{
+				var loginResult = await _userService.LoginUser(loginUserDto);
+				return Ok(new
+				{
+					Token = loginResult
+				});
+			}
+			catch (ApplicationException exception)
+			{
+				return BadRequest(exception.Message);
+			}
+		}
 	}
 }
