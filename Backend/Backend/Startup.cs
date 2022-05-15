@@ -1,4 +1,6 @@
+using System;
 using System.Text;
+using System.Threading.Tasks;
 using Backend.Context;
 using Backend.Models;
 using Backend.Services;
@@ -45,10 +47,11 @@ namespace Backend
 			});
 
 			services.AddTransient<IUserService, UserService>();
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
 		{
 			if (env.IsDevelopment())
 			{
@@ -66,6 +69,8 @@ namespace Backend
 			app.UseAuthentication();
 			app.UseAuthorization();
 			
+			CreateRoles(serviceProvider).Wait();
+			
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
 
@@ -79,6 +84,7 @@ namespace Backend
 					options.Password.RequireNonAlphanumeric = false;
 					options.Password.RequireDigit = false;
 				})
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<DataContext>()
 				.AddDefaultTokenProviders();
 
@@ -100,6 +106,43 @@ namespace Backend
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
 				};
 			});
+		}
+
+		private async Task CreateRoles(IServiceProvider serviceProvider)
+		{
+			var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+			var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+			string[] roleNames = {Role.Administrator};
+			IdentityResult result;
+
+			foreach (var roleName in roleNames)
+			{
+				var roleExist = await roleManager.RoleExistsAsync(roleName);
+				if (!roleExist)
+				{
+					result = await roleManager.CreateAsync(new IdentityRole(roleName));
+				}
+			}
+			
+			var powerUser = new User
+			{
+				Email = Configuration["Admin:Email"],
+				UserName = Configuration["Admin:Email"]
+			};
+
+			var userPassword = Configuration["Admin:Password"];
+			var user = await userManager.FindByEmailAsync(Configuration["Admin:Email"]);
+
+			if (user == null)
+			{
+				var createPowerUser = await userManager.CreateAsync(powerUser, userPassword);
+				
+				if (createPowerUser.Succeeded)
+				{
+					await userManager.AddToRoleAsync(powerUser, "Administrator");
+				}
+			}
 		}
 	}
 }

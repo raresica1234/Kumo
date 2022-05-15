@@ -17,12 +17,14 @@ namespace Backend.Services
 	public class UserService : IUserService
 	{
 		private readonly UserManager<User> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IConfiguration _configuration;
 
-		public UserService(UserManager<User> userManager, IConfiguration configuration)
+		public UserService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
 		{
-			this._userManager = userManager;
-			this._configuration = configuration;
+			_userManager = userManager;
+			_roleManager = roleManager;
+			_configuration = configuration;
 		}
 
 		public async Task RegisterAsync(RegisterUserDto registerUserDto)
@@ -47,7 +49,6 @@ namespace Backend.Services
 		public async Task<string?> LoginUser(LoginUserDto loginUserDto)
 		{
 			var user = await _userManager.FindByEmailAsync(loginUserDto.Email);
-
 			if (user == null)
 				throw new ApplicationException("Username does not exist.");
 
@@ -55,13 +56,21 @@ namespace Backend.Services
 			if (!isPasswordCorrect)
 				throw new ApplicationException("Password incorrect.");
 
+			// TODO: with this approach only the first role is taken
+			var roles = await _userManager.GetRolesAsync(user);
+			
 			var authenticationClaims = new List<Claim>
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id),
 				new Claim(ClaimTypes.Email, user.Email),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 			};
 
+			if (roles.Count > 0)
+			{
+				authenticationClaims.Add(new Claim(ClaimTypes.Role, roles[0]));
+			}
+			
 			var authenticationSingingKey =
 				new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
