@@ -39,7 +39,12 @@ const Login = () => {
 		}
 	}
 
-	return <Paper elevation={1}
+	const handleEnter = async (key: string) => {
+		if (key === "Enter")
+			await handleLogin();
+	}
+
+	return <Paper elevation={6}
 				  component={Grid} container
 				  spacing={1}
 				  className={styles.container}
@@ -54,7 +59,8 @@ const Login = () => {
 			<TextField fullWidth label="Email" variant="standard" type="email"
 					   error={emailError !== ""}
 					   helperText={emailError}
-					   onChange={(e) => setEmail(e.target.value)}/>
+					   onChange={(e) => setEmail(e.target.value)}
+					   onKeyPress={(e) => handleEnter(e.key)}/>
 		</Grid>
 		<Grid item xs className={styles.inputContainer}>
 			<TextField fullWidth
@@ -63,7 +69,8 @@ const Login = () => {
 					   variant="standard"
 					   error={passwordError.props.children !== undefined}
 					   helperText={<>{passwordError}</>}
-					   onChange={(e) => setPassword(e.target.value)}/>
+					   onChange={(e) => setPassword(e.target.value)}
+					   onKeyPress={(e) => handleEnter(e.key)}/>
 		</Grid>
 
 		<Grid item xs className={styles.inputContainer}>

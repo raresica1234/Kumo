@@ -1,5 +1,4 @@
 import React, {useContext, useEffect} from 'react';
-import './App.scss';
 import {AuthenticateContext} from "./infrastructure/authenticate";
 import {BrowserRouter} from "react-router-dom";
 import AccountRoutes from "./pages/accounts";

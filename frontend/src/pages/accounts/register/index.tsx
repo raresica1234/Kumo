@@ -44,9 +44,14 @@ const Register = () => {
 		}
 	}
 
-	return <Paper elevation={1}
+	const handleEnter = async (key: string) => {
+		if (key === "Enter")
+			await handleRegister();
+	}
+
+	return <Paper elevation={6}
 				  component={Grid} container
-				  spacing={2}
+				  spacing={1}
 				  className={styles.container}
 				  direction={"column"}
 				  alignItems={"center"}
@@ -62,7 +67,8 @@ const Register = () => {
 					   type="email"
 					   error={emailError !== ""}
 					   helperText={emailError}
-					   onChange={(e) => setEmail(e.target.value)}/>
+					   onChange={(e) => setEmail(e.target.value)}
+					   onKeyPress={(e) => handleEnter(e.key)}/>
 		</Grid>
 		<Grid item xs className={styles.inputContainer}>
 			<TextField fullWidth
@@ -71,7 +77,8 @@ const Register = () => {
 					   variant="standard"
 					   error={passwordError.props.children !== undefined}
 					   helperText={<>{passwordError}</>}
-					   onChange={(e) => setPassword(e.target.value)}/>
+					   onChange={(e) => setPassword(e.target.value)}
+					   onKeyPress={(e) => handleEnter(e.key)}/>
 		</Grid>
 		<Grid item xs className={styles.inputContainer}>
 			<TextField fullWidth
@@ -79,7 +86,8 @@ const Register = () => {
 					   label="Confirm Password"
 					   variant="standard"
 					   error={confirmPasswordError !== ""} helperText={confirmPasswordError}
-					   onChange={(e) => setConfirmPassword(e.target.value)}/>
+					   onChange={(e) => setConfirmPassword(e.target.value)}
+					   onKeyPress={(e) => handleEnter(e.key)}/>
 		</Grid>
 		<Grid item xs className={styles.inputContainer}>
 			<div className={styles.submit}>
