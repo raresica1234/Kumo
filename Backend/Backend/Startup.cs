@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Backend.Context;
@@ -21,18 +22,18 @@ namespace Backend
 {
 	public class Startup
 	{
+		public IConfiguration Configuration { get; }
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
 		}
 
-		public IConfiguration Configuration { get; }
-
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			ConfigureAuthentication(services);
-			
+
 			services.AddCors(config =>
 				config.AddDefaultPolicy(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
@@ -47,7 +48,7 @@ namespace Backend
 			});
 
 			services.AddTransient<IUserService, UserService>();
-
+			services.AddTransient<IExploreService, ExploreService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,12 +66,13 @@ namespace Backend
 			app.UseRouting();
 
 			app.UseCors();
-			
+
 			app.UseAuthentication();
 			app.UseAuthorization();
-			
+
 			CreateRoles(serviceProvider).Wait();
-			
+			AddRootPathPoints(serviceProvider).Wait();
+
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
 
@@ -124,7 +126,7 @@ namespace Backend
 					result = await roleManager.CreateAsync(new IdentityRole(roleName));
 				}
 			}
-			
+
 			var powerUser = new User
 			{
 				Email = Configuration["Admin:Email"],
@@ -137,12 +139,42 @@ namespace Backend
 			if (user == null)
 			{
 				var createPowerUser = await userManager.CreateAsync(powerUser, userPassword);
-				
+
 				if (createPowerUser.Succeeded)
 				{
 					await userManager.AddToRoleAsync(powerUser, "Administrator");
 				}
 			}
+		}
+
+		private async Task AddRootPathPoints(IServiceProvider serviceProvider)
+		{
+			var dataContext = serviceProvider.GetService<DataContext>();
+
+			if (dataContext == null)
+			{
+				Console.WriteLine("Data context is null");
+				return;
+			}
+
+			var pathPoints = await dataContext.PathPoints.ToListAsync();
+			var rootPathPoints = Configuration.GetSection("RootPathPoints").Get<string[]>();
+
+			foreach (var rootPathPoint in rootPathPoints)
+			{
+				if (!pathPoints.Exists(pathPoint => pathPoint.Path == rootPathPoint))
+				{
+					var pathPoint = new PathPoint
+					{
+						Path = rootPathPoint,
+						IsRoot = true
+					};
+
+					await dataContext.PathPoints.AddAsync(pathPoint);
+				}
+			}
+
+			await dataContext.SaveChangesAsync();
 		}
 	}
 }

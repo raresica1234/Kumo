@@ -1,11 +1,13 @@
-﻿namespace Backend.Models
+﻿using System;
+
+namespace Backend.Models
 {
 	public class Permission
 	{
-		public string RoleId { get; set; }
+		public Guid RoleId { get; set; }
 		public KumoRole KumoRole { get; set; } = null!;
 		
-		public string PathPointId { get; set; }
+		public Guid PathPointId { get; set; }
 		public PathPoint PathPoint { get; set; } = null!;
 		
 		public bool Read { get; set; }

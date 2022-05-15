@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models
@@ -6,7 +7,7 @@ namespace Backend.Models
 	public class PathPoint
 	{
 		[Key]
-		public string Id { get; set; }
+		public Guid Id { get; set; }
 		
 		public string Path { get; set; }
 		
