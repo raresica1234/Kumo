@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Backend.Dtos.Authentication;
 using Backend.Services;
 using Backend.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,14 @@ namespace Backend.Controllers
 			this._userService = userService;
 		}
 
+		[HttpGet("isAdministrator")]
+		public async Task<IActionResult> IsAdministrator()
+		{
+			var result = await _userService.IsAdministrator();
+			
+			return Ok(result);
+		}
+		
 		[HttpPost("register")]
 		public async Task<IActionResult> RegisterUser(RegisterUserDto registerUserDto)
 		{

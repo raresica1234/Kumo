@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Backend.Dtos.Authentication;
 using Backend.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,12 +21,18 @@ namespace Backend.Services
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IConfiguration _configuration;
 
-		public UserService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+		private readonly IHttpContextAccessor _httpAccessor;
+
+		public UserService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
+			IConfiguration configuration, IHttpContextAccessor httpAccessor)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
 			_configuration = configuration;
+			_httpAccessor = httpAccessor;
 		}
+
+		public string GetCurrentUserId() => _httpAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 		public async Task RegisterAsync(RegisterUserDto registerUserDto)
 		{
@@ -58,7 +65,7 @@ namespace Backend.Services
 
 			// TODO: with this approach only the first role is taken
 			var roles = await _userManager.GetRolesAsync(user);
-			
+
 			var authenticationClaims = new List<Claim>
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -70,7 +77,7 @@ namespace Backend.Services
 			{
 				authenticationClaims.Add(new Claim(ClaimTypes.Role, roles[0]));
 			}
-			
+
 			var authenticationSingingKey =
 				new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
@@ -86,6 +93,20 @@ namespace Backend.Services
 			);
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
+		}
+
+		public async Task<bool> IsAdministrator()
+		{
+			var id = GetCurrentUserId();
+
+			var user = await _userManager.FindByIdAsync(id);
+
+			if (user == null)
+				return false;
+
+			var roles = await _userManager.GetRolesAsync(user);
+
+			return roles.Contains(Role.Administrator);
 		}
 	}
 }

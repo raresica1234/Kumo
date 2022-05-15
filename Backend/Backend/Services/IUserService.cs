@@ -8,5 +8,7 @@ namespace Backend.Services
 		Task RegisterAsync(RegisterUserDto registerUserDto);
 
 		Task<string?> LoginUser(LoginUserDto loginUserDto);
+		
+		Task<bool> IsAdministrator();
 	}
 }
