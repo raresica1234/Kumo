@@ -1,9 +1,11 @@
 import {createContext} from "react";
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, runInAction} from "mobx";
 import {clearToken, getToken, setToken} from "./token-helper";
+import {isAdministrator} from "../../accessors/account-accessor";
 
 class AuthenticateStore {
 	public isUserLogged?: boolean = undefined;
+	public isUserAdmin?: boolean = undefined;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -11,6 +13,7 @@ class AuthenticateStore {
 
 	public init = () => {
 		this.isUserLogged = getToken() !== "";
+		this.fetchAdminStatus();
 	}
 
 	public setToken = (token?: string) => {
@@ -21,11 +24,24 @@ class AuthenticateStore {
 			clearToken()
 			this.isUserLogged = false;
 		}
+
+		this.fetchAdminStatus()
 	}
 
 	public reset = () => {
 		this.isUserLogged = false;
 		clearToken();
+		this.fetchAdminStatus()
+	}
+
+	private fetchAdminStatus = () => {
+		if (!this.isUserLogged)
+			return;
+
+		isAdministrator().then(admin => {
+			console.log(admin)
+			runInAction(() => this.isUserAdmin = admin);
+		});
 	}
 }
 

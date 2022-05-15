@@ -9,7 +9,7 @@ const genericFetch = <T>(method: httpMethod, url: string, body?: any) =>
 				method,
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": `Bearer: ${getToken()}`
+					"Authorization": `Bearer ${getToken()}`
 				},
 				body: JSON.stringify(body)
 			})
@@ -30,3 +30,4 @@ const genericFetch = <T>(method: httpMethod, url: string, body?: any) =>
 
 
 export const httpPost = <T>(url: string, body?: any) => genericFetch<T>("POST", url, body);
+export const httpGet = <T>(url: string) => genericFetch<T>("GET", url);

@@ -1,5 +1,5 @@
 import {BASE_URL} from "./constants";
-import {httpPost} from "./helper-functions";
+import {httpGet, httpPost} from "./helper-functions";
 import {User} from "./types/user";
 import TokenResponse from "./types/token-response";
 
@@ -12,3 +12,5 @@ export const login = async (user: User) => {
 
 	return token;
 }
+
+export const isAdministrator = () => httpGet<boolean>(`${ACCOUNT_URL}/isAdministrator`);
