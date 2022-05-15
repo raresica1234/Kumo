@@ -1,6 +1,6 @@
 ﻿namespace Backend.Models
 {
-	public class Role
+	public static class AspRole
 	{
 		public const string Administrator = "Administrator";
 	}

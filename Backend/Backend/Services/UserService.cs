@@ -106,7 +106,7 @@ namespace Backend.Services
 
 			var roles = await _userManager.GetRolesAsync(user);
 
-			return roles.Contains(Role.Administrator);
+			return roles.Contains(AspRole.Administrator);
 		}
 	}
 }

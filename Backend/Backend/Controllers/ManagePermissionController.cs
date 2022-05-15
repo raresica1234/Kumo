@@ -9,7 +9,7 @@ namespace Backend.Controllers
 	public class ManagePermissionController : ControllerBase
 	{
 		[HttpGet("one")]
-		[Authorize(Roles = Role.Administrator)]
+		[Authorize(Roles = AspRole.Administrator)]
 		public IActionResult TestOne()
 		{
 			return Ok("Hello world!");

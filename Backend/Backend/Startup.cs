@@ -113,7 +113,7 @@ namespace Backend
 			var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 			var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
-			string[] roleNames = {Role.Administrator};
+			string[] roleNames = {AspRole.Administrator};
 			IdentityResult result;
 
 			foreach (var roleName in roleNames)
