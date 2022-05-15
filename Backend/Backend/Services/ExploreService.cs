@@ -37,6 +37,7 @@ namespace Backend.Services
 			{
 				results.Add(new ExploreResultDto(
 					Path.GetFileName(directory),
+					Path.GetFullPath(directory),
 					FileSystemEntryType.Directory,
 					true,
 					true
@@ -49,6 +50,7 @@ namespace Backend.Services
 			{
 				results.Add(new ExploreResultDto(
 					Path.GetFileName(file),
+					Path.GetFullPath(file),
 					FileSystemEntryType.File,
 					true,
 					true
@@ -77,6 +79,7 @@ namespace Backend.Services
 			{
 				results.Add(new ExploreResultDto(
 					pathPoint.Path,
+					Path.GetFullPath(pathPoint.Path),
 					FileSystemEntryType.Directory,
 					true,
 					true
