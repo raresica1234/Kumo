@@ -8,6 +8,8 @@ namespace Backend.Models
 	{
 		[Key] public Guid Id { get; set; }
 
+		public string Name { get; set; }
+		
 		public ICollection<PathPoint> PathPoints { get; set; }
 		public List<Permission> Permissions { get; set; }
 		public ICollection<User> Users { get; set; }
