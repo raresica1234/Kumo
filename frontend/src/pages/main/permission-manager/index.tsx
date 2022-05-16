@@ -5,7 +5,7 @@ import PathPointManager from "../../../components/permission-manager/path-point-
 import {useState} from "react";
 
 const PermissionManager = () => {
-	const [expanded, setExpanded] = useState('panel1');
+	const [expanded, setExpanded] = useState('');
 
 	const handleChange = (newExpanded: boolean, panel: string) => {
 		setExpanded(newExpanded ? panel : "");
@@ -31,7 +31,6 @@ const PermissionManager = () => {
 						<Typography>Manage Roles</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<PathPointManager/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>
@@ -42,7 +41,6 @@ const PermissionManager = () => {
 						<Typography>Manage Permissions</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<PathPointManager/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>
@@ -53,7 +51,6 @@ const PermissionManager = () => {
 						<Typography>Manage Users</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<PathPointManager/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>
