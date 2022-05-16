@@ -1,4 +1,4 @@
-import {AppBar, Button, Toolbar, Typography} from "@mui/material";
+import {AppBar, Button, Grid, Toolbar, Typography} from "@mui/material";
 import CloudIcon from '@mui/icons-material/Cloud';
 import LogoutIcon from '@mui/icons-material/Logout';
 import styles from './top-bar.module.scss'
@@ -15,14 +15,25 @@ const TopBar = () => {
 	const handlePermissionManagerClick = () => {
 		navigate("/permissions");
 	}
+	const handleHomeClick = () => {
+		navigate("/");
+	}
 
 	return <AppBar position="sticky">
 		<Toolbar>
-			<CloudIcon/>
-			<Typography className={styles.typography}>
-				Kumo
-			</Typography>
-
+			<Grid container spacing={2} className={styles.logoAndLinksContainer}>
+				<Grid item className={styles.marginZero}>
+					<CloudIcon/>
+				</Grid>
+				<Grid item>
+					<Typography>
+						Kumo
+					</Typography>
+				</Grid>
+				<Grid item component={Button} onClick={() => handleHomeClick()}>
+					Home
+				</Grid>
+			</Grid>
 			{isUserAdmin ? (
 				<Button onClick={() => handlePermissionManagerClick()}>
 					Permission Manager
