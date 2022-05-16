@@ -44,7 +44,10 @@ namespace Backend.Controllers
 		{
 			var created = await _service.CreatePathPoint(pathPointDto);
 
-			return Ok(created);
+			if (created != null)
+				return Ok(created);
+			
+			return Conflict("Item already exists");
 		}
 
 		[HttpPut]
@@ -52,6 +55,8 @@ namespace Backend.Controllers
 		{
 			var updated = await _service.UpdatePathPoint(pathPointDto);
 
+			// TODO: Decide if I want to check for identical paths in update
+			
 			if (updated)
 				return Ok();
 

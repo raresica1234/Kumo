@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Backend.Context;
 using Backend.Dtos.PathPoint;
@@ -66,7 +67,12 @@ namespace Backend.Services
 
 		public async Task<PathPointDto> CreatePathPoint(PathPointCreateDto pathPointCreateDto)
 		{
-			var pathPoint = new PathPoint
+			var pathPoint = await _dataContext.PathPoints.FirstAsync(pathPoint => pathPoint.Path == pathPointCreateDto.Path);
+
+			if (pathPoint != null)
+				return null;
+			
+			pathPoint = new PathPoint
 			{
 				Id = Guid.NewGuid(),
 				IsRoot = pathPointCreateDto.IsRoot,
