@@ -22,7 +22,7 @@ const TopBar = () => {
 	return <AppBar position="sticky">
 		<Toolbar>
 			<Grid container spacing={2} className={styles.logoAndLinksContainer}>
-				<Grid item className={styles.marginZero}>
+				<Grid item>
 					<CloudIcon/>
 				</Grid>
 				<Grid item>
