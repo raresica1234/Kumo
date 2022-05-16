@@ -1,6 +1,7 @@
 import ExplorerResponse from "../../accessors/types/explorer-response";
 import {FileSystemEntryType} from "../../accessors/types/file-system-entry-type";
 import Directory from "./directory";
+import File from "./file";
 
 export default class FileSystemEntryFactory {
 	public static create(explorerResponse: ExplorerResponse): JSX.Element {
@@ -12,7 +13,7 @@ export default class FileSystemEntryFactory {
 			case FileSystemEntryType.Directory:
 				return <Directory explorerResponse={explorerResponse}/>
 			case FileSystemEntryType.File:
-				return <></>
+				return <File explorerResponse={explorerResponse}/>
 		}
 	}
 }
