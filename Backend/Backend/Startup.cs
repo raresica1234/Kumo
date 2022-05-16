@@ -51,6 +51,7 @@ namespace Backend
 			services.AddTransient<IExploreService, ExploreService>();
 			services.AddTransient<IPathPointService, PathPointService>();
 			services.AddTransient<IRoleService, RoleService>();
+			services.AddTransient<IPermissionService, PermissionService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
