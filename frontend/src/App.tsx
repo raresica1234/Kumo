@@ -20,9 +20,9 @@ const App = () => {
 
 	useEffect(() => {
 		init();
-	}, [init]);
+	}, [init, isUserLogged]);
 
-	if (isUserLogged === undefined) {
+	if (isUserLogged === undefined ) {
 		return null;
 	}
 

@@ -30,7 +30,7 @@ const TopBar = () => {
 						Kumo
 					</Typography>
 				</Grid>
-				<Grid item component={Button} onClick={() => handleHomeClick()}>
+				<Grid item component={Button} color="secondary" onClick={() => handleHomeClick()}>
 					Home
 				</Grid>
 			</Grid>

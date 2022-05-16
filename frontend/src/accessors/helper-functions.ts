@@ -31,3 +31,5 @@ const genericFetch = <T>(method: httpMethod, url: string, body?: any) =>
 
 export const httpPost = <T>(url: string, body?: any) => genericFetch<T>("POST", url, body);
 export const httpGet = <T>(url: string) => genericFetch<T>("GET", url);
+export const httpDelete = <T>(url: string, id: string) => genericFetch<T>("DELETE", `${url}/${id}`);
+export const httpPut = <T>(url: string, body?: any) => genericFetch<T>("PUT", url, body);

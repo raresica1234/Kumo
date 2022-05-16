@@ -52,6 +52,8 @@ namespace Backend.Services
 		{
 			var pathPoint = await _dataContext.PathPoints.FindAsync(pathPointDto.Id);
 
+			// TODO: Check if the path actually exists
+
 			if (pathPoint == null)
 				return false;
 
@@ -67,11 +69,14 @@ namespace Backend.Services
 
 		public async Task<PathPointDto> CreatePathPoint(PathPointCreateDto pathPointCreateDto)
 		{
-			var pathPoint = await _dataContext.PathPoints.FirstAsync(pathPoint => pathPoint.Path == pathPointCreateDto.Path);
+			var pathPoint =
+				await _dataContext.PathPoints.FirstAsync(pathPoint => pathPoint.Path == pathPointCreateDto.Path);
+			
+			// TODO: Check if the path actually exists
 
 			if (pathPoint != null)
 				return null;
-			
+
 			pathPoint = new PathPoint
 			{
 				Id = Guid.NewGuid(),
@@ -80,9 +85,9 @@ namespace Backend.Services
 			};
 
 			await _dataContext.PathPoints.AddAsync(pathPoint);
-			
+
 			await _dataContext.SaveChangesAsync();
-			
+
 			return new PathPointDto(pathPoint.Id, pathPoint.Path, pathPoint.IsRoot);
 		}
 	}
