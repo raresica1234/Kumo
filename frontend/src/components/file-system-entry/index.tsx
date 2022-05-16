@@ -6,7 +6,7 @@ interface Props {
 }
 
 const FileSystemEntry = ({onClick, children}: PropsWithChildren<Props>) => {
-	return <Card onClick={e => onClick?.()}>
+	return <Card elevation={12} onClick={e => onClick?.()}>
 		<CardContent sx={{justifyContent: "center"}}>
 			{children}
 		</CardContent>

@@ -5,9 +5,16 @@ import styles from './top-bar.module.scss'
 import {AuthenticateContext} from "../../infrastructure/authenticate";
 import {useContext} from "react";
 import {observer} from "mobx-react";
+import {useNavigate} from "react-router-dom";
 
 const TopBar = () => {
 	const {reset, isUserAdmin} = useContext(AuthenticateContext);
+
+	const navigate = useNavigate();
+
+	const handlePermissionManagerClick = () => {
+		navigate("/permissions");
+	}
 
 	return <AppBar position="sticky">
 		<Toolbar>
@@ -17,8 +24,8 @@ const TopBar = () => {
 			</Typography>
 
 			{isUserAdmin ? (
-				<Button>
-					Admin Page
+				<Button onClick={() => handlePermissionManagerClick()}>
+					Permission Manager
 				</Button>
 			) :(<></>)}
 
