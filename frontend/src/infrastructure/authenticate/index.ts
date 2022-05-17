@@ -39,7 +39,6 @@ class AuthenticateStore {
 			return;
 
 		isAdministrator().then(admin => {
-			console.log(admin)
 			runInAction(() => this.isUserAdmin = admin);
 		});
 	}

@@ -28,10 +28,10 @@ namespace Backend.Controllers
 		public async Task<IActionResult> IsAdministrator()
 		{
 			var result = await _userService.IsAdministrator();
-			
+
 			return Ok(result);
 		}
-		
+
 		[HttpPost("register")]
 		public async Task<IActionResult> RegisterUser(RegisterUserDto registerUserDto)
 		{

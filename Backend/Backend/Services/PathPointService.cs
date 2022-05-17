@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Context;
@@ -70,13 +71,17 @@ namespace Backend.Services
 		public async Task<PathPointDto> CreatePathPoint(PathPointCreateDto pathPointCreateDto)
 		{
 			var pathPoint =
-				await _dataContext.PathPoints.FirstAsync(pathPoint => pathPoint.Path == pathPointCreateDto.Path);
+				await _dataContext.PathPoints.FirstOrDefaultAsync(pathPoint => pathPoint.Path == pathPointCreateDto.Path);
 			
 			// TODO: Check if the path actually exists
-
+			
 			if (pathPoint != null)
 				return null;
 
+			if (!Directory.Exists(pathPointCreateDto.Path))
+				throw new ArgumentException("Invalid path");
+
+			
 			pathPoint = new PathPoint
 			{
 				Id = Guid.NewGuid(),

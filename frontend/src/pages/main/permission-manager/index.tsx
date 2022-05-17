@@ -5,14 +5,14 @@ import PathPointManager from "../../../components/permission-manager/path-point-
 import {useState} from "react";
 
 const PermissionManager = () => {
-	const [expanded, setExpanded] = useState('');
+	const [expanded, setExpanded] = useState('panel1');
 
 	const handleChange = (newExpanded: boolean, panel: string) => {
 		setExpanded(newExpanded ? panel : "");
 	};
 
 	return <MainPageContainer>
-		<Grid container direction="column" padding={2} >
+		<Grid container direction="column" padding={2} spacing={1}>
 			<Grid item>
 				<Accordion expanded={expanded === 'panel1'}
 						   onChange={(event, expanded) => handleChange(expanded, 'panel1')}>

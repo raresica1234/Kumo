@@ -1,5 +1,7 @@
 import {BASE_URL} from "./constants";
 import {httpDelete, httpGet, httpPost, httpPut} from "./helper-functions";
+import PathPoint from "./types/path-point";
+import PathPointCreate from "./types/path-point-create";
 
 const PATH_POINT_URL = `${BASE_URL}/PathPoint`
 
