@@ -3,9 +3,10 @@ import MainPageContainer from "../../../components/main-page/main-page-container
 import {Accordion, AccordionDetails, AccordionSummary, Grid, Typography} from "@mui/material";
 import PathPointManager from "../../../components/permission-manager/path-point-manager";
 import {useState} from "react";
+import RoleManager from "../../../components/permission-manager/role-manager";
 
 const PermissionManager = () => {
-	const [expanded, setExpanded] = useState('panel1');
+	const [expanded, setExpanded] = useState('panel2');
 
 	const handleChange = (newExpanded: boolean, panel: string) => {
 		setExpanded(newExpanded ? panel : "");
@@ -31,6 +32,7 @@ const PermissionManager = () => {
 						<Typography>Manage Roles</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
+						<RoleManager/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>

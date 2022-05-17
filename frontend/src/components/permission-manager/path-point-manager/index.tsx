@@ -49,9 +49,7 @@ const PathPointManager = () => {
 	}
 
 	const handlePathChange = (pathPoint: string) => {
-		debounce(() => {
-			setPathPoint(pathPoint)
-		}, 100);
+		setPathPoint(pathPoint)
 	}
 
 	return <Grid container direction={"column"} spacing={4}>

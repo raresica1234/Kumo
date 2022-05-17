@@ -5,8 +5,9 @@ import {
 	updatePathPoint
 } from "../../../accessors/path-point-accessor";
 import {makeAutoObservable, runInAction, toJS} from "mobx";
-import {createContext, useState} from "react";
-import PathPointModel from "../../../models/PathPointModel";
+import {createContext} from "react";
+import PathPointModel from "../../../models/path-point-model";
+import {debounce} from "@mui/material";
 
 class PathPointManagerStore {
 	public pathPoints: PathPointModel[] = [];
@@ -29,11 +30,9 @@ class PathPointManagerStore {
 		})
 	}
 
-	public setPathPoint = (path: string) => {
-		runInAction(() => {
-			this.pathPoint = path;
-		})
-	}
+	public setPathPoint = debounce((path: string) => {
+		this.pathPoint = path;
+	}, 400)
 
 	public fetchPathPoints = async () => {
 		const pathPoints = await getAllPathPoints();

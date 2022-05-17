@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Backend.Context;
 using Backend.Dtos.Role;
@@ -16,12 +17,12 @@ namespace Backend.Services
 		{
 			_dataContext = dataContext;
 		}
-		
-		
+
+
 		public async Task<List<RoleDto>> GetRoles()
 		{
 			var results = new List<RoleDto>();
-			
+
 			await _dataContext.KumoRoles.ForEachAsync(role =>
 			{
 				results.Add(new RoleDto(
@@ -65,11 +66,15 @@ namespace Backend.Services
 
 		public async Task<RoleDto> CreateRole(RoleCreateDto roleCreateDto)
 		{
-			var kumoRole = await _dataContext.KumoRoles.FirstAsync(kumoRole => kumoRole.Name == roleCreateDto.Name);
+			var kumoRole =
+				await _dataContext.KumoRoles.FirstOrDefaultAsync(kumoRole => kumoRole.Name == roleCreateDto.Name);
 
 			if (kumoRole != null)
 				return null;
-			
+
+			if (roleCreateDto.Name.Length < 3)
+				throw new ArgumentException("Name is too short.");
+
 			kumoRole = new KumoRole()
 			{
 				Id = Guid.NewGuid(),
@@ -77,9 +82,9 @@ namespace Backend.Services
 			};
 
 			await _dataContext.KumoRoles.AddAsync(kumoRole);
-			
+
 			await _dataContext.SaveChangesAsync();
-			
+
 			return new RoleDto(kumoRole.Id, kumoRole.Name);
 		}
 	}
