@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Dtos.PathPoint;
+using Backend.Dtos.Permission;
 using Backend.Dtos.Role;
 
 namespace Backend.Services

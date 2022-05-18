@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Backend.Dtos.Permission;
 using Backend.Dtos.Role;
 using Backend.Models;
 using Backend.Services;

@@ -4,9 +4,10 @@ import {Accordion, AccordionDetails, AccordionSummary, Grid, Typography} from "@
 import PathPointManager from "../../../components/permission-manager/path-point-manager";
 import {useState} from "react";
 import RoleManager from "../../../components/permission-manager/role-manager";
+import PermissionAccessManager from "../../../components/permission-manager/permission-access-manager";
 
 const PermissionManager = () => {
-	const [expanded, setExpanded] = useState('panel2');
+	const [expanded, setExpanded] = useState('panel3');
 
 	const handleChange = (newExpanded: boolean, panel: string) => {
 		setExpanded(newExpanded ? panel : "");
@@ -43,6 +44,7 @@ const PermissionManager = () => {
 						<Typography>Manage Permissions</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
+						<PermissionAccessManager/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Backend.Models;
 
-namespace Backend.Dtos.Role
+namespace Backend.Dtos.Permission
 {
 	public class PermissionDto
 	{
@@ -13,6 +13,10 @@ namespace Backend.Dtos.Role
 		public bool Delete { get; set; }
 		public bool ModifyRoot { get; set; }
 
+		public PermissionDto()
+		{
+		}
+
 		public PermissionDto(Guid roleId, Guid pathPointId, bool read, bool write, bool delete, bool modifyRoot)
 		{
 			RoleId = roleId;
@@ -23,7 +27,7 @@ namespace Backend.Dtos.Role
 			ModifyRoot = modifyRoot;
 		}
 
-		public PermissionDto(Permission permission)
+		public PermissionDto(Models.Permission permission)
 		{
 			RoleId = permission.RoleId;
 			PathPointId = permission.PathPointId;

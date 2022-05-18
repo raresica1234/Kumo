@@ -27,6 +27,7 @@ namespace Backend.Services
 			if (!isAdministrator)
 			{
 				// TODO: Actually check for permission
+				return null;
 			}
 
 			List<ExploreResultDto> results = new List<ExploreResultDto>();
@@ -67,6 +68,7 @@ namespace Backend.Services
 			if (!isAdministrator)
 			{
 				// TODO: Actually check for permission
+				return null;
 			}
 
 			List<ExploreResultDto> results = new List<ExploreResultDto>();

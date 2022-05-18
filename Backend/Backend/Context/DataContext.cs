@@ -53,7 +53,7 @@ namespace Backend.Context
 
 					permission =>
 					{
-						permission.HasKey(t => new {t.PathPointId, t.RoleId});
+						permission.HasKey(t => new {t.RoleId, t.PathPointId});
 					}
 				);
 				

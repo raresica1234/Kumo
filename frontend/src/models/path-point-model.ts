@@ -1,6 +1,6 @@
 import PathPoint from "../accessors/types/path-point";
+import EditableModel from "./editable-model";
 
-export default interface PathPointModel extends PathPoint {
-	dirty: boolean;
-	deleted: boolean;
+// TODO: Remove this
+export default interface PathPointModel extends PathPoint, EditableModel {
 }

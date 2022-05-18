@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Context;
+using Backend.Dtos.Permission;
 using Backend.Dtos.Role;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +68,7 @@ namespace Backend.Services
 
 		public async Task<PermissionDto> CreatePermission(PermissionDto permissionCreateDto)
 		{
-			var permission = await _dataContext.Permissions.FirstAsync(permission =>
+			var permission = await _dataContext.Permissions.FirstOrDefaultAsync(permission =>
 				permission.RoleId == permissionCreateDto.RoleId &&
 				permission.PathPointId == permissionCreateDto.PathPointId);
 
