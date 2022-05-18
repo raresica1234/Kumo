@@ -5,17 +5,19 @@ import {
 	Box,
 	Button,
 	ButtonGroup,
-	Checkbox, FormControl,
-	FormControlLabel,
+	FormControl,
 	Grid,
-	IconButton, InputLabel, MenuItem, Select,
-	TextField,
+	IconButton,
+	InputLabel,
+	MenuItem,
+	Select,
 	Typography
 } from "@mui/material";
-import {DataGrid, GridValueSetterParams} from "@mui/x-data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {toJS} from "mobx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
+
 
 const UserRoleManager = () => {
 	const {
@@ -40,10 +42,10 @@ const UserRoleManager = () => {
 
 	useEffect(init, [init]);
 
-	if(roles.length === 0)
+	if (roles.length === 0)
 		return <>Add a role to continue</>
 
-	return  <Grid container direction={"column"} spacing={4}>
+	return <Grid container direction={"column"} spacing={4}>
 		<Grid item>
 			<DataGrid style={{height: "350px"}}
 					  rows={toJS(userRolesToDisplay)}

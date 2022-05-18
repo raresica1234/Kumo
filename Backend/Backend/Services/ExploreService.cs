@@ -63,19 +63,9 @@ namespace Backend.Services
 
 		public async Task<List<ExploreResultDto>> GetRootPathPoints()
 		{
-			var isAdministrator = await _userService.IsAdministrator();
-
-			if (!isAdministrator)
-			{
-				// TODO: Actually check for permission
-				return null;
-			}
+			var pathPoints = await GetAccessibleRootPathPoints();
 
 			List<ExploreResultDto> results = new List<ExploreResultDto>();
-
-			var pathPoints = await _dataContext.PathPoints.Where(pathPoint => pathPoint.IsRoot).ToListAsync();
-
-			// TODO: Actually check for permissions
 
 			foreach (var pathPoint in pathPoints)
 			{
@@ -89,6 +79,40 @@ namespace Backend.Services
 			}
 
 			return results;
+		}
+
+		private async Task<List<PathPoint>> GetAccessibleRootPathPoints()
+		{
+			var isAdministrator = await _userService.IsAdministrator();
+
+			if (!isAdministrator)
+			{
+				var user = await _dataContext.Users.Include(user => user.Roles)
+					.ThenInclude(role => role.Permissions)
+					.ThenInclude(permission => permission.PathPoint)
+					.FirstOrDefaultAsync(user => user.Id == _userService.GetCurrentUserId());
+
+				if (user == null)
+					return null;
+
+
+				var pathPoints = new List<PathPoint>();
+
+				foreach (var role in user.Roles)
+				{
+					role.Permissions.ForEach(permission =>
+					{
+						if (permission.Read && permission.PathPoint.IsRoot)
+							pathPoints.Add(permission.PathPoint);
+					});
+				}
+
+
+				return pathPoints.Distinct().ToList();
+			}
+
+
+			return await _dataContext.PathPoints.Where(pathPoint => pathPoint.IsRoot).ToListAsync();
 		}
 	}
 }

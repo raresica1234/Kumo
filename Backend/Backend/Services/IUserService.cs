@@ -9,6 +9,9 @@ namespace Backend.Services
 {
 	public interface IUserService
 	{
+
+		public string GetCurrentUserId();
+		
 		public Task RegisterAsync(RegisterUserDto registerUserDto);
 
 		public Task<string?> LoginUser(LoginUserDto loginUserDto);

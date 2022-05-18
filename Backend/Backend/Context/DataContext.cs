@@ -17,20 +17,20 @@ namespace Backend.Context
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			builder.Entity<KumoRole>()
-				.HasMany(role => role.Users)
-				.WithMany(user => user.Roles)
+			builder.Entity<User>()
+				.HasMany(user => user.Roles)
+				.WithMany(role => role.Users)
 				.UsingEntity<UserRole>(
+					userRole => userRole
+						.HasOne(userRole => userRole.KumoRole)
+						.WithMany(role => role.UserRoles)
+						.HasForeignKey(userRole => userRole.RoleId),
+					
 					userRole => userRole
 						.HasOne(userRole => userRole.User)
 						.WithMany(user => user.UserRoles)
 						.HasForeignKey(userRole => userRole.UserId),
 					
-					userRole => userRole
-						.HasOne(userRole => userRole.KumoRole)
-						.WithMany(role => role.UserRoles)
-						.HasForeignKey(userRole => userRole.RoleId),
-
 					userRole =>
 					{
 						userRole.HasKey(t => new {t.UserId, t.RoleId});
