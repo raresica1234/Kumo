@@ -33,7 +33,7 @@ namespace Backend.Context
 
 					userRole =>
 					{
-						userRole.HasKey(t => new {t.RoleId, t.UserId});
+						userRole.HasKey(t => new {t.UserId, t.RoleId});
 					}
 				);
 

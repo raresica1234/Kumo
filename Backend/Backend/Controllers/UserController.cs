@@ -24,6 +24,15 @@ namespace Backend.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllUsers()
 		{
+			var results = await _service.GetUsers();
+			
+			return Ok(results);
+		}
+		
+		[Authorize(Roles = AspRole.Administrator)]
+		[HttpGet("userRoles")]
+		public async Task<IActionResult> GetAllUsersRules()
+		{
 			var results = await _service.GetUserRoles();
 			
 			return Ok(results);

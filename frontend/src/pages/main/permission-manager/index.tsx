@@ -5,9 +5,10 @@ import PathPointManager from "../../../components/permission-manager/path-point-
 import {useState} from "react";
 import RoleManager from "../../../components/permission-manager/role-manager";
 import PermissionAccessManager from "../../../components/permission-manager/permission-access-manager";
+import UserRoleManager from "../../../components/permission-manager/user-role-manager";
 
 const PermissionManager = () => {
-	const [expanded, setExpanded] = useState('panel3');
+	const [expanded, setExpanded] = useState('panel4');
 
 	const handleChange = (newExpanded: boolean, panel: string) => {
 		setExpanded(newExpanded ? panel : "");
@@ -55,6 +56,7 @@ const PermissionManager = () => {
 						<Typography>Manage Users</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
+						<UserRoleManager/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>

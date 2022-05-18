@@ -1,11 +1,11 @@
 import {makeAutoObservable} from "mobx";
 import {createContext} from "react";
-import {User} from "../../../accessors/types/user";
+import {LoginUser} from "../../../accessors/types/login-user";
 import {login} from "../../../accessors/account-accessor";
 import {authenticateStore} from "../../../infrastructure/authenticate";
 
 export class LoginStore {
-	public user: User = {
+	public user: LoginUser = {
 		email: "",
 		password: "",
 	};

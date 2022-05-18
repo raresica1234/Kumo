@@ -1,5 +1,5 @@
-import {User} from "./user";
+import {LoginUser} from "./login-user";
 
-export interface RegisterUser extends User {
+export interface RegisterUser extends LoginUser {
 	confirmPassword: string
 }

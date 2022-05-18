@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -9,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Backend.Context;
 using Backend.Dtos.Authentication;
+using Backend.Dtos.User;
 using Backend.Dtos.UserRole;
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -115,6 +116,18 @@ namespace Backend.Services
 			var roles = await _userManager.GetRolesAsync(user);
 
 			return roles.Contains(AspRole.Administrator);
+		}
+
+		public async Task<List<UserDto>> GetUsers()
+		{
+			var results = new List<UserDto>();
+
+			await _dataContext.Users.ForEachAsync(user =>
+			{
+				results.Add(new UserDto(user));
+			});
+
+			return results;
 		}
 
 		public async Task<bool> DeleteUserRole(string userId, Guid roleId)

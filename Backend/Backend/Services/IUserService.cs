@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Dtos.Authentication;
+using Backend.Dtos.User;
 using Backend.Dtos.UserRole;
 
 namespace Backend.Services
@@ -14,6 +15,8 @@ namespace Backend.Services
 		
 		public Task<bool> IsAdministrator();
 
+		public Task<List<UserDto>> GetUsers();
+		
 		public Task<List<UserRoleDto>> GetUserRoles();
 		public Task<bool> DeleteUserRole(string userId, Guid roleId);
 		public Task<UserRoleDto> CreateUserRole(UserRoleDto userRoleDto);
