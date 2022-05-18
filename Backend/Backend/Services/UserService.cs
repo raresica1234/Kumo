@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Backend.Context;
 using Backend.Dtos.Authentication;
+using Backend.Dtos.UserRole;
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,15 +20,20 @@ namespace Backend.Services
 {
 	public class UserService : IUserService
 	{
+		private readonly DataContext _dataContext;
 		private readonly UserManager<User> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IConfiguration _configuration;
 
 		private readonly IHttpContextAccessor _httpAccessor;
 
-		public UserService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
-			IConfiguration configuration, IHttpContextAccessor httpAccessor)
+		public UserService(DataContext dataContext, 
+			UserManager<User> userManager,
+			RoleManager<IdentityRole> roleManager,
+			IConfiguration configuration, 
+			IHttpContextAccessor httpAccessor)
 		{
+			_dataContext = dataContext;
 			_userManager = userManager;
 			_roleManager = roleManager;
 			_configuration = configuration;
@@ -107,6 +115,51 @@ namespace Backend.Services
 			var roles = await _userManager.GetRolesAsync(user);
 
 			return roles.Contains(AspRole.Administrator);
+		}
+
+		public async Task<bool> DeleteUserRole(string userId, Guid roleId)
+		{
+			var userRole = await _dataContext.KumoUserRoles.FindAsync(userId, roleId);
+
+			if (userRole == null)
+				return false;
+
+			_dataContext.KumoUserRoles.Remove(userRole);
+			
+			await _dataContext.SaveChangesAsync();
+
+			return true;
+		}
+
+		public async Task<UserRoleDto> CreateUserRole(UserRoleDto userRoleDto)
+		{
+			var userRole = await _dataContext.KumoUserRoles.FindAsync(userRoleDto.UserId, userRoleDto.RoleId);
+
+			if (userRole != null)
+				return null;
+
+			userRole = new UserRole
+			{
+				UserId = userRoleDto.UserId,
+				RoleId = userRoleDto.RoleId
+			};
+
+			await _dataContext.KumoUserRoles.AddAsync(userRole);
+			await _dataContext.SaveChangesAsync();
+			
+			return userRoleDto;
+		}
+
+		public async Task<List<UserRoleDto>> GetUserRoles()
+		{
+			var results = new List<UserRoleDto>();
+
+			await _dataContext.KumoUserRoles.ForEachAsync(userRole =>
+			{
+				results.Add(new UserRoleDto(userRole));
+			});
+
+			return results;
 		}
 	}
 }
