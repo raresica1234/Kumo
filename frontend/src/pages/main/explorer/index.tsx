@@ -3,7 +3,6 @@ import {PropsWithChildren, useContext, useEffect} from "react";
 import {observer} from "mobx-react";
 import FileSystemEntryFactory from "../../../components/file-system-entry/file-system-entry-factory";
 import {Grid} from "@mui/material";
-import styles from './explorer.module.scss'
 
 interface Props {
 	path?: string;
@@ -15,6 +14,9 @@ const Explorer = ({path}: PropsWithChildren<Props>) => {
 	useEffect(() => {
 		init(path);
 	}, [init, path]);
+
+	if (fileSystemEntries === undefined || !fileSystemEntries.length)
+		return null;
 
 	const cards: JSX.Element[] = [];
 	fileSystemEntries.forEach(entry => cards.push(

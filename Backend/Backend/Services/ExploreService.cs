@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Backend.Context;
 using Backend.Dtos.Explorer;
+using Backend.Dtos.Role;
 using Backend.Models;
 
 namespace Backend.Services
@@ -26,39 +28,84 @@ namespace Backend.Services
 
 			if (!isAdministrator)
 			{
-				// TODO: Actually check for permission
-				return null;
+				var relevantPermissions = await GetRelevantPathPoints(path);
+
+				if (!Directory.Exists(path))
+					return null;
+
+				if (!IsReadable(relevantPermissions, path))
+					return null;
+
+				var folders = Directory.GetDirectories(path);
+
+				var results = new List<ExploreResultDto>();
+
+				foreach (var folder in folders)
+				{
+					var currentFolderPerms = relevantPermissions.Where(permission =>
+						Path.GetFullPath(permission.PathPoint.Path) == Path.GetFullPath(folder));
+
+					
+					var exploreResultDto = new ExploreResultDto(Path.GetFileName(folder), Path.GetFullPath(folder),
+						FileSystemEntryType.Directory);
+
+					var folderPerms = currentFolderPerms as Permission[] ?? currentFolderPerms.ToArray();
+					if (folderPerms.Length > 0)
+					{
+						var read = folderPerms.Aggregate(false, (prev, next) => prev || next.Read);
+						if (!read)
+							continue;
+
+						var write = folderPerms.Aggregate(false, (prev, next) => prev || next.Write);
+						var delete = folderPerms.Aggregate(false, (prev, next) => prev || next.Delete);
+						var modifyRoot = folderPerms.Aggregate(false, (prev, next) => prev || next.ModifyRoot);
+
+						exploreResultDto.CanWrite = write;
+						exploreResultDto.CanDelete = delete;
+						exploreResultDto.CanModifyRoot = modifyRoot;
+					}
+					
+					exploreResultDto.CanWrite = true;
+
+					results.Add(exploreResultDto);
+				}
+
+				return results;
 			}
-
-			List<ExploreResultDto> results = new List<ExploreResultDto>();
-
-			string[] directories = Directory.GetDirectories(path);
-
-			foreach (var directory in directories)
+			else
 			{
-				results.Add(new ExploreResultDto(
-					Path.GetFileName(directory),
-					Path.GetFullPath(directory),
-					FileSystemEntryType.Directory,
-					true,
-					true
-				));
+				List<ExploreResultDto> results = new List<ExploreResultDto>();
+
+				string[] directories = Directory.GetDirectories(path);
+
+				foreach (var directory in directories)
+				{
+					results.Add(new ExploreResultDto(
+						Path.GetFileName(directory),
+						Path.GetFullPath(directory),
+						FileSystemEntryType.Directory,
+						true,
+						true,
+						true
+					));
+				}
+
+				string[] files = Directory.GetFiles(path);
+
+				foreach (var file in files)
+				{
+					results.Add(new ExploreResultDto(
+						Path.GetFileName(file),
+						Path.GetFullPath(file),
+						FileSystemEntryType.File,
+						true,
+						true,
+						true
+					));
+				}
+
+				return results;
 			}
-
-			string[] files = Directory.GetFiles(path);
-
-			foreach (var file in files)
-			{
-				results.Add(new ExploreResultDto(
-					Path.GetFileName(file),
-					Path.GetFullPath(file),
-					FileSystemEntryType.File,
-					true,
-					true
-				));
-			}
-
-			return results;
 		}
 
 		public async Task<List<ExploreResultDto>> GetRootPathPoints()
@@ -73,6 +120,7 @@ namespace Backend.Services
 					pathPoint.Path,
 					Path.GetFullPath(pathPoint.Path),
 					FileSystemEntryType.Directory,
+					true,
 					true,
 					true
 				));
@@ -95,7 +143,6 @@ namespace Backend.Services
 				if (user == null)
 					return null;
 
-
 				var pathPoints = new List<PathPoint>();
 
 				foreach (var role in user.Roles)
@@ -113,6 +160,38 @@ namespace Backend.Services
 
 
 			return await _dataContext.PathPoints.Where(pathPoint => pathPoint.IsRoot).ToListAsync();
+		}
+
+		private async Task<List<Permission>> GetRelevantPathPoints(string path)
+		{
+			var user = await _dataContext.Users.Include(user => user.Roles)
+				.ThenInclude(role => role.Permissions)
+				.ThenInclude(permission => permission.PathPoint)
+				.FirstOrDefaultAsync(user => user.Id == _userService.GetCurrentUserId());
+
+			var nonTrashPath = Path.GetFullPath(path);
+
+			return (from role in user.Roles
+				from permission in role.Permissions
+				where Path.GetFullPath(permission.PathPoint.Path).StartsWith(nonTrashPath) ||
+				      nonTrashPath.StartsWith(Path.GetFullPath(permission.PathPoint.Path))
+				select permission).ToList();
+		}
+
+		private bool IsReadable(List<Permission> relevantPermissions, string path)
+		{
+			var currentDirectory = Path.GetFullPath(path);
+			do
+			{
+				var permissions = relevantPermissions
+					.Where(permission => Path.GetFullPath(permission.PathPoint.Path) == Path.GetFullPath(currentDirectory))
+					.ToList();
+
+				if (permissions.Count > 0)
+					return permissions.Aggregate(false, (b, permission) => b || permission.Read);
+			} while ((currentDirectory = new DirectoryInfo(currentDirectory).Parent?.FullName) != null);
+
+			return false;
 		}
 	}
 }

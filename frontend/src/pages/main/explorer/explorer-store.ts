@@ -5,7 +5,7 @@ import ExplorerResponse from "../../../accessors/types/explorer-response";
 
 export class ExplorerStore {
 	public currentPath?: string = undefined;
-	public fileSystemEntries: ExplorerResponse[] = [];
+	public fileSystemEntries?: ExplorerResponse[] = [];
 
 	constructor() {
 		makeAutoObservable(this)
@@ -22,6 +22,10 @@ export class ExplorerStore {
 	private exploreLocation = () => {
 		exploreLocation(this.currentPath!).then(rootPaths => {
 			runInAction(() => this.fileSystemEntries = rootPaths);
+		}).catch(() => {
+			runInAction(() => {
+				this.fileSystemEntries = undefined;
+			})
 		})
 	}
 

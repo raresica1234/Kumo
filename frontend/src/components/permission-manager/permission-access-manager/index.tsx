@@ -69,7 +69,6 @@ const PermissionAccessManager = () => {
 							  headerName: "Role",
 							  width: 300,
 							  editable: false,
-							  // valueSetter: (params: GridValueSetterParams) => handleValueSetter(params, "path")
 						  },
 						  {
 							  field: 'pathPoint',
@@ -77,7 +76,6 @@ const PermissionAccessManager = () => {
 							  width: 400,
 							  // type: "boolean",
 							  editable: false,
-							  // valueSetter: (params: GridValueSetterParams) => handleValueSetter(params, "isRoot")
 						  },
 						  {
 							  field: "modifyRoot",
