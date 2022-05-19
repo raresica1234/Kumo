@@ -20,7 +20,7 @@ const Explorer = ({path}: PropsWithChildren<Props>) => {
 
 	const cards: JSX.Element[] = [];
 	fileSystemEntries.forEach(entry => cards.push(
-		<Grid key={entry.name} item xs={2}>
+		<Grid key={entry.name} item xs={4} md={3} lg={2}>
 			{FileSystemEntryFactory.create(entry)}
 		</Grid>
 	));

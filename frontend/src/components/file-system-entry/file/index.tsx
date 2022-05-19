@@ -9,9 +9,8 @@ interface Props {
 }
 
 const File = ({explorerResponse}: PropsWithChildren<Props>) => {
-	return <FileSystemEntry>
-		<InsertDriveFileIcon sx={{fontSize: 100}}/>
-		<Typography>
+	return <FileSystemEntry icon={<InsertDriveFileIcon sx={{fontSize: 100}}/>}>
+		<Typography noWrap>
 			{explorerResponse.name}
 		</Typography>
 	</FileSystemEntry>

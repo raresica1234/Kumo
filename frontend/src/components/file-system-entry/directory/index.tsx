@@ -17,9 +17,8 @@ const Directory = ({explorerResponse}: PropsWithChildren<Props>) => {
 		navigate(`/explore?path=${explorerResponse.absolutePath}`)
 	}
 
-	return <FileSystemEntry onClick={handleClick}>
-		<FolderIcon sx={{fontSize:100 }}/>
-		<Typography>
+	return <FileSystemEntry onClick={handleClick} icon={<FolderIcon sx={{fontSize:100 }}/>}>
+		<Typography noWrap>
 			{explorerResponse.name}
 		</Typography>
 	</FileSystemEntry>

@@ -33,7 +33,9 @@ namespace Backend.Services
 				if (!Directory.Exists(path))
 					return null;
 
-				if (!IsReadable(relevantPermissions, path))
+				var effectivePermission = GetEffectivePermission(relevantPermissions, path);
+
+				if (!effectivePermission.Read)
 					return null;
 
 				var folders = Directory.GetDirectories(path);
@@ -45,9 +47,10 @@ namespace Backend.Services
 					var currentFolderPerms = relevantPermissions.Where(permission =>
 						Path.GetFullPath(permission.PathPoint.Path) == Path.GetFullPath(folder));
 
-					
+
 					var exploreResultDto = new ExploreResultDto(Path.GetFileName(folder), Path.GetFullPath(folder),
-						FileSystemEntryType.Directory);
+						FileSystemEntryType.Directory, effectivePermission.Write, effectivePermission.Delete,
+						effectivePermission.ModifyRoot);
 
 					var folderPerms = currentFolderPerms as Permission[] ?? currentFolderPerms.ToArray();
 					if (folderPerms.Length > 0)
@@ -64,10 +67,15 @@ namespace Backend.Services
 						exploreResultDto.CanDelete = delete;
 						exploreResultDto.CanModifyRoot = modifyRoot;
 					}
-					
-					exploreResultDto.CanWrite = true;
 
 					results.Add(exploreResultDto);
+				}
+
+				foreach (var file in Directory.GetFiles(path))
+				{
+					results.Add(new ExploreResultDto(Path.GetFileName(file), Path.GetFullPath(file),
+						FileSystemEntryType.File, effectivePermission.Write, effectivePermission.Delete,
+						effectivePermission.ModifyRoot));
 				}
 
 				return results;
@@ -178,20 +186,33 @@ namespace Backend.Services
 				select permission).ToList();
 		}
 
-		private bool IsReadable(List<Permission> relevantPermissions, string path)
+		private Permission GetEffectivePermission(List<Permission> relevantPermissions, string path)
 		{
 			var currentDirectory = Path.GetFullPath(path);
 			do
 			{
 				var permissions = relevantPermissions
-					.Where(permission => Path.GetFullPath(permission.PathPoint.Path) == Path.GetFullPath(currentDirectory))
+					.Where(permission =>
+						Path.GetFullPath(permission.PathPoint.Path) == Path.GetFullPath(currentDirectory))
 					.ToList();
 
 				if (permissions.Count > 0)
-					return permissions.Aggregate(false, (b, permission) => b || permission.Read);
+					return new Permission
+					{
+						Read = permissions.Aggregate(false, (b, permission) => b || permission.Read),
+						Write = permissions.Aggregate(false, (b, permission) => b || permission.Write),
+						Delete = permissions.Aggregate(false, (b, permission) => b || permission.Delete),
+						ModifyRoot = permissions.Aggregate(false, (b, permission) => b || permission.ModifyRoot)
+					};
 			} while ((currentDirectory = new DirectoryInfo(currentDirectory).Parent?.FullName) != null);
 
-			return false;
+			return new Permission
+			{
+				Read = false,
+				Write = false,
+				Delete = false,
+				ModifyRoot = false
+			};
 		}
 	}
 }
