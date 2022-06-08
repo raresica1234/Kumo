@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Backend.Dtos.Permission;
 using Backend.Dtos.Role;
+using Backend.Exceptions;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +25,8 @@ namespace Backend.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetPermissions()
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var results = await _service.GetPermissions();
 
 			return Ok(results);
@@ -32,6 +35,8 @@ namespace Backend.Controllers
 		[HttpDelete("{roleId:guid}/{pathPointId:guid}")]
 		public async Task<IActionResult> DeletePermission(Guid roleId, Guid pathPointId)
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var deleted = await _service.DeletePermission(roleId, pathPointId);
 
 			if (deleted)
@@ -43,6 +48,8 @@ namespace Backend.Controllers
 		[HttpPut]
 		public async Task<IActionResult> UpdatePermission(PermissionDto permissionDto)
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var updated = await _service.UpdatePermission(permissionDto);
 
 			// TODO: Decide if I want to check for identical paths in update
@@ -56,6 +63,8 @@ namespace Backend.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreatePermission(PermissionDto permissionDto)
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var created = await _service.CreatePermission(permissionDto);
 
 			if (created != null)

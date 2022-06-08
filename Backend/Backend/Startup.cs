@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Backend.Context;
+using Backend.Middlewares;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,10 +39,12 @@ namespace Backend
 			services.AddCors(config =>
 				config.AddDefaultPolicy(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
-			services.AddControllers().ConfigureApiBehaviorOptions(options =>
+			services.Configure<ApiBehaviorOptions>(options =>
 			{
 				options.SuppressModelStateInvalidFilter = true;
 			});
+			
+			services.AddControllers();
 			services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Backend", Version = "v1"}); });
 			services.AddDbContext<DataContext>(options =>
 			{
@@ -66,9 +70,12 @@ namespace Backend
 
 			app.UseHttpsRedirection();
 
-			app.UseRouting();
-
 			app.UseCors();
+
+			app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"),
+				appBuilder => appBuilder.UseMiddleware<MiddlewareHandler>());
+			
+			app.UseRouting();
 
 			app.UseAuthentication();
 			app.UseAuthorization();

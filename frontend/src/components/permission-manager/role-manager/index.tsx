@@ -1,13 +1,18 @@
-import {Button, ButtonGroup, debounce, Grid, IconButton, TextField, Typography} from "@mui/material";
+import {Button, ButtonGroup, Grid, IconButton, TextField, Typography} from "@mui/material";
 import {DataGrid, GridValueSetterParams} from "@mui/x-data-grid";
 import {toJS} from "mobx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
-import {useContext, useEffect, useRef} from "react";
+import {PropsWithChildren, useContext, useEffect} from "react";
 import {RoleManagerContext} from "./role-manager-store";
 import {observer} from "mobx-react";
 
-const RoleManager = () => {
+interface Props {
+	opened: boolean;
+}
+
+
+const RoleManager = ({opened}: PropsWithChildren<Props>) => {
 	const {
 		rolesToDisplay,
 		dirty,
@@ -21,8 +26,9 @@ const RoleManager = () => {
 	} = useContext(RoleManagerContext);
 
 	useEffect(() => {
-		init();
-	}, [init]);
+		if (opened)
+			init();
+	}, [init, opened]);
 
 	const handleValueSetter = (params: GridValueSetterParams, field: string) => {
 		const model = {...params.row, [field]: params.value};

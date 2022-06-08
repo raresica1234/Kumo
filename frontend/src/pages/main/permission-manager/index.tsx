@@ -8,7 +8,7 @@ import PermissionAccessManager from "../../../components/permission-manager/perm
 import UserRoleManager from "../../../components/permission-manager/user-role-manager";
 
 const PermissionManager = () => {
-	const [expanded, setExpanded] = useState('panel4');
+	const [expanded, setExpanded] = useState('');
 
 	const handleChange = (newExpanded: boolean, panel: string) => {
 		setExpanded(newExpanded ? panel : "");
@@ -23,7 +23,7 @@ const PermissionManager = () => {
 						<Typography>Manage Path Points</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<PathPointManager/>
+						<PathPointManager opened={expanded === 'panel1'}/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>
@@ -34,7 +34,7 @@ const PermissionManager = () => {
 						<Typography>Manage Roles</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<RoleManager/>
+						<RoleManager opened={expanded === 'panel2'}/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>
@@ -45,7 +45,7 @@ const PermissionManager = () => {
 						<Typography>Manage Permissions</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<PermissionAccessManager/>
+						<PermissionAccessManager opened={expanded === 'panel3'}/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>
@@ -56,7 +56,7 @@ const PermissionManager = () => {
 						<Typography>Manage Users</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<UserRoleManager/>
+						<UserRoleManager opened={expanded === 'panel4'}/>
 					</AccordionDetails>
 				</Accordion>
 			</Grid>

@@ -14,15 +14,17 @@ const genericFetch = <T>(method: httpMethod, url: string, body?: any) =>
 				body: JSON.stringify(body)
 			})
 
-			if (response.status / 100 === 2) {
+			const {statusCode, payload} = await response.json();
+
+			if (statusCode / 100 === 2) {
 				try {
-					resolve(await response.json())
+					resolve(payload)
 				} catch {
 					resolve(undefined as any)
 				}
 				return;
 			}
-			reject(await response.text())
+			reject(payload)
 		} catch (exception) {
 			reject(exception);
 		}

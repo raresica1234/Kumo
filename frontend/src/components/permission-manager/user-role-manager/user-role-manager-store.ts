@@ -6,6 +6,7 @@ import {getAllRoles} from "../../../accessors/role-accessor";
 import UserRoleModel from "../../../models/user-role-model";
 import {User} from "../../../accessors/types/user";
 import {SelectChangeEvent} from "@mui/material";
+import {toastServiceStore} from "../../../infrastructure/toast-service/toast-service-store";
 
 class UserRoleManagerStore {
 	private userRoles: UserRoleModel[] = [];
@@ -26,33 +27,42 @@ class UserRoleManagerStore {
 	}
 
 	public fetchAll = async () => {
-		const users = await getAllUsers();
-		const roles = await getAllRoles();
-		const userRoles = await getAllUserRoles();
+		try {
+			const users = await getAllUsers();
+			const roles = await getAllRoles();
+			const userRoles = await getAllUserRoles();
 
-		const userRolesToDisplay: UserRoleModel[] = userRoles.map(userRole => ({
-			...userRole,
-			username: users.find(user => user.id === userRole.userId)?.username ?? "Not found",
-			roleName: roles.find(role => role.id === userRole.roleId)?.name ?? "Not found",
-			dirty: false,
-			deleted: false
-		}));
+			const userRolesToDisplay: UserRoleModel[] = userRoles.map(userRole => ({
+				...userRole,
+				username: users.find(user => user.id === userRole.userId)?.username ?? "Not found",
+				roleName: roles.find(role => role.id === userRole.roleId)?.name ?? "Not found",
+				dirty: false,
+				deleted: false
+			}));
 
-		runInAction(() => {
-			this.dirty = false;
-			this.roles = roles;
-			this.users = users;
-			this.userRoles = userRolesToDisplay;
-			this.userRolesToDisplay = toJS(userRolesToDisplay);
-		})
+			runInAction(() => {
+				this.dirty = false;
+				this.roles = roles;
+				this.users = users;
+				this.userRoles = userRolesToDisplay;
+				this.userRolesToDisplay = toJS(userRolesToDisplay);
+			})
+		} catch (e: any) {
+			toastServiceStore.showError(e.toString());
+		}
 	}
 
 	public commitChanges = async () => {
-		await Promise.all(this.userRoles.filter(userRole => userRole.deleted).map(userRole => deleteUserRole(userRole.userId, userRole.roleId)));
+		try {
+			await Promise.all(this.userRoles.filter(userRole => userRole.deleted).map(userRole => deleteUserRole(userRole.userId, userRole.roleId)));
 
-		runInAction(() => {
-			this.userRolesToDisplay = toJS(this.userRoles.filter(userRole => !userRole.deleted));
-		})
+			runInAction(() => {
+				this.userRolesToDisplay = toJS(this.userRoles.filter(userRole => !userRole.deleted));
+			})
+			toastServiceStore.showSuccess("Changes successfully committed!");
+		} catch (e: any) {
+			toastServiceStore.showError(e.toString());
+		}
 	}
 
 	public markUserRoleAsDeleted = (userId: string, roleId: string, deleted: boolean) => {
@@ -69,14 +79,19 @@ class UserRoleManagerStore {
 	}
 
 	public handleAddUserRole = async () => {
-		await createUserRole({userId: this.userId, roleId: this.roleId});
+		try {
+			await createUserRole({userId: this.userId, roleId: this.roleId});
 
-		runInAction(() => {
-			this.userId = "";
-			this.roleId = "";
-		})
+			runInAction(() => {
+				this.userId = "";
+				this.roleId = "";
+			})
 
-		await this.fetchAll();
+			await this.fetchAll();
+			toastServiceStore.showSuccess("UserRole successfully added");
+		} catch (e: any) {
+			toastServiceStore.showError(e.toString());
+		}
 	}
 
 	public handleUserChange = (event: SelectChangeEvent) => {

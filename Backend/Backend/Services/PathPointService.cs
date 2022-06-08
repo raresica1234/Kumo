@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Backend.Context;
 using Backend.Dtos.PathPoint;
+using Backend.Exceptions;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -79,7 +80,7 @@ namespace Backend.Services
 				return null;
 
 			if (!Directory.Exists(pathPointCreateDto.Path))
-				throw new ArgumentException("Invalid path");
+				throw new KumoException("Invalid path");
 
 			
 			pathPoint = new PathPoint

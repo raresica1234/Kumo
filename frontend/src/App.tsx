@@ -7,14 +7,15 @@ import {observer} from "mobx-react";
 import {deepOrange, lightBlue, orange} from "@mui/material/colors";
 import CenterContainer from "./components/center-container";
 import MainRoutes from "./pages/main";
+import WrappedToastService from "./infrastructure/toast-service";
 
 const App = () => {
 	const {isUserLogged, init} = useContext(AuthenticateContext);
 	const theme = createTheme({
 		palette: {
 			mode: "dark",
-			primary: deepOrange,
-			secondary: lightBlue
+			primary: lightBlue,
+			secondary: orange,
 		}
 	})
 
@@ -44,6 +45,7 @@ const App = () => {
 				</Paper>
 			)}
 		</BrowserRouter>
+		<WrappedToastService/>
 	</ThemeProvider>
 };
 

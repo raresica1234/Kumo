@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Backend.Dtos.PathPoint;
+using Backend.Exceptions;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,8 @@ namespace Backend.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetPathPoints()
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var results = await _service.GetPathPoints();
 
 			return Ok(results);
@@ -31,6 +34,8 @@ namespace Backend.Controllers
 		[HttpDelete("{pathPointId:guid}")]
 		public async Task<IActionResult> DeletePathPoint(Guid pathPointId)
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var deleted = await _service.DeletePathPoint(pathPointId);
 
 			if (deleted)
@@ -42,6 +47,8 @@ namespace Backend.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddPathPoint(PathPointCreateDto pathPointDto)
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var created = await _service.CreatePathPoint(pathPointDto);
 
 			if (created != null)
@@ -53,6 +60,8 @@ namespace Backend.Controllers
 		[HttpPut]
 		public async Task<IActionResult> UpdatePathPoint(PathPointDto pathPointDto)
 		{
+			KumoException.ValidateModel(ModelState);
+			
 			var updated = await _service.UpdatePathPoint(pathPointDto);
 
 			// TODO: Decide if I want to check for identical paths in update

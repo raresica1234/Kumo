@@ -1,6 +1,6 @@
-import {useContext, useEffect} from "react";
+import {PropsWithChildren, useContext, useEffect} from "react";
 import {PathPointManagerContext} from "./path-point-manager-store";
-import {DataGrid, GridValueSetterParams} from "@mui/x-data-grid";
+import {DataGrid, GridRenderCellParams, GridValueSetterParams} from "@mui/x-data-grid";
 import {
 	Button,
 	ButtonGroup,
@@ -17,7 +17,11 @@ import {observer} from "mobx-react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const PathPointManager = () => {
+interface Props {
+	opened: boolean;
+}
+
+const PathPointManager = ({opened} : PropsWithChildren<Props>) => {
 	const {
 		pathPointsToDisplay,
 		dirty,
@@ -34,8 +38,9 @@ const PathPointManager = () => {
 	} = useContext(PathPointManagerContext);
 
 	useEffect(() => {
-		init()
-	}, [init]);
+		if(opened)
+			init()
+	}, [init, opened]);
 
 	const handleValueSetter = (params: GridValueSetterParams, field: string) => {
 		const model = {...params.row, [field]: params.value};
@@ -44,57 +49,55 @@ const PathPointManager = () => {
 		return model;
 	}
 
-	if (!pathPointsToDisplay.length) {
-		return null;
-	}
-
 	const handlePathChange = (pathPoint: string) => {
 		setPathPoint(pathPoint)
 	}
+
+	const columns = [
+		{
+			field: 'path',
+			headerName: "Path",
+			width: 300,
+			editable: true,
+			valueSetter: (params: GridValueSetterParams) => handleValueSetter(params, "path")
+		},
+		{
+			field: 'isRoot',
+			headerName: "Is Root Path?",
+			width: 150,
+			type: "boolean",
+			editable: true,
+			valueSetter: (params: GridValueSetterParams) => handleValueSetter(params, "isRoot")
+		},
+		{
+			field: 'delete',
+			headerName: "",
+			hideSortIcons: true,
+			disableColumnMenu: true,
+			renderCell: (params: GridRenderCellParams) => {
+				const handleClick = (e: any, deleted: boolean) => {
+					e.stopPropagation();
+					markPathPointAsDeleted(params.row.id, deleted);
+				}
+
+				if (!params.row.deleted)
+					return <IconButton onClick={(e) => handleClick(e, true)}>
+						<DeleteIcon/>
+					</IconButton>
+				else
+					return <IconButton onClick={(e) => handleClick(e, false)}>
+						<CancelIcon/>
+					</IconButton>
+			}
+		}
+	]
 
 	return <Grid container direction={"column"} spacing={4}>
 		<Grid item>
 			<DataGrid style={{height: "350px"}}
 					  experimentalFeatures={{newEditingApi: true}}
 					  rows={toJS(pathPointsToDisplay)}
-					  columns={[
-						  {
-							  field: 'path',
-							  headerName: "Path",
-							  width: 300,
-							  editable: true,
-							  valueSetter: (params: GridValueSetterParams) => handleValueSetter(params, "path")
-						  },
-						  {
-							  field: 'isRoot',
-							  headerName: "Is Root Path?",
-							  width: 150,
-							  type: "boolean",
-							  editable: true,
-							  valueSetter: (params: GridValueSetterParams) => handleValueSetter(params, "isRoot")
-						  },
-						  {
-							  field: 'delete',
-							  headerName: "",
-							  hideSortIcons: true,
-							  disableColumnMenu: true,
-							  renderCell: (params) => {
-								  const handleClick = (e: any, deleted: boolean) => {
-									  e.stopPropagation();
-									  markPathPointAsDeleted(params.row.id, deleted);
-								  }
-
-								  if (!params.row.deleted)
-									  return <IconButton onClick={(e) => handleClick(e, true)}>
-										  <DeleteIcon/>
-									  </IconButton>
-								  else
-									  return <IconButton onClick={(e) => handleClick(e, false)}>
-										  <CancelIcon/>
-									  </IconButton>
-							  }
-						  }
-					  ]}
+					  columns={columns}
 					  pageSize={5}
 					  rowsPerPageOptions={[5]}
 			/>

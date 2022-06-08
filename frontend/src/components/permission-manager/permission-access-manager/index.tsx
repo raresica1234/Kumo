@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import {useContext, useEffect} from "react";
+import {PropsWithChildren, useContext, useEffect} from "react";
 import {PermissionAccessManagerContext} from "./permission-access-manager-store";
 import {
 	Box,
@@ -15,12 +15,16 @@ import {
 	Select,
 	Typography
 } from "@mui/material";
-import {DataGrid, GridValueGetterParams, GridValueSetterParams} from "@mui/x-data-grid";
+import {DataGrid, GridValueSetterParams} from "@mui/x-data-grid";
 import {toJS} from "mobx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-const PermissionAccessManager = () => {
+interface Props {
+	opened: boolean;
+}
+
+const PermissionAccessManager = ({opened}: PropsWithChildren<Props>) => {
 	const {
 		permissionsToDisplay,
 		roles,
@@ -51,8 +55,9 @@ const PermissionAccessManager = () => {
 	} = useContext(PermissionAccessManagerContext);
 
 	useEffect(() => {
-		init();
-	}, [init]);
+		if (opened)
+			init();
+	}, [init, opened]);
 
 	if (roles.length === 0 || pathPoints.length === 0)
 		return <>Add a role and a path point to continue</>

@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import {useContext, useEffect} from "react";
+import {PropsWithChildren, useContext, useEffect} from "react";
 import {UserRoleManagerContext} from "./user-role-manager-store";
 import {
 	Box,
@@ -18,8 +18,11 @@ import {toJS} from "mobx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
 
+interface Props {
+	opened: boolean
+}
 
-const UserRoleManager = () => {
+const UserRoleManager = ({opened}: PropsWithChildren<Props>) => {
 	const {
 		users,
 		roles,
@@ -40,7 +43,10 @@ const UserRoleManager = () => {
 	} = useContext(UserRoleManagerContext);
 
 
-	useEffect(init, [init]);
+	useEffect(() => {
+		if (opened)
+			init();
+	}, [init, opened]);
 
 	if (roles.length === 0)
 		return <>Add a role to continue</>

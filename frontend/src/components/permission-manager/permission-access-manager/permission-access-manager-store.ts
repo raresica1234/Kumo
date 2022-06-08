@@ -14,6 +14,7 @@ import {
 import Permission from "../../../accessors/types/permission";
 import {SelectChangeEvent} from "@mui/material";
 import {GridValueSetterParams} from "@mui/x-data-grid";
+import {toastServiceStore} from "../../../infrastructure/toast-service/toast-service-store";
 
 class PermissionAccessManagerStore {
 	private permissions: PermissionModel[] = [];
@@ -39,42 +40,51 @@ class PermissionAccessManagerStore {
 	}
 
 	public fetchAll = async () => {
-		const roles = await getAllRoles();
-		const pathPoints = await getAllPathPoints();
-		const permissions: Permission[] = await getAllPermissions();
-		const permissionsToDisplay: PermissionModel[] = permissions.map(permission => ({
-			...permission,
-			roleName: roles.find(role => role.id === permission.roleId)?.name ?? "Not found",
-			pathPoint: pathPoints.find(pathPoint => pathPoint.id === permission.pathPointId)?.path ?? "Not found",
-			dirty: false,
-			deleted: false,
-		}))
+		try {
+			const roles = await getAllRoles();
+			const pathPoints = await getAllPathPoints();
+			const permissions: Permission[] = await getAllPermissions();
+			const permissionsToDisplay: PermissionModel[] = permissions.map(permission => ({
+				...permission,
+				roleName: roles.find(role => role.id === permission.roleId)?.name ?? "Not found",
+				pathPoint: pathPoints.find(pathPoint => pathPoint.id === permission.pathPointId)?.path ?? "Not found",
+				dirty: false,
+				deleted: false,
+			}))
 
-		runInAction(() => {
-			this.dirty = false;
-			this.roles = roles;
-			this.pathPoints = pathPoints;
-			this.permissions = permissionsToDisplay;
-			this.permissionsToDisplay = toJS(permissionsToDisplay);
-		})
+			runInAction(() => {
+				this.dirty = false;
+				this.roles = roles;
+				this.pathPoints = pathPoints;
+				this.permissions = permissionsToDisplay;
+				this.permissionsToDisplay = toJS(permissionsToDisplay);
+			})
+		} catch (e: any) {
+			toastServiceStore.showError(e.toString());
+		}
 	}
 
 	public handleAddPermission = async () => {
-		await createPermission({
-			roleId: this.roleId,
-			pathPointId: this.pathPointId,
-			read: this.read,
-			write: this.write,
-			delete: this.deletable,
-			modifyRoot: this.modifyRoot
-		});
+		try {
+			await createPermission({
+				roleId: this.roleId,
+				pathPointId: this.pathPointId,
+				read: this.read,
+				write: this.write,
+				delete: this.deletable,
+				modifyRoot: this.modifyRoot
+			});
 
-		runInAction(() => {
-			this.roleId = this.pathPointId = "";
-			this.read = this.write = this.deletable = this.modifyRoot = false;
-		})
+			runInAction(() => {
+				this.roleId = this.pathPointId = "";
+				this.read = this.write = this.deletable = this.modifyRoot = false;
+			})
 
-		await this.fetchAll();
+			await this.fetchAll();
+			toastServiceStore.showSuccess("Permission successfully added!");
+		} catch (e: any) {
+			toastServiceStore.showError(e.toString());
+		}
 	}
 
 	public markPermissionAsDeleted = (roleId: string, pathPointId: string, deleted: boolean) => {
@@ -91,24 +101,30 @@ class PermissionAccessManagerStore {
 	}
 
 	public commitChanges = async () => {
-		await Promise.all(this.permissions.filter(permission => permission.deleted).map(permission => deletePermission(permission.roleId, permission.pathPointId)));
+		try {
+			await Promise.all(this.permissions.filter(permission => permission.deleted).map(permission => deletePermission(permission.roleId, permission.pathPointId)));
 
-		const dirtyPermission = this.permissions.filter(permissions => !permissions.deleted && permissions.dirty)
+			const dirtyPermission = this.permissions.filter(permissions => !permissions.deleted && permissions.dirty)
 
-		await Promise.all(dirtyPermission.map(permission => updatePermission(permission)));
+			await Promise.all(dirtyPermission.map(permission => updatePermission(permission)));
 
-		runInAction(() => {
-			dirtyPermission.forEach(dirtyPermission => dirtyPermission.dirty = false);
-			this.dirty = false;
-			this.permissionsToDisplay = toJS(this.permissions.filter(permission => !permission.deleted));
-		})
+			runInAction(() => {
+				dirtyPermission.forEach(dirtyPermission => dirtyPermission.dirty = false);
+				this.dirty = false;
+				this.permissionsToDisplay = toJS(this.permissions.filter(permission => !permission.deleted));
+			})
+			toastServiceStore.showSuccess("Changes successfully committed!");
+		} catch (e: any) {
+			toastServiceStore.showError(e.toString());
+		}
 	}
 
 	public modifyPermission = (model: PermissionModel) => {
 		const index = this.permissions.findIndex(permission => permission.roleId === model.roleId && permission.pathPointId === model.pathPointId);
-		if (index === -1)
-			// TODO: Error should be displayed
+		if (index === -1) {
+			toastServiceStore.showError("Could not find permission!");
 			return model;
+		}
 		model.dirty = true;
 
 		runInAction(() => {
