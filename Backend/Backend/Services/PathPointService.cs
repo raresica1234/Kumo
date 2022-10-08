@@ -54,7 +54,8 @@ namespace Backend.Services
 		{
 			var pathPoint = await _dataContext.PathPoints.FindAsync(pathPointDto.Id);
 
-			// TODO: Check if the path actually exists
+			if (!Directory.Exists(pathPointDto.Path))
+				throw new KumoException("Invalid path");
 
 			if (pathPoint == null)
 				return false;
@@ -73,8 +74,6 @@ namespace Backend.Services
 		{
 			var pathPoint =
 				await _dataContext.PathPoints.FirstOrDefaultAsync(pathPoint => pathPoint.Path == pathPointCreateDto.Path);
-			
-			// TODO: Check if the path actually exists
 			
 			if (pathPoint != null)
 				return null;

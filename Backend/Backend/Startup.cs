@@ -81,7 +81,7 @@ namespace Backend
 			app.UseAuthorization();
 
 			CreateRoles(serviceProvider).Wait();
-			AddRootPathPoints(serviceProvider).Wait();
+			// AddRootPathPoints(serviceProvider).Wait();
 
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
@@ -157,34 +157,34 @@ namespace Backend
 			}
 		}
 
-		private async Task AddRootPathPoints(IServiceProvider serviceProvider)
-		{
-			var dataContext = serviceProvider.GetService<DataContext>();
-
-			if (dataContext == null)
-			{
-				Console.WriteLine("Data context is null");
-				return;
-			}
-
-			var pathPoints = await dataContext.PathPoints.ToListAsync();
-			var rootPathPoints = Configuration.GetSection("RootPathPoints").Get<string[]>();
-
-			foreach (var rootPathPoint in rootPathPoints)
-			{
-				if (!pathPoints.Exists(pathPoint => pathPoint.Path == rootPathPoint))
-				{
-					var pathPoint = new PathPoint
-					{
-						Path = rootPathPoint,
-						IsRoot = true
-					};
-
-					await dataContext.PathPoints.AddAsync(pathPoint);
-				}
-			}
-
-			await dataContext.SaveChangesAsync();
-		}
+		// private async Task AddRootPathPoints(IServiceProvider serviceProvider)
+		// {
+		// 	var dataContext = serviceProvider.GetService<DataContext>();
+		//
+		// 	if (dataContext == null)
+		// 	{
+		// 		Console.WriteLine("Data context is null");
+		// 		return;
+		// 	}
+		//
+		// 	var pathPoints = await dataContext.PathPoints.ToListAsync();
+		// 	var rootPathPoints = Configuration.GetSection("RootPathPoints").Get<string[]>();
+		//
+		// 	foreach (var rootPathPoint in rootPathPoints)
+		// 	{
+		// 		if (!pathPoints.Exists(pathPoint => pathPoint.Path == rootPathPoint))
+		// 		{
+		// 			var pathPoint = new PathPoint
+		// 			{
+		// 				Path = rootPathPoint,
+		// 				IsRoot = true
+		// 			};
+		//
+		// 			await dataContext.PathPoints.AddAsync(pathPoint);
+		// 		}
+		// 	}
+		//
+		// 	await dataContext.SaveChangesAsync();
+		// }
 	}
 }

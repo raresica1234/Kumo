@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Backend.Exceptions;
 using Backend.Extensions;
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
@@ -95,6 +96,11 @@ namespace Backend.Middlewares
 			HttpResponse response,
 			Exception exception)
 		{
+			if (exception is KumoException)
+			{
+				
+			}
+			
 			if (exception != null && response.StatusCode == (int) HttpStatusCode.OK)
 				response.StatusCode = (int) HttpStatusCode.BadRequest;
 		}

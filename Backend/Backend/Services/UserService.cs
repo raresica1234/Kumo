@@ -10,6 +10,7 @@ using Backend.Context;
 using Backend.Dtos.Authentication;
 using Backend.Dtos.User;
 using Backend.Dtos.UserRole;
+using Backend.Exceptions;
 using Backend.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -58,7 +59,7 @@ namespace Backend.Services
 				Console.WriteLine(result.Errors.ToString());
 				IEnumerable<string> errorList = result.Errors.ToList().Select(error => error.Description);
 				string formattedErrors = string.Join("\n", errorList);
-				throw new ApplicationException(formattedErrors);
+				throw new KumoException(formattedErrors);
 			}
 		}
 
@@ -66,11 +67,11 @@ namespace Backend.Services
 		{
 			var user = await _userManager.FindByEmailAsync(loginUserDto.Email);
 			if (user == null)
-				throw new ApplicationException("Username does not exist.");
+				throw new KumoException("Username does not exist.");
 
 			var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginUserDto.Password);
 			if (!isPasswordCorrect)
-				throw new ApplicationException("Password incorrect.");
+				throw new KumoException("Password incorrect.");
 
 			// TODO: with this approach only the first role is taken
 			var roles = await _userManager.GetRolesAsync(user);

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Backend.Dtos.Authentication;
+using Backend.Exceptions;
 using Backend.Services;
 using Backend.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -35,44 +36,22 @@ namespace Backend.Controllers
 		[HttpPost("register")]
 		public async Task<IActionResult> RegisterUser(RegisterUserDto registerUserDto)
 		{
-			var errors = ModelErrorParser.GetErrors(ModelState);
-			if (errors.Length != 0)
-			{
-				return BadRequest(errors);
-			}
+			KumoException.ValidateModel(ModelState);
 
-			try
-			{
-				await _userService.RegisterAsync(registerUserDto);
-				return Ok();
-			}
-			catch (ApplicationException exception)
-			{
-				return BadRequest(exception.Message);
-			}
+			await _userService.RegisterAsync(registerUserDto);
+			return Ok();
 		}
 
 		[HttpPost("login")]
 		public async Task<IActionResult> LoginUser(LoginUserDto loginUserDto)
 		{
-			var errors = ModelErrorParser.GetErrors(ModelState);
-			if (errors.Length != 0)
-			{
-				return BadRequest(errors);
-			}
+			KumoException.ValidateModel(ModelState);
 
-			try
+			var loginResult = await _userService.LoginUser(loginUserDto);
+			return Ok(new
 			{
-				var loginResult = await _userService.LoginUser(loginUserDto);
-				return Ok(new
-				{
-					Token = loginResult
-				});
-			}
-			catch (ApplicationException exception)
-			{
-				return BadRequest(exception.Message);
-			}
+				Token = loginResult
+			});
 		}
 	}
 }
