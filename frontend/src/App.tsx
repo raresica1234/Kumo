@@ -2,51 +2,45 @@ import React, {useContext, useEffect} from 'react';
 import {AuthenticateContext} from "./infrastructure/authenticate";
 import {BrowserRouter} from "react-router-dom";
 import AccountRoutes from "./pages/accounts";
-import {createTheme, Grid, Paper, ThemeProvider} from "@mui/material";
+import {Grid, Paper, ThemeProvider} from "@mui/material";
 import {observer} from "mobx-react";
-import {deepOrange, lightBlue, orange} from "@mui/material/colors";
 import CenterContainer from "./components/center-container";
 import MainRoutes from "./pages/main";
 import WrappedToastService from "./infrastructure/toast-service";
+import {ThemeContext} from "./infrastructure/theme";
 
 const App = () => {
-	const {isUserLogged, init} = useContext(AuthenticateContext);
-	const theme = createTheme({
-		palette: {
-			mode: "dark",
-			primary: lightBlue,
-			secondary: orange,
-		}
-	})
+    const {isUserLogged, init: initAuthentication} = useContext(AuthenticateContext);
+    const {theme, init: initTheming} = useContext(ThemeContext);
 
-	useEffect(() => {
-		init();
-	}, [init, isUserLogged]);
+    useEffect(() => {
+        initAuthentication();
+        initTheming();
+    }, [initTheming, initAuthentication, isUserLogged]);
 
-	if (isUserLogged === undefined ) {
-		return null;
-	}
+    if (!isUserLogged || !theme)
+        return null;
 
-	return <ThemeProvider theme={theme}>
-		<BrowserRouter>
-			{isUserLogged ? (
-				<MainRoutes />
-			) : (
-				<Paper square elevation={0}>
-					<Grid container>
-						<Grid item xs={0} sm={2} lg={4}/>
-						<Grid item xs={12} sm={8} lg={4}>
-								<CenterContainer>
-										<AccountRoutes/>
-								</CenterContainer>
-						</Grid>
-						<Grid item xs={0} sm={2} lg={4}/>
-					</Grid>
-				</Paper>
-			)}
-		</BrowserRouter>
-		<WrappedToastService/>
-	</ThemeProvider>
+    return <ThemeProvider theme={theme}>
+        <BrowserRouter>
+            {isUserLogged ? (
+                <MainRoutes/>
+            ) : (
+                <Paper square elevation={0}>
+                    <Grid container>
+                        <Grid item xs={0} sm={2} lg={4}/>
+                        <Grid item xs={12} sm={8} lg={4}>
+                            <CenterContainer>
+                                <AccountRoutes/>
+                            </CenterContainer>
+                        </Grid>
+                        <Grid item xs={0} sm={2} lg={4}/>
+                    </Grid>
+                </Paper>
+            )}
+        </BrowserRouter>
+        <WrappedToastService/>
+    </ThemeProvider>
 };
 
 export default observer(App);
