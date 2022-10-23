@@ -88,7 +88,7 @@ class PermissionAccessManagerStore {
 	}
 
 	public markPermissionAsDeleted = (roleId: string, pathPointId: string, deleted: boolean) => {
-		const index = this.permissions.findIndex(permission => permission.roleId === roleId && permission.pathPointId == pathPointId);
+		const index = this.permissions.findIndex(permission => permission.roleId === roleId && permission.pathPointId === pathPointId);
 		if (index === -1)
 			return;
 
