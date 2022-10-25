@@ -1,18 +1,25 @@
 import {AppBar, Box, IconButton, Toolbar, Typography} from "@mui/material";
 import CloudIcon from '@mui/icons-material/Cloud';
-import {AuthenticateContext} from "../../infrastructure/authenticate";
-import {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {observer} from "mobx-react";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import {ThemeContext} from "../../infrastructure/theme";
+import AccountMenu from "../account-menu";
 
 const TopBar = () => {
-    const {reset, isUserAdmin} = useContext(AuthenticateContext);
     const {init, isDarkMode, toggleDarkMode} = useContext(ThemeContext);
 
     useEffect(init, [init]);
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    const handleAccountClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setAnchorEl(event.currentTarget);
+    }
+
+    const onClose = () => setAnchorEl(null);
 
     return <AppBar position="sticky">
         <Toolbar>
@@ -50,10 +57,13 @@ const TopBar = () => {
                         <DarkModeIcon fontSize="large"/>
                     }
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={handleAccountClick}>
                     <AccountCircleIcon fontSize="large"/>
                 </IconButton>
             </Box>
+            <div>
+                <AccountMenu anchorElement={anchorEl} onClose={onClose}/>
+            </div>
         </Toolbar>
     </AppBar>
 }

@@ -10,7 +10,7 @@ import WrappedToastService from "./infrastructure/toast-service";
 import {ThemeContext} from "./infrastructure/theme";
 
 const App = () => {
-    const {isUserLogged, init: initAuthentication} = useContext(AuthenticateContext);
+    const {isUserLogged, init: initAuthentication, isUserAdmin} = useContext(AuthenticateContext);
     const {theme, init: initTheming} = useContext(ThemeContext);
 
     useEffect(() => {
@@ -18,13 +18,15 @@ const App = () => {
         initTheming();
     }, [initTheming, initAuthentication, isUserLogged]);
 
-    if (!isUserLogged || !theme)
+    console.log(`${theme}, ... ${isUserLogged}`)
+
+    if (isUserLogged === undefined || theme === undefined || isUserAdmin === undefined)
         return null;
 
     return <ThemeProvider theme={theme}>
         <BrowserRouter>
             {isUserLogged ? (
-                <MainRoutes/>
+                <MainRoutes isAdmin={isUserAdmin}/>
             ) : (
                 <Paper square elevation={0}>
                     <Grid container>
