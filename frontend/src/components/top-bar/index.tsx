@@ -7,6 +7,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import {ThemeContext} from "../../infrastructure/theme";
 import AccountMenu from "../account-menu";
+import NavigationDrawer from "../navigation-drawer";
 
 const TopBar = () => {
     const {init, isDarkMode, toggleDarkMode} = useContext(ThemeContext);

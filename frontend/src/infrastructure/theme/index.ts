@@ -34,7 +34,8 @@ export class ThemeStore {
                 mode: "light",
                 primary: lightBlue,
                 secondary: orange,
-            }
+            },
+
         })
     }
 
@@ -44,6 +45,15 @@ export class ThemeStore {
                 mode: "dark",
                 primary: lightBlue,
                 secondary: orange,
+            },
+            components: {
+                MuiDrawer: {
+                    styleOverrides: {
+                        paper: {
+                            marginTop: "3em"
+                        }
+                    }
+                }
             }
         })
     }
