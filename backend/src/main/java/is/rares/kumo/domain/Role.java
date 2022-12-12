@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="role")
+@Table(name="kumo_role")
 public class Role extends BaseEntity {
 
 }

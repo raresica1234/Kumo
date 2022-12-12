@@ -7,11 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "app_user")
+@Table(name = "kumo_user")
 public class User extends BaseEntity implements UserDetails {
     @Column(unique = true)
     String username;

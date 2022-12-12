@@ -4,8 +4,14 @@ spring:
     username: postgres
     password: postgres
   jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+
+springdoc:
+  swagger-ui:
+    path=/swagger-ui.html
+server:
+  servlet:
+    context-path: /api
