@@ -7,12 +7,12 @@ interface MainRouteProps {
     isAdmin: boolean;
 }
 
-const MainRoutes = ({isAdmin}: MainRouteProps) => (<Routes>
-        <Route path="" element={<Home/>}/>
-        <Route path="/" element={<Home/>}/>
-        <Route path={EXPLORER_PAGE} element={<Home/>}/>
-        {isAdmin && <Route path={PERMISSIONS_PAGE} element={<PermissionManager/>}/>}
-        <Route path="*" element={<Navigate to="/"/>}/>
-    </Routes>);
+const MainRoutes = ({isAdmin}: MainRouteProps) => <Routes>
+    <Route path="" element={<Home/>}/>
+    <Route path="/" element={<Home/>}/>
+    <Route path={EXPLORER_PAGE} element={<Home/>}/>
+    {isAdmin && <Route path={PERMISSIONS_PAGE} element={<PermissionManager/>}/>}
+    <Route path="*" element={<Navigate to="/"/>}/>
+</Routes>
 
 export default MainRoutes;

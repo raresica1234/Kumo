@@ -5,7 +5,7 @@ import {observer} from "mobx-react";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import {ThemeContext} from "../../infrastructure/theme";
+import {ThemeContext} from "../themer/themer-store";
 import AccountMenu from "../account-menu";
 import NavigationDrawer from "../navigation-drawer";
 

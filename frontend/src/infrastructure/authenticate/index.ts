@@ -4,44 +4,50 @@ import {clearToken, getToken, setToken} from "./token-helper";
 import {isAdministrator} from "../../accessors/account-accessor";
 
 class AuthenticateStore {
-	public isUserLogged?: boolean = undefined;
-	public isUserAdmin?: boolean = undefined;
+    public isUserLogged?: boolean = undefined;
+    public isUserAdmin?: boolean = undefined;
+    public isServerDown?: boolean = undefined;
 
-	constructor() {
-		makeAutoObservable(this);
-	}
+    constructor() {
+        makeAutoObservable(this);
+    }
 
-	public init = () => {
-		this.isUserLogged = getToken() !== "";
-		this.fetchAdminStatus();
-	}
+    public init = () => {
+        this.isUserLogged = getToken() !== "";
+        this.fetchAdminStatus();
+    }
 
-	public setToken = (token?: string) => {
-		if (token !== undefined) {
-			setToken(token);
-			this.isUserLogged = true;
-		} else {
-			clearToken()
-			this.isUserLogged = false;
-		}
+    public setToken = (token?: string) => {
+        if (token !== undefined) {
+            setToken(token);
+            this.isUserLogged = true;
+        } else {
+            clearToken()
+            this.isUserLogged = false;
+        }
 
-		this.fetchAdminStatus()
-	}
+        this.fetchAdminStatus()
+    }
 
-	public reset = () => {
-		this.isUserLogged = false;
-		clearToken();
-		this.fetchAdminStatus()
-	}
+    public reset = () => {
+        this.isUserLogged = false;
+        clearToken();
+        this.fetchAdminStatus()
+    }
 
-	private fetchAdminStatus = () => {
-		if (!this.isUserLogged)
-			return;
+    private fetchAdminStatus = () => {
+        if (!this.isUserLogged)
+            return;
 
-		isAdministrator().then(admin => {
-			runInAction(() => this.isUserAdmin = admin);
-		});
-	}
+        isAdministrator().then(admin => {
+            runInAction(() => this.isUserAdmin = admin);
+        }).catch(() => {
+            runInAction(() => {
+                this.isServerDown = true;
+                this.isUserAdmin = false;
+            });
+        });
+    }
 }
 
 
