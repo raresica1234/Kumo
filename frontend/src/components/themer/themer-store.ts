@@ -3,7 +3,7 @@ import {createContext} from "react";
 import {createTheme, Theme} from "@mui/material";
 import {lightBlue, orange} from "@mui/material/colors";
 
-export class ThemeStore {
+export class ThemerStore {
     public theme?: Theme = undefined;
 
     constructor() {
@@ -59,5 +59,5 @@ export class ThemeStore {
     }
 }
 
-export const themeStore = new ThemeStore();
+export const themeStore = new ThemerStore();
 export const ThemeContext = createContext(themeStore);
