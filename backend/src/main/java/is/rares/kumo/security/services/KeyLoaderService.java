@@ -1,15 +1,13 @@
-package is.rares.kumo.security;
+package is.rares.kumo.security.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.slf4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import org.bouncycastle.openssl.PEMParser;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -18,9 +16,9 @@ import java.security.PublicKey;
 
 @Service
 @Slf4j
-public class AuthenticationService {
-    private PublicKey publicKey;
-    private PrivateKey privateKey;
+public class KeyLoaderService {
+    protected PublicKey publicKey;
+    protected PrivateKey privateKey;
 
     @PostConstruct
     public void loadPrivateKey() {

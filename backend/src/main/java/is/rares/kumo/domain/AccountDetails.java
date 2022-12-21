@@ -3,27 +3,26 @@ package is.rares.kumo.domain;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
-import java.util.UUID;
 
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@MappedSuperclass
-public class BaseEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
-    UUID uuid;
+@Table(name = "account_details")
+public class AccountDetails extends BaseEntity{
+    String firstName;
+    String lastName;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BaseEntity that = (BaseEntity) o;
+        AccountDetails that = (AccountDetails) o;
         return uuid != null && Objects.equals(uuid, that.uuid);
     }
 
