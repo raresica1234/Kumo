@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableWebMvc
 public class KumoApplication {
 
     public static void main(String[] args) {

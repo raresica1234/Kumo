@@ -27,7 +27,7 @@ public class User extends BaseEntity implements UserDetails {
 
     boolean isUsing2FA;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "detail_id")
     private AccountDetails accountDetails;
 

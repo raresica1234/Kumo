@@ -4,10 +4,12 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import is.rares.kumo.core.config.JWTConfiguration;
+import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.domain.User;
 import is.rares.kumo.model.requests.LoginRequest;
+import is.rares.kumo.model.requests.RegisterRequest;
 import is.rares.kumo.model.responses.TokenDataResponse;
 import is.rares.kumo.repository.UserRepository;
 import is.rares.kumo.security.entity.ClientLocation;
@@ -18,7 +20,10 @@ import is.rares.kumo.security.token.Token;
 import is.rares.kumo.security.token.TokenStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import reactor.util.annotation.Nullable;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -33,12 +38,19 @@ public class AuthenticationService extends KeyLoaderService {
     private final TokenStore tokenStore;
     private final AsyncTokenStore asyncTokenStore;
 
+    private final KumoConfig kumoConfig;
+
     @Autowired
-    public AuthenticationService(JWTConfiguration jwtConfiguration, UserRepository userRepository, TokenStore tokenStore, AsyncTokenStore asyncTokenStore) {
+    public AuthenticationService(JWTConfiguration jwtConfiguration,
+                                 UserRepository userRepository,
+                                 TokenStore tokenStore,
+                                 AsyncTokenStore asyncTokenStore,
+                                 KumoConfig kumoConfig) {
         this.jwtConfiguration = jwtConfiguration;
         this.userRepository = userRepository;
         this.tokenStore = tokenStore;
         this.asyncTokenStore = asyncTokenStore;
+        this.kumoConfig = kumoConfig;
     }
 
     private String generateToken(UUID userId, boolean isUsing2FA, boolean isFirstLogin) {
@@ -109,4 +121,24 @@ public class AuthenticationService extends KeyLoaderService {
         return tokenDataResponse;
     }
 
+    public ResponseEntity<String> register(RegisterRequest request, @Nullable String registerInvite) {
+        if (kumoConfig.isInviteBasedRegistration())
+            throw new KumoException(AccountCodeErrorCodes.INVALID_INVITE, "Invite is invalid");
+
+        if (userRepository.findByUsername(request.getUsername()).isPresent())
+            throw new KumoException(AccountCodeErrorCodes.DUPLICATE_USERNAME);
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent())
+            throw new KumoException(AccountCodeErrorCodes.DUPLICATE_EMAIL);
+
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+
+        this.userRepository.save(user);
+
+        return new ResponseEntity<>("{}", HttpStatus.OK);
+    }
 }

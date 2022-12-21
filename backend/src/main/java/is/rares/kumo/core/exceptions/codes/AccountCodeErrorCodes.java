@@ -7,7 +7,12 @@ import org.springframework.http.HttpStatus;
 public enum AccountCodeErrorCodes  implements BaseErrorCode{
     UNEXPECTED_ERROR("1", HttpStatus.BAD_REQUEST, "Exception.Unexpected"),
     USERNAME_NOT_FOUND("2", HttpStatus.NOT_FOUND, "Exception.Username.NotFound"),
-    PASSWORD_INCORRECT("3", HttpStatus.BAD_REQUEST, "Exception.Password.Incorrect");
+    PASSWORD_INCORRECT("3", HttpStatus.BAD_REQUEST, "Exception.Password.Incorrect"),
+
+    INVALID_INVITE("4", HttpStatus.BAD_REQUEST, "Validation.Invite.Invalid"),
+
+    DUPLICATE_USERNAME("5", HttpStatus.BAD_REQUEST, "Duplicate.Username"),
+    DUPLICATE_EMAIL("6", HttpStatus.BAD_REQUEST, "Duplicate.Email");
 
     private final String errorCode;
     private final HttpStatus httpStatus;
