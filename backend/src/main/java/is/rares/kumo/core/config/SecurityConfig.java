@@ -29,12 +29,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorize -> authorize
-                        .antMatchers(AUTH_WHITE_LIST).permitAll()
-                        .anyRequest().permitAll()
-                );
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                        .antMatchers("/api/authenticate/**").permitAll()
+                        .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .antMatchers("/webjars/**").permitAll()
+                        .antMatchers("/swagger-resources/**").permitAll()
+                        .antMatchers("/swagger-resources").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//        http.addFilterBefore(authorizationInterceptor, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authorizationInterceptor, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
