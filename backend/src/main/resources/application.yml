@@ -8,5 +8,10 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 springdoc:
+#  swagger-ui:
+#    path=/swagger-ui.html
+  api-docs:
+    enabled: true
+#    path: /swagger-ui.html
   swagger-ui:
-    path=/swagger-ui.html
+    path: /swagger-ui.html

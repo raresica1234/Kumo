@@ -12,7 +12,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableJpaAuditing
+@OpenAPIDefinition
 @EnableWebMvc
+@EnableSwagger2
 public class KumoApplication {
 
     public static void main(String[] args) {
