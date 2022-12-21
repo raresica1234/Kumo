@@ -1,18 +1,26 @@
 package is.rares.kumo.controller;
 
-import org.springframework.http.HttpStatus;
+import io.swagger.annotations.ApiOperation;
+import is.rares.kumo.model.requests.LoginRequest;
+import is.rares.kumo.model.responses.SuccessResponse;
+import is.rares.kumo.model.responses.TokenDataResponse;
+import is.rares.kumo.security.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/authenticate")
 public class AuthenticationController {
 
-    @GetMapping(value = "/login")
-    public ResponseEntity login() {
-        return new ResponseEntity(HttpStatus.OK);
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
+    @ApiOperation(value = "Login", response = SuccessResponse.class)
+    @PostMapping(value = "/login")
+    public TokenDataResponse login(@RequestBody LoginRequest request) {
+        return authenticationService.login(request);
     }
 }

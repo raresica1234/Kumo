@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -29,6 +26,13 @@ public class User extends BaseEntity implements UserDetails {
     String password;
 
     boolean isUsing2FA;
+
+    @OneToOne
+    @JoinColumn(name = "detail_id")
+    private AccountDetails accountDetails;
+
+    @Column(name = "detail_id", insertable = false, updatable = false)
+    private UUID detailId;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "users")
     Set<Role> roles = new HashSet<>();

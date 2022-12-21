@@ -1,4 +1,4 @@
-package is.rares.kumo.config;
+package is.rares.kumo.core.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

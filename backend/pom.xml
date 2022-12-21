@@ -126,6 +126,13 @@
             <artifactId>tink</artifactId>
             <version>1.7.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+
 
 
     </dependencies>

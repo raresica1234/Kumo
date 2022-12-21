@@ -1,4 +1,4 @@
-package is.rares.kumo.config;
+package is.rares.kumo.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

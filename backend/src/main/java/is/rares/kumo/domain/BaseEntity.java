@@ -17,7 +17,7 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    UUID uuid;
+    protected UUID uuid;
 
     @Override
     public boolean equals(Object o) {
