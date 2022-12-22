@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.util.annotation.Nullable;
 
@@ -40,17 +41,21 @@ public class AuthenticationService extends KeyLoaderService {
 
     private final KumoConfig kumoConfig;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public AuthenticationService(JWTConfiguration jwtConfiguration,
                                  UserRepository userRepository,
                                  TokenStore tokenStore,
                                  AsyncTokenStore asyncTokenStore,
-                                 KumoConfig kumoConfig) {
+                                 KumoConfig kumoConfig,
+                                 PasswordEncoder passwordEncoder) {
         this.jwtConfiguration = jwtConfiguration;
         this.userRepository = userRepository;
         this.tokenStore = tokenStore;
         this.asyncTokenStore = asyncTokenStore;
         this.kumoConfig = kumoConfig;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private String generateToken(UUID userId, boolean isUsing2FA, boolean isFirstLogin) {
@@ -87,7 +92,7 @@ public class AuthenticationService extends KeyLoaderService {
         final User user = this.userRepository.findByUsernameOrEmail(request.getUsername(), request.getUsername())
                 .orElseThrow(() -> new KumoException(AccountCodeErrorCodes.USERNAME_NOT_FOUND, "Username not found"));
 
-        if (!user.getPassword().equals(request.getPassword()))
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new KumoException(AccountCodeErrorCodes.PASSWORD_INCORRECT, "Password incorrect");
 
         return this.generateTokenDataResponse(user, request.getClientLocation(), true);
@@ -135,7 +140,7 @@ public class AuthenticationService extends KeyLoaderService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         this.userRepository.save(user);
 

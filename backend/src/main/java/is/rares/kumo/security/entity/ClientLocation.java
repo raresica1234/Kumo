@@ -7,8 +7,7 @@ import is.rares.kumo.security.enums.ClientLocationType;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -21,15 +20,18 @@ import java.util.Objects;
 @ApiModel(description = "Specifies a client location")
 @Table(name = "client_location")
 public class ClientLocation extends BaseEntity {
+    @Column
     @NotNull
     @ApiModelProperty(notes = "Client country")
     String country;
 
+    @Column
     @NotNull
     @ApiModelProperty(notes = "Client ip address")
     String ipAddress;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @ApiModelProperty(notes = "Client location type")
     ClientLocationType locationType;
 

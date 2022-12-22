@@ -23,8 +23,11 @@ import java.util.UUID;
 public class Token extends BaseEntity {
     @Column(name="jwt_token", columnDefinition = "TEXT")
     String jwtToken;
+
+    @Column(name="refresh_token", columnDefinition = "TEXT")
     String refreshToken;
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_location_id")
     ClientLocation clientLocation;
 
@@ -32,7 +35,9 @@ public class Token extends BaseEntity {
     UUID clientLocationId;
 
     Date lastActivityDate;
+
     UUID userId;
+
     int validityMs;
 
     @Override

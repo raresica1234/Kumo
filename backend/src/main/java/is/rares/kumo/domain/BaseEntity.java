@@ -1,5 +1,6 @@
 package is.rares.kumo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -17,6 +18,7 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
+    @JsonIgnore
     protected UUID uuid;
 
     @Override
