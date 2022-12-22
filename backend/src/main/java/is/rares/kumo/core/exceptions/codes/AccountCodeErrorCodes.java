@@ -12,7 +12,16 @@ public enum AccountCodeErrorCodes  implements BaseErrorCode{
     INVALID_INVITE("4", HttpStatus.BAD_REQUEST, "Validation.Invite.Invalid"),
 
     DUPLICATE_USERNAME("5", HttpStatus.BAD_REQUEST, "Duplicate.Username"),
-    DUPLICATE_EMAIL("6", HttpStatus.BAD_REQUEST, "Duplicate.Email");
+    DUPLICATE_EMAIL("6", HttpStatus.BAD_REQUEST, "Duplicate.Email"),
+
+    TWO_FACTOR_MISSING("7", HttpStatus.BAD_REQUEST, "TwoFA.Missing"),
+
+    ACCOUNT_CODE_NOT_FOUND("8", HttpStatus.NOT_FOUND, "Exception.AccountCode.NotFound"),
+
+    ACCOUNT_CODE_EXPIRED("9", HttpStatus.UNPROCESSABLE_ENTITY, "Validation.AccountCode.Expired"),
+
+    ACCOUNT_CODE_USED("10", HttpStatus.UNPROCESSABLE_ENTITY, "Validation.AccountCode.Used");
+
 
     private final String errorCode;
     private final HttpStatus httpStatus;

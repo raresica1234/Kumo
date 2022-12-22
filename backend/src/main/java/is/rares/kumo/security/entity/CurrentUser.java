@@ -21,13 +21,13 @@ public class CurrentUser extends User {
     private boolean twoFANeeded;
 
 
-    public CurrentUser(String username,
+    public CurrentUser(UUID id,
+                       String username,
                        String password,
                        Collection<? extends GrantedAuthority> authorities,
-                       UUID id,
-                       Date expirationDate,
                        boolean isUsing2FA,
-                       boolean twoFANeeded) {
+                       boolean twoFANeeded,
+                       Date expirationDate) {
         super(username, password, authorities);
         this.id = id;
         this.expirationDate = expirationDate;

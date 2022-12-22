@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/explore")
+@RequestMapping(path = "/api/explore")
 public class ExplorerController {
 
-    @GetMapping("/")
-    public ResponseEntity explore() {
-        return new ResponseEntity(HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<String> explore() {
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
 }

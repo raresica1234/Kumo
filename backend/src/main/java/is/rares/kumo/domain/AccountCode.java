@@ -31,7 +31,7 @@ public class AccountCode extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "uuid")
-    private User accountCredentials;
+    private User user;
 
     @Column(name ="user_id", insertable = false, updatable = false)
     private UUID userId;
