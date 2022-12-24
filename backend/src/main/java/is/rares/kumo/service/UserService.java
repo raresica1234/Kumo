@@ -8,9 +8,9 @@ import is.rares.kumo.model.requests.RegisterRequest;
 import is.rares.kumo.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import reactor.util.annotation.Nullable;
 
 import java.util.UUID;
 
