@@ -51,8 +51,14 @@ public class AuthenticationController {
 
     @ApiOperation(value = "Validate 2FA code", response = SuccessResponse.class)
     @PostMapping(value = "/validate2FA")
-    public ResponseEntity<TokenDataResponse> validateCode(@ApiParam(value = "Account code request", required = true)
+    public TokenDataResponse validateCode(@ApiParam(value = "Account code request", required = true)
                                                           @Valid @RequestBody AccountCodeRequest request) {
-        return new ResponseEntity<>(authenticationService.validateTwoFactorCode(request, currentUserService.getUser()), HttpStatus.OK);
+        return authenticationService.validateTwoFactorCode(request, currentUserService.getUser());
+    }
+
+    @ApiOperation(value = "Refresh token", response = SuccessResponse.class)
+    @PostMapping(value = "/refresh-token")
+    public TokenDataResponse refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
+        return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken);
     }
 }
