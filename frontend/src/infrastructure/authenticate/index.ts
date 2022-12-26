@@ -1,7 +1,8 @@
 import {createContext} from "react";
 import {makeAutoObservable, runInAction} from "mobx";
-import {clearToken, getToken, setToken} from "./token-helper";
+import {clearTokens, getJwtToken, setToken} from "./token-helper";
 import {isAdministrator} from "../../accessors/account-accessor";
+import Token from "../../accessors/types/token";
 
 class AuthenticateStore {
     public isUserLogged?: boolean = undefined;
@@ -13,16 +14,16 @@ class AuthenticateStore {
     }
 
     public init = () => {
-        this.isUserLogged = getToken() !== "";
+        this.isUserLogged = getJwtToken() !== "";
         this.fetchAdminStatus();
     }
 
-    public setToken = (token?: string) => {
+    public setToken = (token?: Token) => {
         if (token !== undefined) {
             setToken(token);
             this.isUserLogged = true;
         } else {
-            clearToken()
+            clearTokens()
             this.isUserLogged = false;
         }
 
@@ -31,13 +32,16 @@ class AuthenticateStore {
 
     public reset = () => {
         this.isUserLogged = false;
-        clearToken();
+        clearTokens();
         this.fetchAdminStatus()
     }
 
     private fetchAdminStatus = () => {
-        if (!this.isUserLogged)
+        if (!this.isUserLogged) {
+            this.isServerDown = false;
+            this.isUserAdmin = false;
             return;
+        }
 
         isAdministrator().then(admin => {
             runInAction(() => this.isUserAdmin = admin);

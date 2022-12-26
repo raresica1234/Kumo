@@ -1,4 +1,4 @@
-import {getToken} from "../infrastructure/authenticate/token-helper";
+import {getJwtToken} from "../infrastructure/authenticate/token-helper";
 
 type httpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -9,7 +9,7 @@ const genericFetch = <T>(method: httpMethod, url: string, body?: any) =>
 				method,
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${getToken()}`
+					"Authorization": `Bearer ${getJwtToken()}`
 				},
 				body: JSON.stringify(body)
 			})
