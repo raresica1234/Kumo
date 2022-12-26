@@ -17,14 +17,18 @@ const Register = () => {
         register
     } = useContext(RegisterContext)
 
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState(<></>);
-    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const initErrorStates = () => {
+        return {
+            usernameError: <></>,
+            emailError: <></>,
+            passwordError: <></>,
+            confirmPasswordError: <></>,
+        };
+    }
+
+    const [errors, setErrors] = useState(initErrorStates());
 
     const handleRegister = async () => {
-        setEmailError("");
-        setPasswordError(<></>);
-        setConfirmPasswordError("");
 
         const result = await register();
 
@@ -32,17 +36,23 @@ const Register = () => {
             // Successful login
             navigate("/login");
         } else {
+            let currentErrors = initErrorStates();
+
             const errors = result.split("\n");
             errors.forEach(error => {
-                if (error.toLowerCase().includes("email") || error.toLowerCase().includes("username")) {
-                    setEmailError(error)
-                }
-                if (error.toLowerCase().includes("match")) {
-                    setConfirmPasswordError(error);
-                } else if (error.toLowerCase().includes("password")) {
-                    setPasswordError(passwordError => <>{passwordError}{error}<br/></>);
-                }
+                if (error.toLowerCase().includes("username"))
+                    currentErrors.usernameError = <>{currentErrors.usernameError}{error}<br/></>;
+
+                if (error.toLowerCase().includes("email"))
+                    currentErrors.emailError = <>{currentErrors.emailError}{error}<br/></>;
+
+                if (error.toLowerCase().includes("match"))
+                    currentErrors.confirmPasswordError = <>{currentErrors.confirmPasswordError}{error}<br/></>;
+                else if (error.toLowerCase().includes("password"))
+                    currentErrors.passwordError = <>{currentErrors.passwordError}{error}<br/></>;
             })
+
+            setErrors(currentErrors);
         }
     }
 
@@ -65,32 +75,44 @@ const Register = () => {
             </Grid>
             <Grid item className={styles.inputContainer}>
                 <TextField fullWidth
+                           label="Username"
+                           variant="standard"
+                           type="text"
+                           error={errors.usernameError.props.children !== undefined}
+                           helperText={errors.usernameError}
+                           onChange={(e) => setUsername(e.target.value)}
+                           onKeyDown={(e) => handleEnter(e.key)}/>
+            </Grid>
+
+            <Grid item className={styles.inputContainer}>
+                <TextField fullWidth
                            label="Email"
                            variant="standard"
                            type="email"
-                           error={emailError !== ""}
-                           helperText={emailError}
-                           onChange={(e) => setUsername(e.target.value)}
-                           onKeyPress={(e) => handleEnter(e.key)}/>
+                           error={errors.emailError.props.children !== undefined}
+                           helperText={errors.emailError}
+                           onChange={(e) => setEmail(e.target.value)}
+                           onKeyDown={(e) => handleEnter(e.key)}/>
             </Grid>
             <Grid item xs className={styles.inputContainer}>
                 <TextField fullWidth
                            type="password"
                            label="Password"
                            variant="standard"
-                           error={passwordError.props.children !== undefined}
-                           helperText={<>{passwordError}</>}
+                           error={errors.passwordError.props.children !== undefined}
+                           helperText={<>{errors.passwordError}</>}
                            onChange={(e) => setPassword(e.target.value)}
-                           onKeyPress={(e) => handleEnter(e.key)}/>
+                           onKeyDown={(e) => handleEnter(e.key)}/>
             </Grid>
             <Grid item xs className={styles.inputContainer}>
                 <TextField fullWidth
                            type="password"
                            label="Confirm Password"
                            variant="standard"
-                           error={confirmPasswordError !== ""} helperText={confirmPasswordError}
+                           error={errors.confirmPasswordError.props.children !== undefined}
+                           helperText={errors.confirmPasswordError}
                            onChange={(e) => setConfirmPassword(e.target.value)}
-                           onKeyPress={(e) => handleEnter(e.key)}/>
+                           onKeyDown={(e) => handleEnter(e.key)}/>
             </Grid>
             <Grid item xs className={styles.inputContainer}>
                 <div className={styles.submit}>
