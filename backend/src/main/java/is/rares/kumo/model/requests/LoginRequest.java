@@ -12,18 +12,18 @@ import javax.validation.constraints.Size;
 @Data
 @ApiModel(description = "Login request object")
 public class LoginRequest {
-    @NotNull
+    @NotNull(message = "Username must not be empty")
     @ApiModelProperty(notes = "The account username")
     @Size(min = 6, max = 25, message = "Username needs to be between 6 and 25 characters")
     String username;
 
-    @NotNull
+    @NotNull(message = "Password must not be empty")
     @ApiModelProperty(notes = "The account password")
     @Size(min = 6, max = 35, message = "Password needs to be between 6 and 35 characters")
-    @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z]).*", message = "aaaaaaaaa")
+    @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z]).*", message = "Password must have at least one uppercase and one lowercase character")
     String password;
 
-    @NotNull
+    @NotNull(message = "Client location missing")
     @ApiModelProperty(notes = "The client's location")
     ClientLocation clientLocation;
 }
