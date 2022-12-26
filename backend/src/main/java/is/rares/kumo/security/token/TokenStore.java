@@ -11,6 +11,8 @@ public class TokenStore {
 
     private final RedisTemplate<Object, Object> redisTemplate;
 
+    private static final String TOKEN_DOCUMENT_NAME = "token::";
+
     public TokenStore(TokenRepository tokenRepository,
                       RedisTemplate<Object, Object> redisTemplate) {
         this.tokenRepository = tokenRepository;
@@ -23,7 +25,8 @@ public class TokenStore {
     }
 
     public void checkTokenValidity(String jwt) {
-//        redisTemplate.opsForValue().get();
+        if (redisTemplate.opsForValue().get(TOKEN_DOCUMENT_NAME + jwt) != null) // token was blacklisted
+            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Invalid authentication");
     }
 
 }

@@ -1,11 +1,14 @@
 spring:
+
   datasource:
     url: jdbc:postgresql://localhost:5432/kumo
     username: postgres
     password: postgres
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 redis:
   host: localhost
+
+spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

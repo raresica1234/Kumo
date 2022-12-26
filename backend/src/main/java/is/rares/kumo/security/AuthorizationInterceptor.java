@@ -6,6 +6,7 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.security.entity.CurrentUser;
 import is.rares.kumo.security.token.AsyncTokenStore;
+import is.rares.kumo.security.token.TokenStore;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,13 +29,16 @@ public class AuthorizationInterceptor extends OncePerRequestFilter {
     private final JwtUserService userService;
     private final ObjectMapper objectMapper;
     private final AsyncTokenStore asyncTokenStore;
+    private final TokenStore tokenStore;
 
     public AuthorizationInterceptor(JwtUserService userService,
                                     ObjectMapper objectMapper,
-                                    AsyncTokenStore asyncTokenStore) {
+                                    AsyncTokenStore asyncTokenStore,
+                                    TokenStore tokenStore) {
         this.userService = userService;
         this.objectMapper = objectMapper;
         this.asyncTokenStore = asyncTokenStore;
+        this.tokenStore = tokenStore;
     }
 
     @Override
@@ -63,6 +66,8 @@ public class AuthorizationInterceptor extends OncePerRequestFilter {
     private void setPrincipal(String jwt, String requestUrl, boolean isRefreshFlowActive) {
         if (jwt == null)
             return;
+
+        tokenStore.checkTokenValidity(jwt);
 
         final CurrentUser currentUser = userService.loadUserByUsername(jwt);
         if (!isRefreshFlowActive) {
