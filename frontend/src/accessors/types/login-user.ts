@@ -1,4 +1,7 @@
+import ClientLocation from "./client-location";
+
 export interface LoginUser {
-	email: string,
+	username: string,
 	password: string
+	clientLocation: ClientLocation;
 }

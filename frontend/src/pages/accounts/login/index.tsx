@@ -9,34 +9,40 @@ const Login = () => {
     const navigate = useNavigate();
 
     const {
-        setEmail,
+        setUsername,
         setPassword,
         login
     } = useContext(LoginContext)
 
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState(<></>);
+    const initErrorStates = () => {
+        return {
+            emailError: <></>,
+            passwordError: <></>
+        };
+    }
+
+    const [errorState, setErrorState] = useState(initErrorStates());
 
     const handleLogin = async () => {
-        setEmailError("");
-        setPasswordError(<></>);
 
         const result = await login();
-
-        console.log(result);
 
         if (result == "") {
             navigate("/");
         } else {
+            let errorStates = initErrorStates();
+
             const errors = result.split("\n");
             errors.forEach(error => {
                 if (error.toLowerCase().includes("email") || error.toLowerCase().includes("username")) {
-                    setEmailError(error)
+                    errorStates.emailError = <>{errorStates.emailError}{error}<br/></>;
                 }
                 if (error.toLowerCase().includes("password")) {
-                    setPasswordError(passwordError => <>{passwordError}{error}<br/></>);
+                    errorStates.passwordError = <>{errorStates.passwordError}{error}<br/></>;
                 }
             });
+
+            setErrorState(errorStates);
         }
     }
 
@@ -59,20 +65,20 @@ const Login = () => {
             </Grid>
             <Grid item className={styles.inputContainer}>
                 <TextField fullWidth label="Email" variant="standard" type="email"
-                           error={emailError !== ""}
-                           helperText={emailError}
-                           onChange={(e) => setEmail(e.target.value)}
-                           onKeyPress={(e) => handleEnter(e.key)}/>
+                           error={errorState.emailError.props.children !== undefined}
+                           helperText={errorState.emailError}
+                           onChange={(e) => setUsername(e.target.value)}
+                           onKeyDown={(e) => handleEnter(e.key)}/>
             </Grid>
             <Grid item xs className={styles.inputContainer}>
                 <TextField fullWidth
                            type="password"
                            label="Password"
                            variant="standard"
-                           error={passwordError.props.children !== undefined}
-                           helperText={<>{passwordError}</>}
+                           error={errorState.passwordError.props.children !== undefined}
+                           helperText={errorState.passwordError}
                            onChange={(e) => setPassword(e.target.value)}
-                           onKeyPress={(e) => handleEnter(e.key)}/>
+                           onKeyDown={(e) => handleEnter(e.key)}/>
             </Grid>
 
             <Grid item xs className={styles.inputContainer}>

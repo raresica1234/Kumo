@@ -1,10 +1,11 @@
-import {RegisterUser} from "../../../accessors/types/register-user";
+import {RegisterUserForm} from "../../../accessors/types/register-user";
 import {makeAutoObservable} from "mobx";
 import {register} from "../../../accessors/account-accessor";
 import {createContext} from "react";
 
 export class RegisterStore {
-	public user: RegisterUser = {
+	public user: RegisterUserForm = {
+		username: "",
 		email: "",
 		password: "",
 		confirmPassword: ""
@@ -13,6 +14,8 @@ export class RegisterStore {
 	constructor() {
 		makeAutoObservable(this)
 	}
+
+	public setUsername = (username: string) => this.user.username = username;
 
 	public setEmail = (email: string) => this.user.email = email;
 
@@ -26,7 +29,7 @@ export class RegisterStore {
 		}
 
 		try {
-			await register({email: this.user.email, password: this.user.password});
+			await register({email: this.user.email, username: this.user.username, password: this.user.password});
 			return ""
 		} catch (error) {
 			return error as string

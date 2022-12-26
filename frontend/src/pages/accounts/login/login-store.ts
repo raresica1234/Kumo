@@ -6,15 +6,20 @@ import {authenticateStore} from "../../../infrastructure/authenticate";
 
 export class LoginStore {
 	public user: LoginUser = {
-		email: "",
+		username: "",
 		password: "",
+		clientLocation: {
+			country: "",
+			ipAddress: "",
+			locationType: "WEB",
+		}
 	};
 
 	constructor() {
 		makeAutoObservable(this)
 	}
 
-	public setEmail = (email: string) => this.user.email = email;
+	public setUsername = (username: string) => this.user.username = username;
 
 	public setPassword = (password: string) => this.user.password = password;
 

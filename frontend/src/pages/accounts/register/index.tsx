@@ -10,6 +10,7 @@ const Register = () => {
     const navigate = useNavigate();
 
     const {
+        setUsername,
         setEmail,
         setPassword,
         setConfirmPassword,
@@ -69,7 +70,7 @@ const Register = () => {
                            type="email"
                            error={emailError !== ""}
                            helperText={emailError}
-                           onChange={(e) => setEmail(e.target.value)}
+                           onChange={(e) => setUsername(e.target.value)}
                            onKeyPress={(e) => handleEnter(e.key)}/>
             </Grid>
             <Grid item xs className={styles.inputContainer}>
