@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static is.rares.kumo.security.AuthorizationInterceptor.BEARER_ATTRIBUTE;
+
 @RestController
 @Slf4j
 @RequestMapping(path = "/api/authenticate")
@@ -59,6 +61,6 @@ public class AuthenticationController {
     @ApiOperation(value = "Refresh token", response = SuccessResponse.class)
     @PostMapping(value = "/refresh-token")
     public TokenDataResponse refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
-        return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken);
+        return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken.substring(BEARER_ATTRIBUTE.length()));
     }
 }

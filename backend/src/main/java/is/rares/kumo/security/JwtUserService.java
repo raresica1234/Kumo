@@ -27,13 +27,20 @@ public class JwtUserService extends KeyLoaderService implements UserDetailsServi
             final String username = userClaims.getSubject();
             final UUID userId = UUID.fromString(username);
             final Date expirationDate = userClaims.getExpiration();
-            final boolean isUsing2FA = (boolean) userClaims.get(UserClaims.IS_USING_TWO_FA.getClaim());
 
-            boolean twoFANeeded = false;
-            if (userClaims.containsKey(UserClaims.TWO_FA_NEEDED.getClaim()))
-                twoFANeeded = (boolean) userClaims.get(UserClaims.TWO_FA_NEEDED.getClaim());
+            boolean isRefreshToken = userClaims.get(UserClaims.REFRESH_TOKEN.getClaim()) != null;
 
-            return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), isUsing2FA, twoFANeeded, expirationDate);
+            if (!isRefreshToken) {
+                final boolean isUsing2FA = (boolean) userClaims.get(UserClaims.IS_USING_TWO_FA.getClaim());
+
+                boolean twoFANeeded = false;
+                if (userClaims.containsKey(UserClaims.TWO_FA_NEEDED.getClaim()))
+                    twoFANeeded = (boolean) userClaims.get(UserClaims.TWO_FA_NEEDED.getClaim());
+                return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), isUsing2FA, twoFANeeded, expirationDate);
+
+            }
+            else
+                return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), false, false, expirationDate);
 
         } catch (Exception e) {
             throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Invalid token");

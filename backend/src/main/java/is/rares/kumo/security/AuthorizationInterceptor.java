@@ -23,7 +23,7 @@ import java.io.IOException;
 public class AuthorizationInterceptor extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String REFRESH_HEADER = "Refresh-Token";
-    private static final String BEARER_ATTRIBUTE = "Bearer "; // space is mandatory
+    public static final String BEARER_ATTRIBUTE = "Bearer "; // space is mandatory
     private static final String VALIDATE_2FA_ENDPOINT = "/validate2FA";
 
     private final JwtUserService userService;

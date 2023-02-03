@@ -44,7 +44,7 @@ class AuthenticateStore {
         }
 
         isAdministrator().then(admin => {
-            runInAction(() => this.isUserAdmin = admin);
+            // runInAction(() => this.isUserAdmin = admin);
         }).catch(() => {
             runInAction(() => {
                 this.isServerDown = true;

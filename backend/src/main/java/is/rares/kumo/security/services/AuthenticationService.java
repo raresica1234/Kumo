@@ -85,7 +85,8 @@ public class AuthenticationService extends KeyLoaderService {
 
     private String generateRefreshToken(UUID userId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("randomId", UUID.randomUUID().toString());
+        claims.put(UserClaims.RANDOM_ID.getClaim(), UUID.randomUUID().toString());
+        claims.put(UserClaims.REFRESH_TOKEN.getClaim(), true);
         return createToken(claims, userId.toString(), jwtConfiguration.getRefreshTokenValidity());
     }
 

@@ -26,9 +26,13 @@ const genericFetch = <T>(method: httpMethod, url: string, body?: any) =>
                 }
                 return;
             }
-            if (payload.httpStatus) {
+
+            console.log(payload);
+
+            if (payload.httpStatus)
                 reject(payload.message);
-            }
+            else
+                reject(payload)
         } catch (exception) {
             reject(exception);
         }

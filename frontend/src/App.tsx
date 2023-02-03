@@ -13,7 +13,9 @@ const App = () => {
 
     useEffect(() => {
         init();
-    }, [init, isUserLogged]);
+    }, [init, isUserLogged === undefined ? null : isUserLogged]);
+
+    console.log(`${isUserLogged} - ${isUserAdmin}`)
 
     if (isUserLogged === undefined || isUserAdmin === undefined) return null;
 

@@ -26,7 +26,7 @@ export class LoginStore {
 	public login = async (): Promise<string> => {
 		try {
 			const token = await login(this.user);
-			authenticateStore.setToken(token);
+			// authenticateStore.setToken(token);
 
 			return ""
 		} catch (error) {
