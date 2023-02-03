@@ -5,16 +5,16 @@ import Token from "./types/token";
 import {RegisterUserRequest} from "./types/register-user";
 import {http} from "./services/axios-instances";
 
-const ACCOUNT_URL = `${BASE_URL}/authenticate`
+const AUTHENTICATE_URL = `/authenticate`
 
-export const register = (user: RegisterUserRequest) => httpPost(`${ACCOUNT_URL}/register`, user);
+export const register = (user: RegisterUserRequest) => httpPost(`${BASE_URL}/authenticate/register`, user);
 
 export const login = async (user: LoginUser) => {
-	const token = await http.post<Token>(`/login`, user);
+	const token = await http.post<Token>(`${AUTHENTICATE_URL}/login`, user);
 
 	console.log(token);
 
 	return token;
 }
 
-export const isAdministrator = () => http.post<boolean>("/isAdministrator");
+export const isAdministrator = () => http.post<boolean>(`${AUTHENTICATE_URL}/isAdministrator`);

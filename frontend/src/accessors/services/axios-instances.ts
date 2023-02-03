@@ -2,6 +2,7 @@ import axios from "axios";
 import {getJwtToken, getRefreshToken} from "../../infrastructure/authenticate/token-helper";
 import {BASE_URL} from "../constants";
 import Token from "../types/token";
+import {authenticateStore} from "../../infrastructure/authenticate";
 
 export const http = axios.create({
     baseURL: BASE_URL,
@@ -25,36 +26,28 @@ http.interceptors.request.use(config => {
 
 
 http.interceptors.response.use(value => {
-
     return value;
 }, async error => {
-    // console.log(error);
     const {config, message, response} = error;
 
     if (refreshFlow) {
-        // authenticateStore.reset();
+        authenticateStore.reset();
 
         return Promise.reject(error);
     }
 
     if (response.data && response.data.httpStatus !== undefined) {
         if (response.data.message.includes("authentication")) {
-
-            console.log("Auth failed, trying to refresh token");
             refreshFlow = true;
             const token = await http.post<Token>("/authenticate/refresh-token", undefined, {
                 headers: {
                     'Refresh-Token': `Bearer ${getRefreshToken()}`,
                 },
             });
-
             console.log(token);
         }
     }
-    // Auth failed
-
-
-    // http(config);
+    authenticateStore.reset();
 
     return Promise.reject(error);
 });

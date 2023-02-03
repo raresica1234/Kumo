@@ -24,8 +24,9 @@ const Login = () => {
     const [errorState, setErrorState] = useState(initErrorStates());
 
     const handleLogin = async () => {
-
         const result = await login();
+
+        console.log(result)
 
         if (result == "") {
             navigate("/");
