@@ -90,7 +90,7 @@ public class AuthorizationInterceptor extends OncePerRequestFilter {
 
     private void refreshToken(HttpServletRequest request) {
         final String authHeader = request.getHeader(REFRESH_HEADER);
-        if (authHeader != null && authHeader.startsWith(BEARER_ATTRIBUTE))
+        if (authHeader != null)
             this.setPrincipal(authHeader.substring(BEARER_ATTRIBUTE.length()), request.getRequestURL().toString(), true);
     }
 }

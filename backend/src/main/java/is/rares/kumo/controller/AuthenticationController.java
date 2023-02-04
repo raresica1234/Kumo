@@ -11,8 +11,6 @@ import is.rares.kumo.security.CurrentUserService;
 import is.rares.kumo.security.services.AuthenticationService;
 import is.rares.kumo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +45,15 @@ public class AuthenticationController {
 
     @ApiOperation(value = "Register", response = SuccessResponse.class)
     @PostMapping(value = "/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request, @Nullable @RequestHeader("Register-Invite") String registerInvite) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request,
+                                           @Nullable @RequestHeader("Register-Invite") String registerInvite) {
         return userService.register(request, registerInvite);
     }
 
     @ApiOperation(value = "Validate 2FA code", response = SuccessResponse.class)
     @PostMapping(value = "/validate2FA")
     public TokenDataResponse validateCode(@ApiParam(value = "Account code request", required = true)
-                                                          @Valid @RequestBody AccountCodeRequest request) {
+                                          @Valid @RequestBody AccountCodeRequest request) {
         return authenticationService.validateTwoFactorCode(request, currentUserService.getUser());
     }
 
