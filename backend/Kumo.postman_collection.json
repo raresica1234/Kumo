@@ -1,0 +1,163 @@
+{
+	"info": {
+		"_postman_id": "86ec1432-8797-49d2-a4f3-dfbd82ff574e",
+		"name": "Kumo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\",\n  \"clientLocation\": {\n    \"country\": \"Romania\",\n    \"ipAddress\": \"0.0.0.0\",\n    \"locationType\": \"WEB\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/authenticate/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"authenticate",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Register-Invite",
+								"value": "a",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"colorlord98@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/authenticate/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"authenticate",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TwoFactorValidation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJpc1VzaW5nMkZBIjp0cnVlLCJ0d29GQU5lZWRlZCI6dHJ1ZSwic3ViIjoiZTYwNDgyYTctNzU1ZC00MmMzLTk1YzEtYzdhZDY0NGFmYzllIiwiaXNzIjoiS3VtbyIsImlhdCI6MTY3MTcyNTc2MCwiZXhwIjoxNjcxNzI2MzYwLCJqdGkiOiI3YWFlZTIxZS05ODQzLTRiMjktOTc4YS0wYjIwMzFmNmM1NDcifQ.ARmguzWgi8JpJOiYiOfgS-ev2uTy13IhmYJJVVqwb439IwgVdj8GPRBEOZ8PgvrYaVI-Dw3FB-5NfGBR6DvQ10OpAf7IAA0jQTelKcYMMpk5mNNMkksTmJDf_f1Nwshb3AMXuXsj_hXo_rXKUzbdFeBcKCKuJDhY41rVW3Y5DbN5XjES",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Romania\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"pU7tPQ\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/authenticate/validate2FA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"authenticate",
+								"validate2FA"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exploring",
+			"item": [
+				{
+					"name": "Explore",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJFUzUxMiJ9.eyJpc1VzaW5nMkZBIjpmYWxzZSwidHdvRkFOZWVkZWQiOnRydWUsInN1YiI6Ijk0NzI0YTNhLWZjYzUtNGM3Ni04ZThlLTEyM2I3ZWQ3MmYyNyIsImlzcyI6Ikt1bW8iLCJpYXQiOjE2NzIwNTIyMjgsImV4cCI6MTY3MjA1MjgyOCwianRpIjoiYWNmN2ZjNWItNmUwMy00YThiLWE3ZDgtMzFkMWMzZjgwMDg4In0.AUJ2Ogbj5EQR3DB4HHMAPsCpF_Vo5cuIPTPCb8bnY-BSdMoVdDKb28LGmgTtWqWltpBxstytY3y3nJdGc-y8phd1AMGqVFrMwy_MQwsT0RL1r9xSdtzgG3wGh1jnq-HiC2JT_fDNNPyX6RFVKhaR5VU_DyYRXige8FRnfqIfuWhFik2P",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/explore",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"explore"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
