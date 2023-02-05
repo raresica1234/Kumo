@@ -1,4 +1,4 @@
-package is.rares.kumo.model.requests;
+package is.rares.kumo.controller.requests;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

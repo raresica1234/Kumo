@@ -1,4 +1,4 @@
-package is.rares.kumo.model.responses;
+package is.rares.kumo.controller.responses;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;

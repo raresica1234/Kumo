@@ -18,7 +18,6 @@ public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    @JsonIgnore
     protected UUID uuid;
 
     @Override

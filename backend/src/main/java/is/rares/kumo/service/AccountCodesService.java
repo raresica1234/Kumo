@@ -6,7 +6,7 @@ import is.rares.kumo.domain.AccountCode;
 import is.rares.kumo.domain.User;
 import is.rares.kumo.domain.enums.AccountCodeStatus;
 import is.rares.kumo.domain.enums.AccountCodeType;
-import is.rares.kumo.model.requests.AccountCodeRequest;
+import is.rares.kumo.controller.requests.AccountCodeRequest;
 import is.rares.kumo.repository.AccountCodeRepository;
 import is.rares.kumo.security.entity.CurrentUser;
 import is.rares.kumo.utils.StringUtils;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Slf4j

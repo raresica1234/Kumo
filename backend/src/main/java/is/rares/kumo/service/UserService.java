@@ -4,7 +4,7 @@ import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.domain.User;
-import is.rares.kumo.model.requests.RegisterRequest;
+import is.rares.kumo.controller.requests.RegisterRequest;
 import is.rares.kumo.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

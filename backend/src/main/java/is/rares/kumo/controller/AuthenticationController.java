@@ -2,11 +2,11 @@ package is.rares.kumo.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import is.rares.kumo.model.requests.AccountCodeRequest;
-import is.rares.kumo.model.requests.LoginRequest;
-import is.rares.kumo.model.requests.RegisterRequest;
-import is.rares.kumo.model.responses.SuccessResponse;
-import is.rares.kumo.model.responses.TokenDataResponse;
+import is.rares.kumo.controller.requests.AccountCodeRequest;
+import is.rares.kumo.controller.requests.LoginRequest;
+import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.controller.responses.SuccessResponse;
+import is.rares.kumo.controller.responses.TokenDataResponse;
 import is.rares.kumo.security.CurrentUserService;
 import is.rares.kumo.security.services.AuthenticationService;
 import is.rares.kumo.service.UserService;
@@ -62,4 +62,6 @@ public class AuthenticationController {
     public TokenDataResponse refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
         return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken.substring(BEARER_ATTRIBUTE.length()));
     }
+
+    @ApiOperation(value = "List Client Locations", response=)
 }
