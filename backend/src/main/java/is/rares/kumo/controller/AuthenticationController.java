@@ -7,6 +7,7 @@ import is.rares.kumo.controller.requests.LoginRequest;
 import is.rares.kumo.controller.requests.RegisterRequest;
 import is.rares.kumo.controller.responses.SuccessResponse;
 import is.rares.kumo.controller.responses.TokenDataResponse;
+import is.rares.kumo.model.authentication.LoggedClientModel;
 import is.rares.kumo.security.CurrentUserService;
 import is.rares.kumo.security.services.AuthenticationService;
 import is.rares.kumo.service.UserService;
@@ -16,6 +17,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 import static is.rares.kumo.security.AuthorizationInterceptor.BEARER_ATTRIBUTE;
 
@@ -63,5 +66,9 @@ public class AuthenticationController {
         return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken.substring(BEARER_ATTRIBUTE.length()));
     }
 
-//    @ApiOperation(value = "List Client Locations", response=)
+    @ApiOperation(value = "List Client Locations", response= LoggedClientModel.class, responseContainer = "List")
+    @GetMapping(value = "/clients")
+    public List<LoggedClientModel> getAllLoggedClients() {
+        return this.authenticationService.getLoggedClients(currentUserService.getUser());
+    }
 }
