@@ -25,10 +25,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests(authorize -> authorize
-                        .antMatchers("/api/authenticate/**").permitAll()
-                        .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .antMatchers("/swagger-resources/**").permitAll()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/authenticate/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

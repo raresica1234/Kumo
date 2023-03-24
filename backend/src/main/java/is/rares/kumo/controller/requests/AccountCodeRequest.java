@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import is.rares.kumo.security.entity.ClientLocation;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 @ApiModel(description = "Login request object for account code validation")

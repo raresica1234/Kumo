@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static is.rares.kumo.security.AuthorizationInterceptor.BEARER_ATTRIBUTE;
 
@@ -63,5 +63,5 @@ public class AuthenticationController {
         return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken.substring(BEARER_ATTRIBUTE.length()));
     }
 
-    @ApiOperation(value = "List Client Locations", response=)
+//    @ApiOperation(value = "List Client Locations", response=)
 }

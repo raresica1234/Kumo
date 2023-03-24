@@ -9,7 +9,7 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.*;
 import java.security.PrivateKey;
 import java.security.PublicKey;

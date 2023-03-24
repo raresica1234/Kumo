@@ -6,7 +6,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;

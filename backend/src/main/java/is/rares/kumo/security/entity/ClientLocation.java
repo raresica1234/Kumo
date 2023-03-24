@@ -5,7 +5,7 @@ import is.rares.kumo.security.enums.ClientLocationType;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Getter
