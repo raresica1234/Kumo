@@ -7,18 +7,21 @@ import is.rares.kumo.KumoApplication;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
-@AnalyzeClasses(packagesOf = KumoApplication.class)
+@AnalyzeClasses(packages = "is.rares.kumo")
 public class ArchitectureTests {
+    private static final String PACKAGE = "is.rares.kumo";
     @ArchTest
-    public static final ArchRule controllersShouldNotAccessDomainObjects = noClasses()
-            .that().resideInAnyPackage("..controller..")
-            .should().dependOnClassesThat().resideInAnyPackage("..domain..");
+    public static final ArchRule controllersShouldNotAccessDomainObjects = classes()
+            .that().resideInAPackage(PACKAGE)
+            .and().resideInAnyPackage("..controller..")
+            .should().notBe().
+            .should().dependOnClassesThat().arenot("..domain..");
 
     @ArchTest
     public static final ArchRule methodsAnnotatedWithRequestBodyShouldHaveValid = methods()
-            .that().areAnnotatedWith(RequestBody.class)
+            .that().areDeclaredInClassesThat().resideInAPackage(PACKAGE)
+            .and().areAnnotatedWith(RequestBody.class)
             .should().beAnnotatedWith(Valid.class);
 }

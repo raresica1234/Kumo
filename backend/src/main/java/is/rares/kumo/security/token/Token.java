@@ -1,7 +1,7 @@
 package is.rares.kumo.security.token;
 
 import is.rares.kumo.domain.BaseEntity;
-import is.rares.kumo.security.entity.ClientLocation;
+import is.rares.kumo.security.domain.ClientLocation;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

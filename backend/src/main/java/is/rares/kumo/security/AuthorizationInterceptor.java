@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import is.rares.kumo.core.exceptions.ErrorResponse;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
-import is.rares.kumo.security.entity.CurrentUser;
+import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.token.AsyncTokenStore;
 import is.rares.kumo.security.token.TokenStore;
 import org.springframework.core.annotation.Order;

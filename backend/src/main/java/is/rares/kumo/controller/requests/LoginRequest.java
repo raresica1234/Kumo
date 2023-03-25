@@ -2,7 +2,7 @@ package is.rares.kumo.controller.requests;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import is.rares.kumo.security.entity.ClientLocation;
+import is.rares.kumo.security.model.ClientLocationModel;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;
@@ -25,5 +25,5 @@ public class LoginRequest {
 
     @NotNull(message = "Client location missing")
     @ApiModelProperty(notes = "The client's location")
-    ClientLocation clientLocation;
+    ClientLocationModel clientLocation;
 }

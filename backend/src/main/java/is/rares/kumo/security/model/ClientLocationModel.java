@@ -1,15 +1,13 @@
-package is.rares.kumo.model.authentication;
+package is.rares.kumo.security.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import is.rares.kumo.security.entity.ClientLocation;
+import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.enums.ClientLocationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 
 @Data

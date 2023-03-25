@@ -1,4 +1,4 @@
-package is.rares.kumo.security.entity;
+package is.rares.kumo.security.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
