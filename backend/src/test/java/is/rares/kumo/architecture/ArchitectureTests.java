@@ -1,5 +1,6 @@
 package is.rares.kumo.architecture;
 
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
@@ -9,15 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
-@AnalyzeClasses(packages = "is.rares.kumo")
+@AnalyzeClasses(packagesOf = KumoApplication.class, importOptions = {
+        ImportOption.DoNotIncludeTests.class,
+        ImportOption.DoNotIncludeArchives.class,
+        ImportOption.DoNotIncludeJars.class
+})
 public class ArchitectureTests {
     private static final String PACKAGE = "is.rares.kumo";
     @ArchTest
-    public static final ArchRule controllersShouldNotAccessDomainObjects = classes()
-            .that().resideInAPackage(PACKAGE)
-            .and().resideInAnyPackage("..controller..")
-            .should().notBe().
-            .should().dependOnClassesThat().arenot("..domain..");
+    public static final ArchRule controllersShouldNotAccessDomainObjects = noClasses()
+            .that().resideInAPackage("..controller..")
+            .should().dependOnClassesThat().resideInAPackage("..domain..");
 
     @ArchTest
     public static final ArchRule methodsAnnotatedWithRequestBodyShouldHaveValid = methods()
