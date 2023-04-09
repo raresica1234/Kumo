@@ -16,7 +16,6 @@ import is.rares.kumo.security.services.AuthenticationService;
 import is.rares.kumo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +43,7 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Login", operationId = "login", responses = {
-            @ApiResponse(responseCode = HttpStatus.OK.toString(), content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
             @ApiResponse(responseCode = "400", description = "Incorrect password"),
             @ApiResponse(responseCode = "404", description = "Username not found")
     })
@@ -54,7 +53,11 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Register", responses = {
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = SuccessResponse.class)))
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+            @ApiResponse(responseCode = "400", description = "Invitation invalid"),
+            @ApiResponse(responseCode = "400", description = "Duplicate username"),
+            @ApiResponse(responseCode = "400", description = "Duplicate email"),
+
     })
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request,
@@ -62,22 +65,29 @@ public class AuthenticationController {
         return userService.register(request, registerInvite);
     }
 
-    @Operation(summary = "Validate 2FA code", responses =
-    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = SuccessResponse.class)))
-    )
+    @Operation(summary = "Validate 2FA code", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Code not found"),
+            @ApiResponse(responseCode = "422", description = "Code expired"),
+            @ApiResponse(responseCode = "422", description = "Code already used"),
+    })
     @PostMapping(value = "/validate2FA")
     public TokenDataResponse validateCode(@Parameter(name = "Account code request", required = true)
                                           @Valid @RequestBody AccountCodeRequest request) {
         return authenticationService.validateTwoFactorCode(request, currentUserService.getUser());
     }
 
-    @Operation(summary = "Refresh token", response = SuccessResponse.class)
+    @Operation(summary = "Refresh token", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
+    })
     @PostMapping(value = "/refresh-token")
     public TokenDataResponse refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
         return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken.substring(BEARER_ATTRIBUTE.length()));
     }
 
-    @Operation(summary = "List Client Locations", response = LoggedClientModel.class, responseContainer = "List")
+    @Operation(summary = "List Client Locations", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
+    })
     @GetMapping(value = "/clients")
     public List<LoggedClientModel> getAllLoggedClients() {
         return this.authenticationService.getLoggedClients(currentUserService.getUser());
