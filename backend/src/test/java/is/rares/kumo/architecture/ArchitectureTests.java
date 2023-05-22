@@ -27,22 +27,22 @@ public class ArchitectureTests {
             .that().resideInAPackage("..controller..")
             .should().dependOnClassesThat().resideInAPackage("..domain..");
 
-    private static ArchCondition<JavaMethod> methodAnnotatedWithRequestBodyShouldBeValid =
+    private static final ArchCondition<JavaMethod> methodAnnotatedWithRequestBodyShouldBeValid =
             new ArchCondition<>("Methods annotated with @RequestBody should be annotated with @Valid") {
                 @Override
                 public void check(JavaMethod item, ConditionEvents events) {
+                    System.out.println(item.getFullName());
+
                     for (var parameter : item.getParameters())
                         if (parameter.isAnnotatedWith(RequestBody.class) && !parameter.isAnnotatedWith(Valid.class))
-                            events.add(SimpleConditionEvent.violated(parameter, "Parameters annotated with @RequestBody should be annotated with @Valid \n" + item.toString()));
+                            events.add(SimpleConditionEvent.violated(parameter, "Parameters annotated with @RequestBody should be annotated with @Valid \n" + item));
                 }
             };
-
 
     @ArchTest
     public static final ArchRule methodsAnnotatedWithRequestBodyShouldHaveValid = methods()
             .that().areDeclaredInClassesThat().resideInAPackage("..controller..")
             .and().areDeclaredInClassesThat().areAnnotatedWith(RestController.class)
             .should(methodAnnotatedWithRequestBodyShouldBeValid);
-
 
 }
