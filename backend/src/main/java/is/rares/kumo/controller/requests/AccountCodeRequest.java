@@ -1,20 +1,18 @@
 package is.rares.kumo.controller.requests;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import is.rares.kumo.security.model.ClientLocationModel;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import jakarta.validation.constraints.NotNull;
-
 @Data
-@ApiModel(description = "Login request object for account code validation")
+@Schema(description = "Login request object for account code validation")
 public class AccountCodeRequest {
     @NotNull
-    @ApiModelProperty(notes = "The 2FA code")
+    @Schema(description = "The 2FA code")
     String code;
 
     @NotNull
-    @ApiModelProperty(notes = "The client's location")
+    @Schema(description = "The client's location")
     ClientLocationModel clientLocation;
 }

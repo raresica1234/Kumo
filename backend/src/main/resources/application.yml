@@ -1,5 +1,4 @@
 spring:
-
   datasource:
     url: jdbc:postgresql://localhost:5432/kumo
     username: postgres
@@ -10,5 +9,10 @@ spring:
 
 redis:
   host: localhost
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+#  paths-to-match: /api/**
 
 spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

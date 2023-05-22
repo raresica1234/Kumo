@@ -1,6 +1,6 @@
 package is.rares.kumo.controller.responses;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,14 +10,14 @@ import jakarta.validation.constraints.NotNull;
 @Builder
 public class TokenDataResponse {
     @NotNull
-    @ApiModelProperty(notes = "The jwt")
+    @Schema(description = "The jwt")
     private String jwtToken;
 
     @NotNull
-    @ApiModelProperty(notes = "The refresh token")
+    @Schema(description = "The refresh token")
     private String refreshToken;
 
     @NotNull
-    @ApiModelProperty(notes = "THe validity of the access token")
+    @Schema(description = "THe validity of the access token")
     private int validityMs;
 }

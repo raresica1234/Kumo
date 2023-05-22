@@ -16,8 +16,10 @@ import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.UserClaims;
 import is.rares.kumo.security.model.ClientLocationModel;
+import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.token.AsyncTokenStore;
 import is.rares.kumo.security.token.Token;
+import is.rares.kumo.security.token.TokenRepository;
 import is.rares.kumo.security.token.TokenStore;
 import is.rares.kumo.service.AccountCodesService;
 import is.rares.kumo.service.UserService;
@@ -26,14 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
 public class AuthenticationService extends KeyLoaderService {
+    private final TokenRepository tokenRepository;
     private final JWTConfiguration jwtConfiguration;
     private final UserRepository userRepository;
     private final TokenStore tokenStore;
@@ -55,7 +55,8 @@ public class AuthenticationService extends KeyLoaderService {
                                  UserService userService,
                                  PasswordEncoder passwordEncoder,
                                  AccountCodesService accountCodesService,
-                                 ClientLocationConvertor clientLocationConvertor) {
+                                 ClientLocationConvertor clientLocationConvertor,
+                                 TokenRepository tokenRepository) {
         this.jwtConfiguration = jwtConfiguration;
         this.userRepository = userRepository;
         this.tokenStore = tokenStore;
@@ -64,6 +65,7 @@ public class AuthenticationService extends KeyLoaderService {
         this.passwordEncoder = passwordEncoder;
         this.accountCodesService = accountCodesService;
         this.clientLocationConvertor = clientLocationConvertor;
+        this.tokenRepository = tokenRepository;
     }
 
     private String generateToken(UUID userId, boolean isUsing2FA, boolean isFirstLogin) {
@@ -141,4 +143,9 @@ public class AuthenticationService extends KeyLoaderService {
         return generateTokenDataResponse(userService.findByUserId(currentUser.getId()), request.getClientLocation(), false);
     }
 
+    public List<LoggedClientModel> getLoggedClients(CurrentUser user) {
+        return tokenRepository.findByUserId(user.getId()).stream()
+                .map(LoggedClientModel::new)
+                .toList();
+    }
 }

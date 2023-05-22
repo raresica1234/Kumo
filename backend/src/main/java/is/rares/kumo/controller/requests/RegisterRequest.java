@@ -1,27 +1,25 @@
 package is.rares.kumo.controller.requests;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import jakarta.validation.constraints.*;
-
 @Data
-@ApiModel(description = "Register request object")
+@Schema(description = "Register request object")
 public class RegisterRequest {
     @NotNull
-    @ApiModelProperty(notes = "The account username")
+    @Schema(description = "The account username")
     @Size(min = 6, max = 25, message = "Username needs to be between 6 and 25 characters")
     String username;
 
     @NotNull
-    @ApiModelProperty(notes = "The account email")
+    @Schema(description = "The account email")
     @Email
     @NotBlank(message = "Email can not be empty")
     String email;
 
     @NotNull
-    @ApiModelProperty(notes = "The account password")
+    @Schema(description = "The account password")
     @Size(min = 6, max = 35, message = "Password needs to be between 6 and 35 characters")
     @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z]).*", message = "Password must have at least one lowercase and one uppercase character")
     String password;
