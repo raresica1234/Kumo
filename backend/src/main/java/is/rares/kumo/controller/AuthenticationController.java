@@ -44,7 +44,7 @@ public class AuthenticationController {
 
     @Operation(summary = "Login", operationId = "login", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Incorrect password"),
+            @ApiResponse(responseCode = "401", description = "Incorrect password"),
             @ApiResponse(responseCode = "404", description = "Username not found")
     })
     @PostMapping(value = "/login")

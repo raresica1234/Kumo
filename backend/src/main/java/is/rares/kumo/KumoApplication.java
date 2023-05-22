@@ -6,11 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-//@EnableSwagger2
 public class KumoApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(KumoApplication.class, args);
     }
-
 }
