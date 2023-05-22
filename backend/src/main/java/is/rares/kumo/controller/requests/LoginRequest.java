@@ -1,7 +1,7 @@
 package is.rares.kumo.controller.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import is.rares.kumo.security.entity.ClientLocation;
+import is.rares.kumo.security.model.ClientLocationModel;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -23,5 +23,5 @@ public class LoginRequest {
 
     @NotNull(message = "Client location missing")
     @Schema(description = "The client's location")
-    ClientLocation clientLocation;
+    ClientLocationModel clientLocation;
 }

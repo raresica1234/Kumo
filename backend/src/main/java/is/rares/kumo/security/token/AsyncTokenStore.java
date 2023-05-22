@@ -1,7 +1,7 @@
 package is.rares.kumo.security.token;
 
 import is.rares.kumo.controller.responses.TokenDataResponse;
-import is.rares.kumo.security.entity.ClientLocation;
+import is.rares.kumo.security.domain.ClientLocation;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;

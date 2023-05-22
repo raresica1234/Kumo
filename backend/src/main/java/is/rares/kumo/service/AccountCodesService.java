@@ -8,7 +8,7 @@ import is.rares.kumo.domain.enums.AccountCodeStatus;
 import is.rares.kumo.domain.enums.AccountCodeType;
 import is.rares.kumo.controller.requests.AccountCodeRequest;
 import is.rares.kumo.repository.AccountCodeRepository;
-import is.rares.kumo.security.entity.CurrentUser;
+import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,7 +1,7 @@
-package is.rares.kumo.model.authentication;
+package is.rares.kumo.security.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import is.rares.kumo.security.entity.ClientLocation;
+import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.enums.ClientLocationType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

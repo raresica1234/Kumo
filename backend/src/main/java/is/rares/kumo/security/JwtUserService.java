@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
-import is.rares.kumo.security.entity.CurrentUser;
+import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.UserClaims;
 import is.rares.kumo.security.services.KeyLoaderService;
 import lombok.extern.slf4j.Slf4j;

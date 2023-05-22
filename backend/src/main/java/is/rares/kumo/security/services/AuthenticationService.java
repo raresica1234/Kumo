@@ -3,18 +3,20 @@ package is.rares.kumo.security.services;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import is.rares.kumo.controller.requests.AccountCodeRequest;
+import is.rares.kumo.controller.requests.LoginRequest;
+import is.rares.kumo.controller.responses.TokenDataResponse;
 import is.rares.kumo.core.config.JWTConfiguration;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.domain.User;
-import is.rares.kumo.controller.requests.AccountCodeRequest;
-import is.rares.kumo.controller.requests.LoginRequest;
-import is.rares.kumo.controller.responses.TokenDataResponse;
-import is.rares.kumo.model.authentication.LoggedClientModel;
 import is.rares.kumo.repository.UserRepository;
-import is.rares.kumo.security.entity.ClientLocation;
-import is.rares.kumo.security.entity.CurrentUser;
+import is.rares.kumo.security.convertor.ClientLocationConvertor;
+import is.rares.kumo.security.domain.ClientLocation;
+import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.UserClaims;
+import is.rares.kumo.security.model.ClientLocationModel;
+import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.token.AsyncTokenStore;
 import is.rares.kumo.security.token.Token;
 import is.rares.kumo.security.token.TokenRepository;
@@ -43,13 +45,17 @@ public class AuthenticationService extends KeyLoaderService {
 
     private final AccountCodesService accountCodesService;
 
+    private final ClientLocationConvertor clientLocationConvertor;
+
     @Autowired
     public AuthenticationService(JWTConfiguration jwtConfiguration,
                                  UserRepository userRepository,
                                  TokenStore tokenStore,
                                  AsyncTokenStore asyncTokenStore,
-                                 UserService userService, PasswordEncoder passwordEncoder,
+                                 UserService userService,
+                                 PasswordEncoder passwordEncoder,
                                  AccountCodesService accountCodesService,
+                                 ClientLocationConvertor clientLocationConvertor,
                                  TokenRepository tokenRepository) {
         this.jwtConfiguration = jwtConfiguration;
         this.userRepository = userRepository;
@@ -58,6 +64,7 @@ public class AuthenticationService extends KeyLoaderService {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.accountCodesService = accountCodesService;
+        this.clientLocationConvertor = clientLocationConvertor;
         this.tokenRepository = tokenRepository;
     }
 
@@ -102,7 +109,7 @@ public class AuthenticationService extends KeyLoaderService {
         return this.generateTokenDataResponse(user, request.getClientLocation(), true);
     }
 
-    public TokenDataResponse generateTokenDataResponse(User user, ClientLocation clientLocation, boolean isFirstLogin) {
+    public TokenDataResponse generateTokenDataResponse(User user, ClientLocationModel clientLocationModel, boolean isFirstLogin) {
         final TokenDataResponse tokenDataResponse = TokenDataResponse.builder()
                 .jwtToken(generateToken(user.getUuid(), user.isUsing2FA(), isFirstLogin))
                 .refreshToken(generateRefreshToken(user.getUuid()))
@@ -111,6 +118,8 @@ public class AuthenticationService extends KeyLoaderService {
 
         if (user.isUsing2FA() && isFirstLogin)
             accountCodesService.generateTwoFactorCode(user);
+
+        ClientLocation clientLocation = clientLocationConvertor.mapModelToEntity(clientLocationModel);
 
         this.asyncTokenStore.saveUserToken(tokenDataResponse, user.getUuid(), clientLocation);
         return tokenDataResponse;

@@ -1,4 +1,4 @@
-package is.rares.kumo.security.entity;
+package is.rares.kumo.security.domain;
 
 import is.rares.kumo.domain.BaseEntity;
 import is.rares.kumo.security.enums.ClientLocationType;

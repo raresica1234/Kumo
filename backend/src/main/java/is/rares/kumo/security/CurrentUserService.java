@@ -1,6 +1,6 @@
 package is.rares.kumo.security;
 
-import is.rares.kumo.security.entity.CurrentUser;
+import is.rares.kumo.security.domain.CurrentUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

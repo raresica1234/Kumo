@@ -1,4 +1,4 @@
-package is.rares.kumo.model.authentication;
+package is.rares.kumo.security.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import is.rares.kumo.security.token.Token;

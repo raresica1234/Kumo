@@ -23,5 +23,4 @@ public class RegisterRequest {
     @Size(min = 6, max = 35, message = "Password needs to be between 6 and 35 characters")
     @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z]).*", message = "Password must have at least one lowercase and one uppercase character")
     String password;
-
 }
