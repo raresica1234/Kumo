@@ -1,0 +1,13 @@
+<div>
+  <form [formGroup]="signInForm" (ngSubmit)="singIn()">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input name="email" matInput formControlName="email" placeholder="Email">
+    </mat-form-field> <br>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input type="password" name="password" matInput formControlName="password" placeholder="Password">
+    </mat-form-field> <br>
+    <button mat-flat-button [disabled]="!signInForm.valid">Sign in</button>
+  </form>
+</div>
