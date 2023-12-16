@@ -22,7 +22,7 @@ import java.io.IOException;
 @Slf4j
 public class CorsFilter implements Filter {
 
-    @Value("${kumo.cors.origin:http://localhost:3000}")
+    @Value("${kumo.cors.origin:http://localhost:4200}")
     String origin;
 
     @Override

@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+## Swagger
+gen/
+openapi-codegen/openapi.json

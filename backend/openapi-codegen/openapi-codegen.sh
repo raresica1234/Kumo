@@ -1,0 +1,1 @@
+openapi-generator-cli generate -g typescript-angular -i openapi.json -o ../gen --additional-properties ngVersion="17.0.0",debugModels=false,enumPropertyNaming=UPPERCASE,isDateTime=true
