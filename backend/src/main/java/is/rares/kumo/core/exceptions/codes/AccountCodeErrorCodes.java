@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
-public enum AccountCodeErrorCodes  implements BaseErrorCode{
+public enum AccountCodeErrorCodes implements BaseErrorCode {
     UNEXPECTED_ERROR("1", HttpStatus.BAD_REQUEST, "Exception.Unexpected"),
     USERNAME_NOT_FOUND("2", HttpStatus.NOT_FOUND, "Exception.Username.NotFound"),
     PASSWORD_INCORRECT("3", HttpStatus.UNAUTHORIZED, "Exception.Password.Incorrect"),
 
-    INVALID_INVITE("4", HttpStatus.BAD_REQUEST, "Validation.Invite.Invalid"),
+    INVALID_INVITE("4", HttpStatus.UNAUTHORIZED, "Validation.Invite.Invalid"),
 
     DUPLICATE_USERNAME("5", HttpStatus.BAD_REQUEST, "Duplicate.Username"),
     DUPLICATE_EMAIL("6", HttpStatus.BAD_REQUEST, "Duplicate.Email"),
@@ -30,7 +30,7 @@ public enum AccountCodeErrorCodes  implements BaseErrorCode{
 
     @Override
     public String getErrorCode() {
-        return "AcccountCode" + errorCode;
+        return "AccountCode" + errorCode;
     }
 
     @Override

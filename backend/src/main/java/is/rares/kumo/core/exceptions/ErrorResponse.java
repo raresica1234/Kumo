@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @Data
 public class ErrorResponse {
     private String message;
-    private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+    private int httpStatus = HttpStatus.BAD_REQUEST.value();
 
     private String errorCode;
 
@@ -17,13 +17,13 @@ public class ErrorResponse {
 
     public ErrorResponse(BaseErrorCode errorCode, String message) {
         this.message = message;
-        this.httpStatus = errorCode.getHttpStatus();
+        this.httpStatus = errorCode.getHttpStatus().value();
         this.errorCode = errorCode.getErrorCode();
     }
 
     public ErrorResponse(KumoException exception, String message) {
         this.message = message;
-        this.httpStatus = exception.getErrorCode().getHttpStatus();
+        this.httpStatus = exception.getErrorCode().getHttpStatus().value();
         this.errorCode = exception.getErrorCode().getErrorCode();
     }
 }

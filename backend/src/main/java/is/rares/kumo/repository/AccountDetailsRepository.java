@@ -1,6 +1,6 @@
 package is.rares.kumo.repository;
 
-import is.rares.kumo.domain.AccountDetails;
+import is.rares.kumo.domain.user.AccountDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository

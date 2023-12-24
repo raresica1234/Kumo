@@ -10,6 +10,10 @@ import is.rares.kumo.controller.requests.LoginRequest;
 import is.rares.kumo.controller.requests.RegisterRequest;
 import is.rares.kumo.controller.responses.TokenDataResponse;
 import is.rares.kumo.security.CurrentUserService;
+import is.rares.kumo.security.annotation.Authenticated;
+import is.rares.kumo.security.annotation.HasTokenType;
+import is.rares.kumo.security.annotation.NotAuthenticated;
+import is.rares.kumo.security.enums.TokenType;
 import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.services.AuthenticationService;
 import is.rares.kumo.service.UserService;
@@ -48,6 +52,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "401", description = "Incorrect password"),
             @ApiResponse(responseCode = "404", description = "Username not found")
     })
+    @NotAuthenticated
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public TokenDataResponse login(@Valid @RequestBody LoginRequest request) {
         return authenticationService.login(request);
@@ -59,6 +64,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "400", description = "Duplicate username"),
             @ApiResponse(responseCode = "400", description = "Duplicate email"),
     })
+    @NotAuthenticated
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request,
                                            @Nullable @RequestHeader("Register-Invite") String registerInvite) {
@@ -71,6 +77,8 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "422", description = "Code expired"),
             @ApiResponse(responseCode = "422", description = "Code already used"),
     })
+    @Authenticated
+    @HasTokenType(TokenType.TWO_FA_TOKEN)
     @PostMapping(value = "/validate2FA", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public TokenDataResponse validateCode(@Parameter(name = "Account code request", required = true)
                                           @Valid @RequestBody AccountCodeRequest request) {
@@ -80,14 +88,17 @@ public class AuthenticationController {
     @Operation(summary = "Refresh token", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
     })
+    @NotAuthenticated
     @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON)
     public TokenDataResponse refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
-        return this.authenticationService.refreshToken(currentUserService.getUser(), refreshToken.substring(BEARER_ATTRIBUTE.length()));
+        return this.authenticationService.refreshToken(refreshToken.substring(BEARER_ATTRIBUTE.length()));
     }
 
     @Operation(summary = "List Client Locations", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
     })
+    @Authenticated
+    @HasTokenType
     @GetMapping(value = "/clients", produces = MediaType.APPLICATION_JSON)
     public List<LoggedClientModel> getAllLoggedClients() {
         return this.authenticationService.getLoggedClients(currentUserService.getUser());

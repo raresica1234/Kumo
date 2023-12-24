@@ -1,5 +1,6 @@
-package is.rares.kumo.domain;
+package is.rares.kumo.domain.user;
 
+import is.rares.kumo.domain.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @Table(name = "account_details")
-public class AccountDetails extends BaseEntity{
+public class AccountDetails extends BaseEntity {
     String firstName;
     String lastName;
 

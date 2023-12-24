@@ -4,7 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
+import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.security.domain.CurrentUser;
+import is.rares.kumo.security.enums.TokenType;
 import is.rares.kumo.security.enums.UserClaims;
 import is.rares.kumo.security.services.KeyLoaderService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,22 +30,15 @@ public class JwtUserService extends KeyLoaderService implements UserDetailsServi
             final UUID userId = UUID.fromString(username);
             final Date expirationDate = userClaims.getExpiration();
 
-            boolean isRefreshToken = userClaims.get(UserClaims.REFRESH_TOKEN.getClaim()) != null;
+            if (!userClaims.containsKey(UserClaims.TOKEN_TYPE.getClaim()))
+                throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid token");
 
-            if (!isRefreshToken) {
-                final boolean isUsing2FA = (boolean) userClaims.get(UserClaims.IS_USING_TWO_FA.getClaim());
+            TokenType tokenType = TokenType.valueOf((String) userClaims.get(UserClaims.TOKEN_TYPE.getClaim()));
 
-                boolean twoFANeeded = false;
-                if (userClaims.containsKey(UserClaims.TWO_FA_NEEDED.getClaim()))
-                    twoFANeeded = (boolean) userClaims.get(UserClaims.TWO_FA_NEEDED.getClaim());
-                return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), isUsing2FA, twoFANeeded, expirationDate);
-
-            }
-            else
-                return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), false, false, expirationDate);
+            return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), tokenType, expirationDate);
 
         } catch (Exception e) {
-            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Invalid token");
+            throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid token");
         }
     }
 

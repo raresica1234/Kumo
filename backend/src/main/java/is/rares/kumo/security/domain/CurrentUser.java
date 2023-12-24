@@ -1,5 +1,6 @@
 package is.rares.kumo.security.domain;
 
+import is.rares.kumo.security.enums.TokenType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,22 +18,18 @@ public class CurrentUser extends User {
 
     private UUID id;
     private Date expirationDate;
-    private boolean isUsing2FA;
-    private boolean twoFANeeded;
-
+    private TokenType tokenType;
 
     public CurrentUser(UUID id,
                        String username,
                        String password,
                        Collection<? extends GrantedAuthority> authorities,
-                       boolean isUsing2FA,
-                       boolean twoFANeeded,
+                       TokenType tokenType,
                        Date expirationDate) {
         super(username, password, authorities);
         this.id = id;
         this.expirationDate = expirationDate;
-        this.isUsing2FA = isUsing2FA;
-        this.twoFANeeded = twoFANeeded;
+        this.tokenType = tokenType;
     }
 
 }

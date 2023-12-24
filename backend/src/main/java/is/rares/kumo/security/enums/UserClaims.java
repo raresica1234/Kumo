@@ -2,6 +2,7 @@ package is.rares.kumo.security.enums;
 
 import lombok.Getter;
 
+@Getter
 public enum UserClaims {
     IS_USING_TWO_FA("isUsing2FA"),
 
@@ -9,11 +10,12 @@ public enum UserClaims {
 
     REFRESH_TOKEN("refreshToken"),
 
-    RANDOM_ID("randomId")
+    RANDOM_ID("randomId"),
+
+    TOKEN_TYPE("tokenType")
 
     ;
 
-    @Getter
     private final String claim;
 
     UserClaims(String claim) {

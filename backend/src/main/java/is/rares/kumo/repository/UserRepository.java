@@ -1,6 +1,6 @@
 package is.rares.kumo.repository;
 
-import is.rares.kumo.domain.User;
+import is.rares.kumo.domain.user.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

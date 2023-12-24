@@ -1,5 +1,6 @@
-package is.rares.kumo.domain;
+package is.rares.kumo.domain.user;
 
+import is.rares.kumo.domain.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;

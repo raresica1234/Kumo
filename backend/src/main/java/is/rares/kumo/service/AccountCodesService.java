@@ -2,8 +2,8 @@ package is.rares.kumo.service;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
-import is.rares.kumo.domain.AccountCode;
-import is.rares.kumo.domain.User;
+import is.rares.kumo.domain.user.AccountCode;
+import is.rares.kumo.domain.user.User;
 import is.rares.kumo.domain.enums.AccountCodeStatus;
 import is.rares.kumo.domain.enums.AccountCodeType;
 import is.rares.kumo.controller.requests.AccountCodeRequest;

@@ -1,6 +1,6 @@
 package is.rares.kumo.repository;
 
-import is.rares.kumo.domain.AccountCode;
+import is.rares.kumo.domain.user.AccountCode;
 import is.rares.kumo.domain.enums.AccountCodeStatus;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

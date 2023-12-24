@@ -12,13 +12,10 @@ import lombok.Data;
 public class LoginRequest {
     @NotNull(message = "Username must not be empty")
     @Schema(description = "The account username")
-    @Size(min = 6, max = 25, message = "Username needs to be between 6 and 25 characters")
     String username;
 
     @NotNull(message = "Password must not be empty")
     @Schema(description = "The account password")
-    @Size(min = 6, max = 35, message = "Password needs to be between 6 and 35 characters")
-    @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z]).*", message = "Password must have at least one uppercase and one lowercase character")
     String password;
 
     @NotNull(message = "Client location missing")

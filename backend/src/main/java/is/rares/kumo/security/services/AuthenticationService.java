@@ -9,11 +9,12 @@ import is.rares.kumo.controller.responses.TokenDataResponse;
 import is.rares.kumo.core.config.JWTConfiguration;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
-import is.rares.kumo.domain.User;
+import is.rares.kumo.domain.user.User;
 import is.rares.kumo.repository.UserRepository;
 import is.rares.kumo.security.convertor.ClientLocationConvertor;
 import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.domain.CurrentUser;
+import is.rares.kumo.security.enums.TokenType;
 import is.rares.kumo.security.enums.UserClaims;
 import is.rares.kumo.security.model.ClientLocationModel;
 import is.rares.kumo.security.model.LoggedClientModel;
@@ -68,11 +69,9 @@ public class AuthenticationService extends KeyLoaderService {
         this.tokenRepository = tokenRepository;
     }
 
-    private String generateToken(UUID userId, boolean isUsing2FA, boolean isFirstLogin) {
+    private String generateToken(UUID userId, TokenType tokenType) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(UserClaims.IS_USING_TWO_FA.getClaim(), isUsing2FA);
-        if (isFirstLogin)
-            claims.put(UserClaims.TWO_FA_NEEDED.getClaim(), true);
+        claims.put(UserClaims.TOKEN_TYPE.getClaim(), tokenType);
         return createToken(claims, userId.toString(), jwtConfiguration.getAccessTokenValidity());
     }
 
@@ -101,7 +100,7 @@ public class AuthenticationService extends KeyLoaderService {
 
     public TokenDataResponse login(LoginRequest request) {
         final User user = this.userRepository.findByUsernameOrEmail(request.getUsername(), request.getUsername())
-                .orElseThrow(() -> new KumoException(AccountCodeErrorCodes.USERNAME_NOT_FOUND, "Username not found"));
+                .orElseThrow(() -> new KumoException(AccountCodeErrorCodes.USERNAME_NOT_FOUND, "Username or Email not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new KumoException(AccountCodeErrorCodes.PASSWORD_INCORRECT, "Password incorrect");
@@ -110,8 +109,10 @@ public class AuthenticationService extends KeyLoaderService {
     }
 
     public TokenDataResponse generateTokenDataResponse(User user, ClientLocationModel clientLocationModel, boolean isFirstLogin) {
+        TokenType tokenType = user.isUsing2FA() && isFirstLogin ? TokenType.TWO_FA_TOKEN : TokenType.NORMAL_TOKEN;
+
         final TokenDataResponse tokenDataResponse = TokenDataResponse.builder()
-                .jwtToken(generateToken(user.getUuid(), user.isUsing2FA(), isFirstLogin))
+                .jwtToken(generateToken(user.getUuid(), tokenType))
                 .refreshToken(generateRefreshToken(user.getUuid()))
                 .validityMs(jwtConfiguration.getAccessTokenValidity())
                 .build();
@@ -121,20 +122,20 @@ public class AuthenticationService extends KeyLoaderService {
 
         ClientLocation clientLocation = clientLocationConvertor.mapModelToEntity(clientLocationModel);
 
-        this.asyncTokenStore.saveUserToken(tokenDataResponse, user.getUuid(), clientLocation);
+        this.asyncTokenStore.saveUserToken(tokenDataResponse, user.getUuid(), clientLocation, tokenType);
         return tokenDataResponse;
     }
 
-    public TokenDataResponse refreshToken(CurrentUser currentUser, String refreshToken) {
-        Token currentToken = this.tokenStore.fetchByRefreshToken(refreshToken);
+    public TokenDataResponse refreshToken(String refreshToken) {
+        Token currentToken = this.tokenStore.findByRefreshToken(refreshToken);
 
         final TokenDataResponse tokenDataResponse = TokenDataResponse.builder()
-                .jwtToken(generateToken(currentUser.getId(), currentUser.isUsing2FA(), false))
-                .refreshToken(generateRefreshToken(currentUser.getId()))
+                .jwtToken(generateToken(currentToken.getUserId(), currentToken.getTokenType()))
+                .refreshToken(generateRefreshToken(currentToken.getUserId()))
                 .validityMs(jwtConfiguration.getAccessTokenValidity())
                 .build();
 
-        this.asyncTokenStore.saveUserToken(tokenDataResponse, currentUser.getId(), currentToken.getClientLocation());
+        this.asyncTokenStore.saveUserToken(tokenDataResponse, currentToken.getUserId(), currentToken.getClientLocation().getUuid(), currentToken.getTokenType());
         return tokenDataResponse;
     }
 

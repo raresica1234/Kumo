@@ -9,6 +9,9 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
 import is.rares.kumo.KumoApplication;
+import is.rares.kumo.security.annotation.Authenticated;
+import is.rares.kumo.security.annotation.HasTokenType;
+import is.rares.kumo.security.annotation.NotAuthenticated;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +24,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
         ImportOption.DoNotIncludeArchives.class,
         ImportOption.DoNotIncludeJars.class
 })
-public class ArchitectureTests {
+public class ControllerArchitectureTests {
     @ArchTest
     public static final ArchRule controllersShouldNotAccessDomainObjects = noClasses()
             .that().resideInAPackage("..controller..")
@@ -45,4 +48,17 @@ public class ArchitectureTests {
             .and().areDeclaredInClassesThat().areAnnotatedWith(RestController.class)
             .should(methodAnnotatedWithRequestBodyShouldBeValid);
 
+
+    @ArchTest
+    public static final ArchRule controllerMethodShouldBeAnnotatedWithEitherAuthenticatedOrNotAuthenticated = methods()
+            .that().areDeclaredInClassesThat().resideInAPackage("..controller..")
+            .and().areDeclaredInClassesThat().areAnnotatedWith(RestController.class)
+            .should().beAnnotatedWith(Authenticated.class).orShould().beAnnotatedWith(NotAuthenticated.class);
+
+    @ArchTest
+    public static final ArchRule methodsThatAreAnnotatedWithAuthenticatedShouldHaveTokenTypeAnnotation = methods()
+            .that().areDeclaredInClassesThat().resideInAPackage("..controller..")
+            .and().areDeclaredInClassesThat().areAnnotatedWith(RestController.class)
+            .and().areAnnotatedWith(Authenticated.class)
+            .should().beAnnotatedWith(HasTokenType.class);
 }

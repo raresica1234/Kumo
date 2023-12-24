@@ -1,13 +1,32 @@
-<div>
-  <form [formGroup]="signInForm" (ngSubmit)="singIn()">
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input name="email" matInput formControlName="email" placeholder="Email">
-    </mat-form-field> <br>
-    <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input type="password" name="password" matInput formControlName="password" placeholder="Password">
-    </mat-form-field> <br>
-    <button mat-flat-button [disabled]="!signInForm.valid">Sign in</button>
-  </form>
+<div class="flex h-screen flex-col items-center justify-center bg-black">
+  <div class="w-96 rounded-md bg-gray-600 p-6">
+    <h1 class="w-full text-center text-gray-100">Kumo</h1>
+    <hr />
+    <form class="w-full p-4" [formGroup]="signInForm" (ngSubmit)="singIn()">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          name="email"
+          matInput
+          formControlName="email"
+          placeholder="Email"
+        />
+      </mat-form-field>
+      <br />
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          type="password"
+          name="password"
+          matInput
+          formControlName="password"
+          placeholder="Password"
+        />
+      </mat-form-field>
+      <br />
+      <button mat-flat-button class="w-full" [disabled]="!signInForm.valid">
+        Sign in
+      </button>
+    </form>
+  </div>
 </div>

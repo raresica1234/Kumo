@@ -2,6 +2,7 @@ package is.rares.kumo.security.token;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
+import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,9 @@ public class TokenStore {
         this.redisTemplate = redisTemplate;
     }
 
-    public Token fetchByRefreshToken(String refreshToken) {
+    public Token findByRefreshToken(String refreshToken) {
         return this.tokenRepository.findByRefreshToken(refreshToken).orElseThrow(() ->
-                new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Invalid sign-in"));
+                new KumoException(AuthorizationErrorCodes.INVALID_REFRESH_TOKEN, "Invalid refresh token"));
     }
 
     public void checkTokenValidity(String jwt) {

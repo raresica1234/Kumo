@@ -1,7 +1,8 @@
-package is.rares.kumo.domain;
+package is.rares.kumo.domain.user;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import is.rares.kumo.domain.BaseEntity;
 import lombok.Data;
 
 import jakarta.persistence.*;

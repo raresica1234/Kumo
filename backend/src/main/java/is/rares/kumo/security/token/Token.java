@@ -2,6 +2,7 @@ package is.rares.kumo.security.token;
 
 import is.rares.kumo.domain.BaseEntity;
 import is.rares.kumo.security.domain.ClientLocation;
+import is.rares.kumo.security.enums.TokenType;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @Builder
 @Table(name = "token")
 public class Token extends BaseEntity {
+
     @Column(name="jwt_token", columnDefinition = "TEXT")
     String jwtToken;
 
@@ -37,6 +39,8 @@ public class Token extends BaseEntity {
     Date lastActivityDate;
 
     UUID userId;
+
+    TokenType tokenType;
 
     int validityMs;
 
