@@ -30,7 +30,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"Rares123\",\n  \"username\": \"ddddddd\",\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"0.0.0.8\",\n    \"locationType\": \"WEB\"\n  }\n}",
+							"raw": "{\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\",\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"0.0.0.8\",\n    \"locationType\": \"WEB\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -88,6 +88,20 @@
 				},
 				{
 					"name": "TwoFactorValidation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"jwtToken\", jsonData.jwtToken);",
+									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -103,7 +117,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"pU7tPQ\"\n}",
+							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"sfSqY4\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -141,6 +155,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -191,6 +208,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Two FA is required",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/authenticate/require2FA",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"authenticate",
+								"require2FA"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -210,11 +256,12 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}api/explore",
+							"raw": "{{baseUrl}}/api/explore",
 							"host": [
-								"{{baseUrl}}api"
+								"{{baseUrl}}"
 							],
 							"path": [
+								"api",
 								"explore"
 							]
 						}
