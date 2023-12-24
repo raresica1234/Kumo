@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import is.rares.kumo.controller.requests.AccountCodeRequest;
 import is.rares.kumo.controller.requests.LoginRequest;
 import is.rares.kumo.controller.responses.TokenDataResponse;
+import is.rares.kumo.controller.responses.TwoFARequired;
 import is.rares.kumo.core.config.JWTConfiguration;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
@@ -148,5 +149,9 @@ public class AuthenticationService extends KeyLoaderService {
         return tokenRepository.findByUserId(user.getId()).stream()
                 .map(LoggedClientModel::new)
                 .toList();
+    }
+
+    public TwoFARequired isTwoFARequired(CurrentUser user) {
+        return new TwoFARequired(user.getTokenType() == TokenType.TWO_FA_TOKEN);
     }
 }

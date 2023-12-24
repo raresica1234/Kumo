@@ -36,8 +36,10 @@ public class HasTokenTypeAspect {
         if (hasTokenTypeAnnotation != null) {
             boolean found = false;
             for (TokenType tokenType : hasTokenTypeAnnotation.value())
-                if (tokenType.equals(currentUser.getTokenType()))
+                if (tokenType.equals(currentUser.getTokenType()) || tokenType.equals(TokenType.ANY)) {
                     found = true;
+                    break;
+                }
 
             if (!found) {
                 throw new KumoException(AuthorizationErrorCodes.UNAUTHORIZED, "Access is denied");

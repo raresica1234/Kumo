@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import is.rares.kumo.controller.requests.AccountCodeRequest;
 import is.rares.kumo.controller.requests.LoginRequest;
 import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.controller.responses.SuccessResponse;
 import is.rares.kumo.controller.responses.TokenDataResponse;
+import is.rares.kumo.controller.responses.TwoFARequired;
 import is.rares.kumo.security.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasTokenType;
@@ -83,6 +85,16 @@ public class AuthenticationController {
     public TokenDataResponse validateCode(@Parameter(name = "Account code request", required = true)
                                           @Valid @RequestBody AccountCodeRequest request) {
         return authenticationService.validateTwoFactorCode(request, currentUserService.getUser());
+    }
+
+    @Operation(summary = "Check in 2FA is required", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TwoFARequired.class))),
+    })
+    @Authenticated
+    @HasTokenType(TokenType.ANY)
+    @GetMapping(value = "/require2FA", produces = MediaType.APPLICATION_JSON)
+    public TwoFARequired require2FA() {
+        return authenticationService.isTwoFARequired(currentUserService.getUser());
     }
 
     @Operation(summary = "Refresh token", responses = {
