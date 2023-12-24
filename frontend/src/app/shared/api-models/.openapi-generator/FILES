@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -14,5 +15,6 @@ model/loginRequest.ts
 model/models.ts
 model/registerRequest.ts
 model/tokenDataResponse.ts
+model/twoFARequired.ts
 param.ts
 variables.ts

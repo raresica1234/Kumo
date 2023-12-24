@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import SignInModel from '../../models/sessions/sign-in-model';
 import { IpService } from '../ip.service';
-import { AuthenticationControllerService, LoginRequest } from '../../api-models';
-import { Subscription } from 'rxjs';
+import { AccountCodeRequest, AuthenticationControllerService, LoginRequest, TokenDataResponse } from '../../api-models';
+import { catchError, concatMap, map, Observable, Subscription, throwError } from 'rxjs';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private subscriptionManager: Subscription = new Subscription();
-
   constructor(
     private ipService: IpService,
     private authenticationController: AuthenticationControllerService,
+    private sessionService: SessionService,
   ) {}
 
   isAuthenticated(): boolean {
-    const user = localStorage.getItem('userData');
+    const user = this.sessionService.getUserData();
     if (user) {
       return true;
     } else {
@@ -25,26 +25,42 @@ export class AuthService {
     }
   }
 
-  public signIn(model: SignInModel): Promise<string> {
-    return new Promise<string>(async (resolve, reject) => {
-      localStorage.clear();
-      const loginRequest = {
-        clientLocation: await this.ipService.getClientLocation(),
-        ...model,
-      } as LoginRequest;
-      const sub = this.authenticationController.login(loginRequest).subscribe({
-        next: (tokenData) => {
-          console.log(tokenData);
-          resolve('OK');
-        },
-        error: (error) => {
-          console.log(error);
-          reject(error);
-        },
-      });
+  public signIn(model: SignInModel): Observable<TokenDataResponse> {
+    localStorage.clear();
 
-      this.subscriptionManager.add(sub);
-    });
+    return this.ipService.getClientLocation().pipe(
+      map((clientLocation) => {
+        return {
+          clientLocation,
+          ...model,
+        } as LoginRequest;
+      }),
+      concatMap((loginRequest) => this.authenticationController.login(loginRequest)),
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  public validateTwoFA(code: string): Observable<TokenDataResponse> {
+    return this.ipService.getClientLocation().pipe(
+      map((clientLocation) => {
+        return {
+          clientLocation,
+          code,
+        } as AccountCodeRequest;
+      }),
+      concatMap((accountCodeRequest) => this.authenticationController.validateCode(accountCodeRequest)),
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  is2FARequired(): Observable<boolean> {
+    return this.authenticationController.require2FA().pipe(map((val) => val.required!));
   }
 
   private removeSessionDataFromLocalStorage() {

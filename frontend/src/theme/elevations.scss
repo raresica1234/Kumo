@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+  .elevation-0 {
+    @apply bg-elevation_starter;
+  }
+}

@@ -1,7 +1,23 @@
+@use "@angular/material" as mat;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@layer base {
+  :root {
+    --color-elevation-starter: white;
+  }
+
+  .dark {
+    --color-elevation-starter: #121212;
+  }
+}
+
+@import "ngx-toastr/toastr";
+
+@import "theme/theme";
+
+// TODO: Sync themes (dark/light between tailwind, angular material and toaster)
+// TODO: Add custom elevations

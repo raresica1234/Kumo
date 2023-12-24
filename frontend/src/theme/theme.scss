@@ -1,0 +1,44 @@
+@use "@angular/material/index" as mat;
+
+@import "fixes";
+@import "toastr";
+@import "elevations";
+
+@include mat.core();
+
+$my-accent: mat.define-palette(mat.$pink-palette);
+
+// The "warn" palette is optional and defaults to red if not specified.
+$my-warn: mat.define-palette(mat.$red-palette);
+
+$primary-dark: mat.define-palette(mat.$blue-gray-palette);
+$primary-light: mat.define-palette(mat.$blue-palette);
+
+$dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $primary-dark,
+      accent: $my-accent,
+      warn: $my-warn,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+
+$light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary-light,
+      accent: $my-accent,
+      warn: $my-warn,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+@include mat.all-component-themes($light-theme);
+
+.dark {
+  @include mat.all-component-themes($dark-theme);
+}

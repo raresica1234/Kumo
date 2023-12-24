@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {ClientLocationModel} from "../api-models";
-import {firstValueFrom} from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ClientLocationModel } from '../api-models';
+import { catchError, map, Observable, of } from 'rxjs';
 
 interface IpData {
   query: string;
@@ -10,29 +10,29 @@ interface IpData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class IpService {
-  private static API = "http://ip-api.com/json/";
+  private static API = 'http://ip-api.com/json/';
 
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
-  }
-
-  async getClientLocation(): Promise<ClientLocationModel> {
-    try {
-      const ipData = await firstValueFrom(this.http.get<IpData>(IpService.API));
-      return {
-        locationType: "WEB",
-        ipAddress: ipData.query,
-        country: ipData.country
-      } as ClientLocationModel;
-    } catch {
-      return {
-        locationType: "WEB",
-        ipAddress: "", // Ip will be figured out on the server
-        country: ""
-      } as ClientLocationModel;
-    }
+  getClientLocation(): Observable<ClientLocationModel> {
+    return this.http.get<IpData>(IpService.API).pipe(
+      map((value) => {
+        return {
+          locationType: 'WEB',
+          ipAddress: value.query,
+          country: value.country,
+        } as ClientLocationModel;
+      }),
+      catchError(() =>
+        of({
+          locationType: 'WEB',
+          ipAddress: '', // Ip will be figured out on the server
+          country: '',
+        } as ClientLocationModel),
+      ),
+    );
   }
 }

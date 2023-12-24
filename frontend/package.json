@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "ngx-toastr": "^18.0.0",
+    "prettier-plugin-tailwindcss": "^0.5.9",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
@@ -37,7 +39,14 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.4.31",
+    "prettier": "3.1.1",
     "tailwindcss": "^3.3.5",
     "typescript": "~5.2.2"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }

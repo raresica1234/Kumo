@@ -1,24 +1,27 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from "@angular/router";
-import {SignInComponent} from "./views/sign-in/sign-in.component";
-import {SignUpComponent} from "./views/sign-up/sign-up.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { SignInComponent } from './views/sign-in/sign-in.component';
+import { SignUpComponent } from './views/sign-up/sign-up.component';
 
 const routes: Routes = [
   {
-    path: "",
+    path: 'signin',
     component: SignInComponent,
-    data: {title: "Sign in"}
+    data: { title: 'Sign in' },
   },
   {
-    path: "signup",
+    path: 'signup',
     component: SignUpComponent,
-    data: {title: "Sign up"}
-  }
-]
+    data: { title: 'Sign up' },
+  },
+  {
+    path: '**',
+    redirectTo: 'signin',
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class SessionsRoutingModule {
-}
+export class SessionsRoutingModule {}
