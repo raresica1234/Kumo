@@ -1,23 +1,33 @@
 import { Injectable } from '@angular/core';
 import SignInModel from '../../models/sessions/sign-in-model';
 import { IpService } from '../ip.service';
-import { AccountCodeRequest, AuthenticationControllerService, LoginRequest, TokenDataResponse } from '../../api-models';
-import { catchError, concatMap, map, Observable, Subscription, throwError } from 'rxjs';
+import {
+  AccountCodeRequest,
+  AuthenticationControllerService,
+  LoginRequest,
+  TokenDataResponse,
+  UserControllerService,
+  UserModel,
+} from '../../api-models';
+import { catchError, concatMap, map, Observable, Subscription, tap, throwError } from 'rxjs';
 import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private user: UserModel | undefined;
+
   constructor(
     private ipService: IpService,
     private authenticationController: AuthenticationControllerService,
     private sessionService: SessionService,
+    private userController: UserControllerService,
   ) {}
 
   isAuthenticated(): boolean {
-    const user = this.sessionService.getUserData();
-    if (user) {
+    this.user = this.sessionService.getUserData();
+    if (this.user) {
       return true;
     } else {
       this.removeSessionDataFromLocalStorage();
@@ -65,5 +75,18 @@ export class AuthService {
 
   private removeSessionDataFromLocalStorage() {
     localStorage.removeItem('userData');
+  }
+
+  fetchCurrentUser() {
+    return this.userController.getUser().pipe(
+      tap((userData) => {
+        this.sessionService.setUserData(userData);
+        this.user = userData;
+      }),
+    );
+  }
+
+  getCurrentUser() {
+    return this.user;
   }
 }

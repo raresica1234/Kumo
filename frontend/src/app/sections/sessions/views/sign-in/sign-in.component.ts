@@ -94,8 +94,11 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   private finishSignIn() {
-    // TODO: Add endpoint for getting user details/profile
-    this.router.navigate(['/']);
+    const sub = this.authService.fetchCurrentUser().subscribe(() => {
+      this.router.navigate(['/']);
+    });
+
+    this.subscriptionManager.add(sub);
   }
 
   private handleError(error: string) {

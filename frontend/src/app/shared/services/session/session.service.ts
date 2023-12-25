@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TokenDataResponse } from '../../api-models';
+import { TokenDataResponse, UserModel } from '../../api-models';
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +36,16 @@ export class SessionService {
   }
 
   getUserData() {
-    return localStorage.getItem(SessionService.USER_DATA_STORAGE_LOCATION);
+    const value = localStorage.getItem(SessionService.USER_DATA_STORAGE_LOCATION);
+    if (value) return JSON.parse(value);
+    return value;
   }
 
   isTwoFARequired() {
     return !!localStorage.getItem(SessionService.TWO_FA_REQUIRED_STORAGE_LOCATION);
+  }
+
+  setUserData(userData: UserModel) {
+    localStorage.setItem(SessionService.USER_DATA_STORAGE_LOCATION, JSON.stringify(userData));
   }
 }

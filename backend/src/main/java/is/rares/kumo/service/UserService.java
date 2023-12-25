@@ -1,11 +1,15 @@
 package is.rares.kumo.service;
 
+import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.convertor.UserConvertor;
 import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
+import is.rares.kumo.domain.user.AccountDetails;
 import is.rares.kumo.domain.user.User;
-import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.model.UserModel;
 import is.rares.kumo.repository.UserRepository;
+import is.rares.kumo.security.domain.CurrentUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -20,13 +24,16 @@ public class UserService {
     private final KumoConfig kumoConfig;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserConvertor userConvertor;
 
     public UserService(KumoConfig kumoConfig,
                        PasswordEncoder passwordEncoder,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       UserConvertor userConvertor) {
         this.kumoConfig = kumoConfig;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.userConvertor = userConvertor;
     }
 
 
@@ -45,6 +52,7 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setAccountDetails(new AccountDetails());
 
         this.userRepository.save(user);
 
@@ -54,5 +62,11 @@ public class UserService {
     public User findByUserId(UUID userId) {
         return this.userRepository.findByUuid(userId)
                 .orElseThrow(() -> new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR));
+    }
+
+    public UserModel getUser(CurrentUser currentUser) {
+        User user = findByUserId(currentUser.getId());
+
+        return userConvertor.mapEntityToModel(user);
     }
 }
