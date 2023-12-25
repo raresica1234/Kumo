@@ -14,10 +14,16 @@ export class AlertService {
     toaster.toastrConfig.tapToDismiss = false;
   }
 
-  public success(message: string) {}
-  public warning(message: string) {}
+  public success(message: string) {
+    this.toaster.success(message);
+  }
+  public warning(message: string) {
+    this.toaster.warning(message);
+  }
 
-  public info(message: string) {}
+  public info(message: string) {
+    this.toaster.info(message);
+  }
 
   public error(message: string) {
     this.toaster.error(message);

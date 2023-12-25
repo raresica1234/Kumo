@@ -1,6 +1,7 @@
 package is.rares.kumo.service;
 
 import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.controller.responses.BooleanResponse;
 import is.rares.kumo.convertor.UserConvertor;
 import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
@@ -68,5 +69,9 @@ public class UserService {
         User user = findByUserId(currentUser.getId());
 
         return userConvertor.mapEntityToModel(user);
+    }
+
+    public BooleanResponse registerInviteRequired() {
+        return new BooleanResponse(kumoConfig.isInviteBasedRegistration());
     }
 }

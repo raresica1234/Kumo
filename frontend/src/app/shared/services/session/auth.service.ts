@@ -46,10 +46,6 @@ export class AuthService {
         } as LoginRequest;
       }),
       concatMap((loginRequest) => this.authenticationController.login(loginRequest)),
-      catchError((error) => {
-        console.log(error);
-        return throwError(() => error);
-      }),
     );
   }
 
@@ -62,15 +58,11 @@ export class AuthService {
         } as AccountCodeRequest;
       }),
       concatMap((accountCodeRequest) => this.authenticationController.validateCode(accountCodeRequest)),
-      catchError((error) => {
-        console.log(error);
-        return throwError(() => error);
-      }),
     );
   }
 
   is2FARequired(): Observable<boolean> {
-    return this.authenticationController.require2FA().pipe(map((val) => val.required!));
+    return this.authenticationController.require2FA().pipe(map((val) => val.value!));
   }
 
   private removeSessionDataFromLocalStorage() {

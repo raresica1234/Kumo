@@ -16,9 +16,12 @@ import { Router } from '@angular/router';
 export class SignInComponent implements OnInit, OnDestroy {
   signInForm!: FormGroup;
   twoFAForm!: FormGroup;
+  // TODO: Figure out what to do when a user's code has expired, they'll just be stuck in this screen
+  // maybe on 2fa flow, if the user refreshes, just remove everything and let them start over
+  // TODO: Add 2fa sending by mail or some other way
   twoFAFlow: boolean = false;
 
-  // TODO: Fix loading bar spacing
+  // TODO: Decide if when not loading the loading bar should disappear, if so, fix the spacing
   loading: boolean = false;
 
   subscriptionManager: Subscription = new Subscription();
@@ -84,7 +87,6 @@ export class SignInComponent implements OnInit, OnDestroy {
     this.sessionService.saveTokenData(tokenData);
     const sub = this.authService.is2FARequired().subscribe((value) => {
       this.sessionService.setTwoFARequired(value);
-      console.log(value);
       this.twoFAFlow = value;
       if (!value) this.finishSignIn();
       else this.loading = false;

@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { SessionService } from './session.service';
 import { environment } from '../../../../environments/environment';
 
-const noAuthEndpoints = ['authenticate/login', 'authenticate/register'];
+const noAuthEndpoints = ['authenticate/login', 'authenticate/register', 'authenticate/requireRegisterInvite'];
 
 export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
   const sessionService = inject(SessionService);

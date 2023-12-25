@@ -65,7 +65,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"mail@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica123466\"\n}",
+							"raw": "{\n  \"email\": \"mail@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -87,7 +87,7 @@
 					"response": []
 				},
 				{
-					"name": "TwoFactorValidation",
+					"name": "Validate 2FA Code",
 					"event": [
 						{
 							"listen": "test",
@@ -117,7 +117,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"sfSqY4\"\n}",
+							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"jG3YEg\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -237,6 +237,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Register Invite Required",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/authenticate/requireRegisterInvite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"authenticate",
+								"requireRegisterInvite"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -263,6 +285,60 @@
 							"path": [
 								"api",
 								"explore"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{jwtToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get User Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
 							]
 						}
 					},

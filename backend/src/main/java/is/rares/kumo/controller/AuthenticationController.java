@@ -8,9 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import is.rares.kumo.controller.requests.AccountCodeRequest;
 import is.rares.kumo.controller.requests.LoginRequest;
 import is.rares.kumo.controller.requests.RegisterRequest;
-import is.rares.kumo.controller.responses.SuccessResponse;
+import is.rares.kumo.controller.responses.BooleanResponse;
 import is.rares.kumo.controller.responses.TokenDataResponse;
-import is.rares.kumo.controller.responses.TwoFARequired;
 import is.rares.kumo.security.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasTokenType;
@@ -25,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -73,6 +71,15 @@ public class AuthenticationController {
         return userService.register(request, registerInvite);
     }
 
+    @Operation(summary = "Is Register by invites required", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BooleanResponse.class))),
+    })
+    @NotAuthenticated
+    @GetMapping(value = "/requireRegisterInvite", produces = MediaType.APPLICATION_JSON)
+    public BooleanResponse registerByInvites() {
+        return userService.registerInviteRequired();
+    }
+
     @Operation(summary = "Validate 2FA code", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),
             @ApiResponse(responseCode = "404", description = "Code not found"),
@@ -88,12 +95,12 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Check in 2FA is required", responses = {
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TwoFARequired.class))),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BooleanResponse.class))),
     })
     @Authenticated
     @HasTokenType(TokenType.ANY)
     @GetMapping(value = "/require2FA", produces = MediaType.APPLICATION_JSON)
-    public TwoFARequired require2FA() {
+    public BooleanResponse require2FA() {
         return authenticationService.isTwoFARequired(currentUserService.getUser());
     }
 

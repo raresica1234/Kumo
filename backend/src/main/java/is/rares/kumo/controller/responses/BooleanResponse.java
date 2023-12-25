@@ -7,6 +7,6 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class TwoFARequired implements Serializable {
-    private boolean required;
+public class BooleanResponse implements Serializable {
+    private boolean value;
 }
