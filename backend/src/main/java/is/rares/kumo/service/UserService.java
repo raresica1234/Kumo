@@ -7,8 +7,10 @@ import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.domain.user.AccountDetails;
+import is.rares.kumo.domain.user.Role;
 import is.rares.kumo.domain.user.User;
 import is.rares.kumo.model.UserModel;
+import is.rares.kumo.repository.RoleRepository;
 import is.rares.kumo.repository.UserRepository;
 import is.rares.kumo.security.domain.CurrentUser;
 import org.springframework.http.HttpStatus;
@@ -27,14 +29,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserConvertor userConvertor;
 
+    private final RoleService roleService;
+    private final RoleRepository roleRepository;
+
     public UserService(KumoConfig kumoConfig,
                        PasswordEncoder passwordEncoder,
                        UserRepository userRepository,
-                       UserConvertor userConvertor) {
+                       UserConvertor userConvertor,
+                       RoleService roleService,
+                       RoleRepository roleRepository) {
         this.kumoConfig = kumoConfig;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userConvertor = userConvertor;
+        this.roleService = roleService;
+        this.roleRepository = roleRepository;
     }
 
 
@@ -55,7 +64,13 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setAccountDetails(new AccountDetails());
 
-        this.userRepository.save(user);
+        user = this.userRepository.save(user);
+
+        if (kumoConfig.getOwnerUsername().equals(request.getUsername())) {
+            Role ownerRole = roleService.getOwnerRoleOrCreateIfNotExists();
+            ownerRole.getUsers().add(user);
+            roleRepository.save(ownerRole);
+        }
 
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }

@@ -1,13 +1,15 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
+import is.rares.kumo.domain.enums.AuthorityType;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -30,23 +32,22 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "detail_id")
-    private AccountDetails accountDetails;
+    private AccountDetails accountDetails = new AccountDetails();
 
     @Column(name = "detail_id", insertable = false, updatable = false)
     private UUID detailId;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "users")
-    Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Authority> authorities = new HashSet<>();
         if (roles != null) {
-            roles.forEach(role -> {
-                if (role.getAuthorities() != null) {
-                    authorities.addAll(role.getAuthorities());
-                }
-            });
+            return roles.stream()
+                    .flatMap(role -> role.getAuthorities().stream())
+                    .filter(authority -> authority.getType().equals(AuthorityType.FEATURE))
+                    .collect(Collectors.toSet());
         }
         return authorities;
     }

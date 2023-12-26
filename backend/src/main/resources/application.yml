@@ -15,4 +15,8 @@ springdoc:
     path: /swagger-ui.html
 #  paths-to-match: /api/**
 
+kumo:
+  owner:
+    username: raresica1234
+
 spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

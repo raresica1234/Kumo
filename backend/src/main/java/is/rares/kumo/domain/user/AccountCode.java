@@ -22,7 +22,9 @@ import java.util.UUID;
 public class AccountCode extends BaseEntity {
     private String code;
 
+    @Enumerated(EnumType.STRING)
     private AccountCodeType codeType;
+    @Enumerated(EnumType.STRING)
     private AccountCodeStatus codeStatus;
 
     @CreatedDate

@@ -12,4 +12,13 @@ public class KumoConfig {
 
     @Value("${kumo.registration.requireAccountVerification:false}")
     boolean requireAccountVerification;
+
+    @Value("${kumo.owner.username:}") // null default
+    String ownerUsername;
+
+    @Value("${kumo.owner.password:}") // null default
+    String ownerPassword;
+
+    @Value("${kumo.owner.email:}") // null default
+    String ownerEmail;
 }

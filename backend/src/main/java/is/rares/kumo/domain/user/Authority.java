@@ -1,6 +1,10 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
+import is.rares.kumo.domain.enums.AuthorityType;
+import is.rares.kumo.domain.enums.Feature;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,15 +20,19 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "authority")
+
+// TODO: Why is this a table bruh
 public class Authority extends BaseEntity implements GrantedAuthority {
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private AuthorityType type;
 
-    private String code;
+    @Enumerated(EnumType.STRING)
+    private Feature feature;
 
     @Override
     public String getAuthority() {
-        return code;
+        return feature.getName();
     }
 
     @Override
