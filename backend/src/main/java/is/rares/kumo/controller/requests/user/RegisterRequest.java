@@ -1,4 +1,4 @@
-package is.rares.kumo.controller.requests;
+package is.rares.kumo.controller.requests.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;

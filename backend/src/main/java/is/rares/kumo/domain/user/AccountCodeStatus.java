@@ -1,4 +1,4 @@
-package is.rares.kumo.domain.enums;
+package is.rares.kumo.domain.user;
 
 public enum AccountCodeStatus {
     UNUSED,

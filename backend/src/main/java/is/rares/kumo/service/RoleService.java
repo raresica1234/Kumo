@@ -1,6 +1,6 @@
 package is.rares.kumo.service;
 
-import is.rares.kumo.domain.enums.Feature;
+import is.rares.kumo.domain.user.Feature;
 import is.rares.kumo.domain.user.Authority;
 import is.rares.kumo.domain.user.Role;
 import is.rares.kumo.repository.RoleRepository;

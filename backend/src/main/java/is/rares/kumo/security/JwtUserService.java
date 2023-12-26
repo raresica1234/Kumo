@@ -7,7 +7,7 @@ import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.TokenType;
-import is.rares.kumo.security.enums.UserClaims;
+import is.rares.kumo.security.enums.TokenClaims;
 import is.rares.kumo.security.services.KeyLoaderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,10 +30,10 @@ public class JwtUserService extends KeyLoaderService implements UserDetailsServi
             final UUID userId = UUID.fromString(username);
             final Date expirationDate = userClaims.getExpiration();
 
-            if (!userClaims.containsKey(UserClaims.TOKEN_TYPE.getClaim()))
+            if (!userClaims.containsKey(TokenClaims.TOKEN_TYPE.getClaim()))
                 throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid token");
 
-            TokenType tokenType = TokenType.valueOf((String) userClaims.get(UserClaims.TOKEN_TYPE.getClaim()));
+            TokenType tokenType = TokenType.valueOf((String) userClaims.get(TokenClaims.TOKEN_TYPE.getClaim()));
 
             return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), tokenType, expirationDate);
 

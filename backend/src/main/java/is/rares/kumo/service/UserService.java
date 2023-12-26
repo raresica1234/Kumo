@@ -1,6 +1,6 @@
 package is.rares.kumo.service;
 
-import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.controller.requests.user.RegisterRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
 import is.rares.kumo.convertor.UserConvertor;
 import is.rares.kumo.core.config.KumoConfig;

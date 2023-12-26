@@ -1,8 +1,6 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
-import is.rares.kumo.domain.enums.AuthorityType;
-import is.rares.kumo.domain.enums.Feature;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;

@@ -14,6 +14,6 @@ import java.util.UUID;
 public interface RoleRepository extends BasePagingAndSortingRepository<Role> {
     Optional<Role> findByName(String owner);
 
-    @Query(value = "select role from kumo_role role inner join user_role on user_role.role_id where user_role.user_id = :userId", nativeQuery = true)
+    @Query(value = "select * from kumo_role role inner join user_role on user_role.role_id=role.uuid where user_role.user_id = :userId", nativeQuery = true)
     List<Role> getAllRolesForUser(@QueryParam("userId") UUID userId);
 }

@@ -5,18 +5,23 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import is.rares.kumo.controller.requests.AccountCodeRequest;
-import is.rares.kumo.controller.requests.LoginRequest;
-import is.rares.kumo.controller.requests.RegisterRequest;
+import is.rares.kumo.controller.requests.user.AccountCodeRequest;
+import is.rares.kumo.controller.requests.user.CreateRegisterInviteRequest;
+import is.rares.kumo.controller.requests.user.LoginRequest;
+import is.rares.kumo.controller.requests.user.RegisterRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
-import is.rares.kumo.controller.responses.TokenDataResponse;
+import is.rares.kumo.controller.responses.user.RegisterInviteResponse;
+import is.rares.kumo.controller.responses.user.TokenDataResponse;
+import is.rares.kumo.domain.user.Feature;
 import is.rares.kumo.security.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
+import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.security.annotation.NotAuthenticated;
 import is.rares.kumo.security.enums.TokenType;
 import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.services.AuthenticationService;
+import is.rares.kumo.service.RegisterInviteService;
 import is.rares.kumo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -36,15 +41,17 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final UserService userService;
-
     private final CurrentUserService currentUserService;
+    private final RegisterInviteService registerInviteService;
 
     public AuthenticationController(AuthenticationService authenticationService,
                                     UserService userService,
-                                    CurrentUserService currentUserService) {
+                                    CurrentUserService currentUserService,
+                                    RegisterInviteService registerInviteService) {
         this.authenticationService = authenticationService;
         this.userService = userService;
         this.currentUserService = currentUserService;
+        this.registerInviteService = registerInviteService;
     }
 
     @Operation(summary = "Login", operationId = "login", responses = {
@@ -78,6 +85,21 @@ public class AuthenticationController {
     @GetMapping(value = "/requireRegisterInvite", produces = MediaType.APPLICATION_JSON)
     public BooleanResponse registerByInvites() {
         return userService.registerInviteRequired();
+    }
+
+    @Operation(summary = "Create register invite", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Code not found"),
+            @ApiResponse(responseCode = "422", description = "Code expired"),
+            @ApiResponse(responseCode = "422", description = "Code already used"),
+    })
+    @Authenticated
+    @HasTokenType
+    @HasAuthority(Feature.CREATE_REGISTER_INVITE)
+    @PostMapping(value = "/createRegisterInvite", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    public RegisterInviteResponse createRegisterInvite(@Parameter(name = "Register invite request", required = true)
+                                          @Valid @RequestBody CreateRegisterInviteRequest registerInviteRequest) {
+        return registerInviteService.createRegisterInvite(registerInviteRequest);
     }
 
     @Operation(summary = "Validate 2FA code", responses = {

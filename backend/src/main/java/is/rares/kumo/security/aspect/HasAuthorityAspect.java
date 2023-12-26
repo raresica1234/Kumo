@@ -2,8 +2,8 @@ package is.rares.kumo.security.aspect;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
-import is.rares.kumo.domain.enums.AuthorityType;
-import is.rares.kumo.domain.enums.Feature;
+import is.rares.kumo.domain.user.AuthorityType;
+import is.rares.kumo.domain.user.Feature;
 import is.rares.kumo.domain.user.Authority;
 import is.rares.kumo.repository.RoleRepository;
 import is.rares.kumo.security.annotation.HasAuthority;

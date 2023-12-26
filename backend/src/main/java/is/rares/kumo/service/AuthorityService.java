@@ -1,7 +1,7 @@
 package is.rares.kumo.service;
 
-import is.rares.kumo.domain.enums.AuthorityType;
-import is.rares.kumo.domain.enums.Feature;
+import is.rares.kumo.domain.user.AuthorityType;
+import is.rares.kumo.domain.user.Feature;
 import is.rares.kumo.domain.user.Authority;
 import is.rares.kumo.repository.AuthorityRepository;
 import org.springframework.stereotype.Service;

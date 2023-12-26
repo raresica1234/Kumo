@@ -1,4 +1,4 @@
-package is.rares.kumo.domain.enums;
+package is.rares.kumo.domain.user;
 
 
 import lombok.AllArgsConstructor;
@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Feature {
-    OWNER("owner");
+    OWNER("owner"),
+    CREATE_REGISTER_INVITE("create_register_invite");
 
     private final String name;
-
 }

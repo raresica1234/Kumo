@@ -1,7 +1,6 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
-import is.rares.kumo.domain.enums.AuthorityType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;

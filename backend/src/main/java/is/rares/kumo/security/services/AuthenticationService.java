@@ -3,10 +3,10 @@ package is.rares.kumo.security.services;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import is.rares.kumo.controller.requests.AccountCodeRequest;
-import is.rares.kumo.controller.requests.LoginRequest;
+import is.rares.kumo.controller.requests.user.AccountCodeRequest;
+import is.rares.kumo.controller.requests.user.LoginRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
-import is.rares.kumo.controller.responses.TokenDataResponse;
+import is.rares.kumo.controller.responses.user.TokenDataResponse;
 import is.rares.kumo.core.config.JWTConfiguration;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
@@ -16,7 +16,7 @@ import is.rares.kumo.security.convertor.ClientLocationConvertor;
 import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.TokenType;
-import is.rares.kumo.security.enums.UserClaims;
+import is.rares.kumo.security.enums.TokenClaims;
 import is.rares.kumo.security.model.ClientLocationModel;
 import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.token.AsyncTokenStore;
@@ -72,7 +72,7 @@ public class AuthenticationService extends KeyLoaderService {
 
     private String generateToken(UUID userId, TokenType tokenType) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(UserClaims.TOKEN_TYPE.getClaim(), tokenType);
+        claims.put(TokenClaims.TOKEN_TYPE.getClaim(), tokenType);
         return createToken(claims, userId.toString(), jwtConfiguration.getAccessTokenValidity());
     }
 
@@ -94,8 +94,8 @@ public class AuthenticationService extends KeyLoaderService {
 
     private String generateRefreshToken(UUID userId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(UserClaims.RANDOM_ID.getClaim(), UUID.randomUUID().toString());
-        claims.put(UserClaims.REFRESH_TOKEN.getClaim(), true);
+        claims.put(TokenClaims.RANDOM_ID.getClaim(), UUID.randomUUID().toString());
+        claims.put(TokenClaims.REFRESH_TOKEN.getClaim(), true);
         return createToken(claims, userId.toString(), jwtConfiguration.getRefreshTokenValidity());
     }
 
@@ -153,5 +153,26 @@ public class AuthenticationService extends KeyLoaderService {
 
     public BooleanResponse isTwoFARequired(CurrentUser user) {
         return new BooleanResponse(user.getTokenType() == TokenType.TWO_FA_TOKEN);
+    }
+
+    public String createRegisterInviteJwt(int validity, int uses) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(TokenClaims.RANDOM_ID.getClaim(), UUID.randomUUID().toString());
+        claims.put(TokenClaims.TOKEN_TYPE.getClaim(), TokenType.REGISTER_INVITE_TOKEN);
+        claims.put(TokenClaims.VALIDITY.getClaim(), validity);
+        claims.put(TokenClaims.MAX_USAGE.getClaim(), uses);
+
+        final JwtBuilder jwtBuilder = Jwts.builder()
+                .setClaims(claims)
+                .setIssuer(jwtConfiguration.getIssuer())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + validity * 1000L))
+                .setId(UUID.randomUUID().toString());
+        try {
+            jwtBuilder.signWith(this.privateKey, SignatureAlgorithm.ES512);
+        } catch (Exception e) {
+            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Signing error");
+        }
+        return jwtBuilder.compact();
     }
 }

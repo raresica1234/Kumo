@@ -1,8 +1,6 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
-import is.rares.kumo.domain.enums.AccountCodeStatus;
-import is.rares.kumo.domain.enums.AccountCodeType;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

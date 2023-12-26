@@ -40,6 +40,7 @@ public class Token extends BaseEntity {
 
     UUID userId;
 
+    @Enumerated(EnumType.STRING)
     TokenType tokenType;
 
     int validityMs;

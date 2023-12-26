@@ -1,6 +1,6 @@
 package is.rares.kumo.security.token;
 
-import is.rares.kumo.controller.responses.TokenDataResponse;
+import is.rares.kumo.controller.responses.user.TokenDataResponse;
 import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.enums.TokenType;
 import jakarta.transaction.Transactional;
