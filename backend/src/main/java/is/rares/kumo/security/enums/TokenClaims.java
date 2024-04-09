@@ -14,9 +14,7 @@ public enum TokenClaims {
 
     TOKEN_TYPE("tokenType"),
 
-    MAX_USAGE("maxUsage"),
-    VALIDITY("validity")
-
+    MAX_USAGE("maxUsage")
     ;
 
     private final String claim;

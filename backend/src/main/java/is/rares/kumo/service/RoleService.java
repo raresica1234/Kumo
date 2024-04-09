@@ -1,7 +1,6 @@
 package is.rares.kumo.service;
 
 import is.rares.kumo.domain.user.Feature;
-import is.rares.kumo.domain.user.Authority;
 import is.rares.kumo.domain.user.Role;
 import is.rares.kumo.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,18 +11,15 @@ import org.springframework.stereotype.Service;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    private final AuthorityService authorityService;
-
-    public RoleService(RoleRepository roleRepository, AuthorityService authorityService) {
+    public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-        this.authorityService = authorityService;
     }
 
     public Role getOwnerRoleOrCreateIfNotExists() {
         var ownerRoleOptional = roleRepository.findByName("Owner");
         if (ownerRoleOptional.isPresent()) {
             Role ownerRole = ownerRoleOptional.get();
-            if (ownerRole.getAuthorities().stream().noneMatch(authority -> authority.getFeature().equals(Feature.OWNER))) {
+            if (ownerRole.getFeatures().stream().noneMatch(feature -> feature.equals(Feature.OWNER))) {
                 log.error("Already existing owner role does not have owner feature");
                 System.exit(0);
             }
@@ -31,11 +27,9 @@ public class RoleService {
             return ownerRole;
         }
 
-        Authority authority = authorityService.getOwnerAuthorityOrCreateIfNotExists();
-
         Role ownerRole = new Role();
         ownerRole.setName("Owner");
-        ownerRole.getAuthorities().add(authority);
+        ownerRole.getFeatures().add(Feature.OWNER);
 
         return roleRepository.save(ownerRole);
     }

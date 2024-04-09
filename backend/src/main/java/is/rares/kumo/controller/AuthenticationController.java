@@ -13,7 +13,7 @@ import is.rares.kumo.controller.responses.BooleanResponse;
 import is.rares.kumo.controller.responses.user.RegisterInviteResponse;
 import is.rares.kumo.controller.responses.user.TokenDataResponse;
 import is.rares.kumo.domain.user.Feature;
-import is.rares.kumo.security.CurrentUserService;
+import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.annotation.HasTokenType;

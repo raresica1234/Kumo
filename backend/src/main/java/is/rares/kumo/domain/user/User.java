@@ -41,11 +41,11 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Authority> authorities = new HashSet<>();
+        Set<GrantedAuthority> authorities = new HashSet<>();
         if (roles != null) {
             return roles.stream()
-                    .flatMap(role -> role.getAuthorities().stream())
-                    .filter(authority -> authority.getType().equals(AuthorityType.FEATURE))
+                    .flatMap(role -> role.getFeatures().stream())
+                    .map(feature -> (GrantedAuthority) feature::getName)
                     .collect(Collectors.toSet());
         }
         return authorities;

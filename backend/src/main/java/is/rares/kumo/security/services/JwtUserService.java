@@ -1,4 +1,4 @@
-package is.rares.kumo.security;
+package is.rares.kumo.security.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,11 +20,17 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class JwtUserService extends KeyLoaderService implements UserDetailsService {
+public class JwtUserService implements UserDetailsService {
+    private final JwtService jwtService;
+
+    public JwtUserService(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
+
     @Override
     public CurrentUser loadUserByUsername(String jwt) throws UsernameNotFoundException {
         try {
-            final Claims userClaims = extractAllClaims(jwt);
+            final Claims userClaims = jwtService.extractAllClaims(jwt);
 
             final String username = userClaims.getSubject();
             final UUID userId = UUID.fromString(username);
@@ -42,14 +48,4 @@ public class JwtUserService extends KeyLoaderService implements UserDetailsServi
         }
     }
 
-    public Claims extractAllClaims(String token) {
-        if (publicKey == null)
-            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Key missing");
-
-        return Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
 }

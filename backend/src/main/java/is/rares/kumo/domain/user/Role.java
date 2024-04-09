@@ -19,14 +19,11 @@ import java.util.Set;
 @Table(name = "kumo_role")
 public class Role extends BaseEntity {
 
+    @Column(unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "role_authority",
-            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "uuid"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "uuid")
-    )
-    private Set<Authority> authorities = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private Set<Feature> features = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

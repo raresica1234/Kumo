@@ -1,7 +1,7 @@
 package is.rares.kumo.controller;
 
 import is.rares.kumo.model.UserModel;
-import is.rares.kumo.security.CurrentUserService;
+import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.service.UserService;
@@ -26,7 +26,7 @@ public class UserController {
 
     @Authenticated
     @HasTokenType
-    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(produces = MediaType.APPLICATION_JSON)
     public UserModel getUser() {
         return userService.getUser(currentUserService.getUser());
     }

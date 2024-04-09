@@ -11,8 +11,8 @@ public class JWTConfiguration {
     private String issuer;
 
     @Value("${jwt.accessTokenValidity:600000}")
-    private int accessTokenValidity;
+    private long accessTokenValidity;
 
     @Value("${jwt.refreshTokenValidity:86400000}")
-    private int refreshTokenValidity;
+    private long refreshTokenValidity;
 }

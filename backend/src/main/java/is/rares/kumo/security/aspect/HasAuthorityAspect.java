@@ -4,7 +4,6 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.AuthorityType;
 import is.rares.kumo.domain.user.Feature;
-import is.rares.kumo.domain.user.Authority;
 import is.rares.kumo.repository.RoleRepository;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.domain.CurrentUser;
@@ -64,9 +63,7 @@ public class HasAuthorityAspect {
 
     Set<Feature> getAllUserFeatures(CurrentUser currentUser) {
         return roleRepository.getAllRolesForUser(currentUser.getId()).stream()
-                .flatMap(role -> role.getAuthorities().stream())
-                .filter(authority -> authority.getType().equals(AuthorityType.FEATURE))
-                .map(Authority::getFeature)
+                .flatMap(role -> role.getFeatures().stream())
                 .collect(Collectors.toSet());
     }
 

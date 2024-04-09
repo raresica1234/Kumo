@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import is.rares.kumo.core.exceptions.ErrorResponse;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.security.domain.CurrentUser;
+import is.rares.kumo.security.services.JwtUserService;
 import is.rares.kumo.security.token.AsyncTokenStore;
 import is.rares.kumo.security.token.TokenStore;
 import jakarta.servlet.FilterChain;
@@ -21,9 +22,7 @@ import java.io.IOException;
 @Order
 public class AuthorizationInterceptor extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String REFRESH_HEADER = "Refresh-Token";
     public static final String BEARER_ATTRIBUTE = "Bearer "; // space is mandatory
-    private static final String VALIDATE_2FA_ENDPOINT = "/validate2FA";
 
     private final JwtUserService userService;
     private final ObjectMapper objectMapper;

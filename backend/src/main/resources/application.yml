@@ -16,7 +16,10 @@ springdoc:
 #  paths-to-match: /api/**
 
 kumo:
+  registration:
+    inviteBased: true
   owner:
     username: raresica1234
+
 
 spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

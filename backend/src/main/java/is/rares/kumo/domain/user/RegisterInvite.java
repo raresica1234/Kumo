@@ -20,7 +20,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "register_invite")
 public class RegisterInvite extends BaseEntity {
-    @Column(name="jwt_token", columnDefinition = "TEXT")
+    @Column(name="jwt_token", columnDefinition = "TEXT", unique = true)
     private String jwtToken;
 
     private int usageCount = 0;

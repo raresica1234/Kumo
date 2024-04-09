@@ -43,7 +43,7 @@ public class Token extends BaseEntity {
     @Enumerated(EnumType.STRING)
     TokenType tokenType;
 
-    int validityMs;
+    long validityMs;
 
     @Override
     public boolean equals(Object o) {

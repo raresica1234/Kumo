@@ -58,14 +58,13 @@
 						"header": [
 							{
 								"key": "Register-Invite",
-								"value": "a",
-								"type": "default",
-								"disabled": true
+								"value": "eyJhbGciOiJFUzUxMiJ9.eyJyYW5kb21JZCI6IjJjNGYwMzE0LWE2MzItNDE0ZS05NWJiLWQ5MTM1OTRmNTU1YyIsIm1heFVzYWdlIjowLCJ2YWxpZGl0eSI6MzE1MzYwMDAwMCwidG9rZW5UeXBlIjoiUkVHSVNURVJfSU5WSVRFX1RPS0VOIiwic3ViIjoiUmVnaXN0ZXIgSW52aXRlIiwiaXNzIjoiS3VtbyIsImlhdCI6MTcwMzYyODAzOSwiZXhwIjo0ODU3MjI4MDM5LCJqdGkiOiI0ZmNiZDA0Ny0xZTFkLTRkYzUtOTZjMC1lNTY3NWY4NmM1OGUifQ.ACNSSiYgxPxOcoBHgb0Y2JkKXf7VDw8kXYG7hiBV2TEK4TqdzRKC3EvS8JSvPHWsfxnZ8yQcvBp26pFqjLjL_0-TAKdAsVTr3z0hI-wbNLNrcdhpOKB1uR8vbM4cE032cT6KSNT4oDqGudEZRr4y2KEBhHSewS9Xyd2bvyT4GXW8ziho",
+								"type": "default"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"mail@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\"\n}",
+							"raw": "{\n  \"email\": \"ma1il2@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica12342\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -259,6 +258,57 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create Register Invite",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"registerInvite\", jsonData.invite);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"validitySeconds\": 0,\n    \"uses\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/authenticate/createRegisterInvite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"authenticate",
+								"createRegisterInvite"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -331,14 +381,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/api/users/",
+							"raw": "{{baseUrl}}/api/users",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"api",
-								"users",
-								""
+								"users"
 							]
 						}
 					},

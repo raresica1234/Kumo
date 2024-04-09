@@ -32,24 +32,29 @@ public class UserService {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
 
+    private final RegisterInviteService registerInviteService;
+
     public UserService(KumoConfig kumoConfig,
                        PasswordEncoder passwordEncoder,
                        UserRepository userRepository,
                        UserConvertor userConvertor,
                        RoleService roleService,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository,
+                       RegisterInviteService registerInviteService) {
         this.kumoConfig = kumoConfig;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userConvertor = userConvertor;
         this.roleService = roleService;
         this.roleRepository = roleRepository;
+        this.registerInviteService = registerInviteService;
     }
 
 
     public ResponseEntity<String> register(RegisterRequest request, @Nullable String registerInvite) {
-        if (kumoConfig.isInviteBasedRegistration())
-            throw new KumoException(AccountCodeErrorCodes.INVALID_INVITE, "Invite is invalid");
+        if (kumoConfig.isInviteBasedRegistration()) {
+            registerInviteService.validateInvite(registerInvite);
+        }
 
         if (userRepository.findByUsername(request.getUsername()).isPresent())
             throw new KumoException(AccountCodeErrorCodes.DUPLICATE_USERNAME);

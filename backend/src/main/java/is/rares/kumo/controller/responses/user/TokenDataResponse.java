@@ -18,6 +18,6 @@ public class TokenDataResponse {
     private String refreshToken;
 
     @NotNull
-    @Schema(description = "THe validity of the access token")
-    private int validityMs;
+    @Schema(description = "The validity of the access token")
+    private long validityMs;
 }

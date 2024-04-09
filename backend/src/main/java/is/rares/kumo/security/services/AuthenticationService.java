@@ -1,8 +1,5 @@
 package is.rares.kumo.security.services;
 
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import is.rares.kumo.controller.requests.user.AccountCodeRequest;
 import is.rares.kumo.controller.requests.user.LoginRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
@@ -16,7 +13,6 @@ import is.rares.kumo.security.convertor.ClientLocationConvertor;
 import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.TokenType;
-import is.rares.kumo.security.enums.TokenClaims;
 import is.rares.kumo.security.model.ClientLocationModel;
 import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.token.AsyncTokenStore;
@@ -34,9 +30,11 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class AuthenticationService extends KeyLoaderService {
-    private final TokenRepository tokenRepository;
+public class AuthenticationService {
+    private final JwtService jwtService;
     private final JWTConfiguration jwtConfiguration;
+
+    private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final TokenStore tokenStore;
     private final AsyncTokenStore asyncTokenStore;
@@ -50,7 +48,7 @@ public class AuthenticationService extends KeyLoaderService {
     private final ClientLocationConvertor clientLocationConvertor;
 
     @Autowired
-    public AuthenticationService(JWTConfiguration jwtConfiguration,
+    public AuthenticationService(JwtService jwtService, JWTConfiguration jwtConfiguration,
                                  UserRepository userRepository,
                                  TokenStore tokenStore,
                                  AsyncTokenStore asyncTokenStore,
@@ -59,6 +57,7 @@ public class AuthenticationService extends KeyLoaderService {
                                  AccountCodesService accountCodesService,
                                  ClientLocationConvertor clientLocationConvertor,
                                  TokenRepository tokenRepository) {
+        this.jwtService = jwtService;
         this.jwtConfiguration = jwtConfiguration;
         this.userRepository = userRepository;
         this.tokenStore = tokenStore;
@@ -68,35 +67,6 @@ public class AuthenticationService extends KeyLoaderService {
         this.accountCodesService = accountCodesService;
         this.clientLocationConvertor = clientLocationConvertor;
         this.tokenRepository = tokenRepository;
-    }
-
-    private String generateToken(UUID userId, TokenType tokenType) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(TokenClaims.TOKEN_TYPE.getClaim(), tokenType);
-        return createToken(claims, userId.toString(), jwtConfiguration.getAccessTokenValidity());
-    }
-
-    private String createToken(Map<String, Object> claims, String subject, int validity) {
-        final JwtBuilder jwtBuilder = Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuer(jwtConfiguration.getIssuer())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
-                .setId(UUID.randomUUID().toString());
-        try {
-            jwtBuilder.signWith(this.privateKey, SignatureAlgorithm.ES512);
-        } catch (Exception e) {
-            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Signing error");
-        }
-        return jwtBuilder.compact();
-    }
-
-    private String generateRefreshToken(UUID userId) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(TokenClaims.RANDOM_ID.getClaim(), UUID.randomUUID().toString());
-        claims.put(TokenClaims.REFRESH_TOKEN.getClaim(), true);
-        return createToken(claims, userId.toString(), jwtConfiguration.getRefreshTokenValidity());
     }
 
     public TokenDataResponse login(LoginRequest request) {
@@ -113,8 +83,8 @@ public class AuthenticationService extends KeyLoaderService {
         TokenType tokenType = user.isUsing2FA() && isFirstLogin ? TokenType.TWO_FA_TOKEN : TokenType.NORMAL_TOKEN;
 
         final TokenDataResponse tokenDataResponse = TokenDataResponse.builder()
-                .jwtToken(generateToken(user.getUuid(), tokenType))
-                .refreshToken(generateRefreshToken(user.getUuid()))
+                .jwtToken(jwtService.generateAccessToken(user.getUuid(), tokenType))
+                .refreshToken(jwtService.generateRefreshToken(user.getUuid()))
                 .validityMs(jwtConfiguration.getAccessTokenValidity())
                 .build();
 
@@ -131,8 +101,8 @@ public class AuthenticationService extends KeyLoaderService {
         Token currentToken = this.tokenStore.findByRefreshToken(refreshToken);
 
         final TokenDataResponse tokenDataResponse = TokenDataResponse.builder()
-                .jwtToken(generateToken(currentToken.getUserId(), currentToken.getTokenType()))
-                .refreshToken(generateRefreshToken(currentToken.getUserId()))
+                .jwtToken(jwtService.generateAccessToken(currentToken.getUserId(), currentToken.getTokenType()))
+                .refreshToken(jwtService.generateRefreshToken(currentToken.getUserId()))
                 .validityMs(jwtConfiguration.getAccessTokenValidity())
                 .build();
 
@@ -155,24 +125,4 @@ public class AuthenticationService extends KeyLoaderService {
         return new BooleanResponse(user.getTokenType() == TokenType.TWO_FA_TOKEN);
     }
 
-    public String createRegisterInviteJwt(int validity, int uses) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(TokenClaims.RANDOM_ID.getClaim(), UUID.randomUUID().toString());
-        claims.put(TokenClaims.TOKEN_TYPE.getClaim(), TokenType.REGISTER_INVITE_TOKEN);
-        claims.put(TokenClaims.VALIDITY.getClaim(), validity);
-        claims.put(TokenClaims.MAX_USAGE.getClaim(), uses);
-
-        final JwtBuilder jwtBuilder = Jwts.builder()
-                .setClaims(claims)
-                .setIssuer(jwtConfiguration.getIssuer())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validity * 1000L))
-                .setId(UUID.randomUUID().toString());
-        try {
-            jwtBuilder.signWith(this.privateKey, SignatureAlgorithm.ES512);
-        } catch (Exception e) {
-            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Signing error");
-        }
-        return jwtBuilder.compact();
-    }
 }

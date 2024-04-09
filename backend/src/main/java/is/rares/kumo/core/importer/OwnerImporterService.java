@@ -53,18 +53,20 @@ public class OwnerImporterService {
                 roleRepository.save(ownerRole);
             }
         } else {
-            if (!StringUtils.isEmpty(kumoConfig.getOwnerEmail()) && !StringUtils.isEmpty(kumoConfig.getOwnerPassword())) {
-                User owner = new User();
-                owner.setUsername(kumoConfig.getOwnerUsername());
-                owner.setEmail(kumoConfig.getOwnerEmail());
-                owner.setPassword(passwordEncoder.encode(kumoConfig.getOwnerPassword()));
-                owner = userRepository.save(owner);
-
-
-                Role ownerRole = roleService.getOwnerRoleOrCreateIfNotExists();
-                ownerRole.getUsers().add(owner);
-                roleRepository.save(ownerRole);
+            if (StringUtils.isEmpty(kumoConfig.getOwnerEmail()) || StringUtils.isEmpty(kumoConfig.getOwnerPassword())) {
+                log.error("Could not create owner account because email or password not set.");
+                System.exit(0);
             }
+            User owner = new User();
+            owner.setUsername(kumoConfig.getOwnerUsername());
+            owner.setEmail(kumoConfig.getOwnerEmail());
+            owner.setPassword(passwordEncoder.encode(kumoConfig.getOwnerPassword()));
+            owner = userRepository.save(owner);
+
+
+            Role ownerRole = roleService.getOwnerRoleOrCreateIfNotExists();
+            ownerRole.getUsers().add(owner);
+            roleRepository.save(ownerRole);
         }
     }
 }

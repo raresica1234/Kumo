@@ -12,7 +12,7 @@ public class CreateRegisterInviteRequest {
     @NotNull
     @Schema(description = "Specifies for how long the invite should be valid, 0 for unlimited")
     @Min(0)
-    private int validitySeconds;
+    private long validitySeconds;
 
     @NotNull
     @Schema(description = "Number of uses, 0 for unlimited")
