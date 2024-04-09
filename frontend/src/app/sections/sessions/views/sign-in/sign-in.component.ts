@@ -16,8 +16,6 @@ import { Router } from '@angular/router';
 export class SignInComponent implements OnInit, OnDestroy {
   signInForm!: FormGroup;
   twoFAForm!: FormGroup;
-  // TODO: Figure out what to do when a user's code has expired, they'll just be stuck in this screen
-  // maybe on 2fa flow, if the user refreshes, just remove everything and let them start over
   // TODO: Add 2fa sending by mail or some other way
   twoFAFlow: boolean = false;
 
@@ -48,6 +46,10 @@ export class SignInComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.twoFAFlow = this.sessionService.isTwoFARequired();
+    if (this.twoFAFlow) {
+      localStorage.clear();
+      this.twoFAFlow = false;
+    }
   }
 
   signIn() {

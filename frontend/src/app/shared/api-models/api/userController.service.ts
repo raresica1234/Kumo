@@ -131,7 +131,7 @@ export class UserControllerService {
             }
         }
 
-        let localVarPath = `/api/users/`;
+        let localVarPath = `/api/users`;
         return this.httpClient.request<UserModel>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

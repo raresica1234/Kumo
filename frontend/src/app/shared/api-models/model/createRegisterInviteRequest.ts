@@ -11,18 +11,17 @@
  */
 
 
-export interface TokenDataResponse { 
+/**
+ * Object to create a register invite
+ */
+export interface CreateRegisterInviteRequest { 
     /**
-     * The jwt
+     * Specifies for how long the invite should be valid, 0 for unlimited
      */
-    jwtToken: string;
+    validitySeconds: number;
     /**
-     * The refresh token
+     * Number of uses, 0 for unlimited
      */
-    refreshToken: string;
-    /**
-     * The validity of the access token
-     */
-    validityMs: number;
+    uses: number;
 }
 

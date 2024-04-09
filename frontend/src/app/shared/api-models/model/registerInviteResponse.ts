@@ -11,18 +11,7 @@
  */
 
 
-export interface TokenDataResponse { 
-    /**
-     * The jwt
-     */
-    jwtToken: string;
-    /**
-     * The refresh token
-     */
-    refreshToken: string;
-    /**
-     * The validity of the access token
-     */
-    validityMs: number;
+export interface RegisterInviteResponse { 
+    invite?: string;
 }
 

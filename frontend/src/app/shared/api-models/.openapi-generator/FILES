@@ -12,8 +12,10 @@ index.ts
 model/accountCodeRequest.ts
 model/booleanResponse.ts
 model/clientLocationModel.ts
+model/createRegisterInviteRequest.ts
 model/loginRequest.ts
 model/models.ts
+model/registerInviteResponse.ts
 model/registerRequest.ts
 model/tokenDataResponse.ts
 model/userModel.ts
