@@ -30,7 +30,7 @@ export class AuthService {
     if (this.user) {
       return true;
     } else {
-      this.removeSessionDataFromLocalStorage();
+      this.sessionService.removeUserDataFromLocalStorage();
       return false;
     }
   }
@@ -65,10 +65,6 @@ export class AuthService {
     return this.authenticationController.require2FA().pipe(map((val) => val.value!));
   }
 
-  private removeSessionDataFromLocalStorage() {
-    localStorage.removeItem('userData');
-  }
-
   fetchCurrentUser() {
     return this.userController.getUser().pipe(
       tap((userData) => {
@@ -80,5 +76,13 @@ export class AuthService {
 
   getCurrentUser() {
     return this.user;
+  }
+
+  signOut() {
+    return this.authenticationController.logout().pipe(
+      tap(() => {
+        this.sessionService.removeSessionFromLocalStorage();
+      }),
+    );
   }
 }

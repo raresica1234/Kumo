@@ -7,8 +7,10 @@ import is.rares.kumo.controller.responses.user.TokenDataResponse;
 import is.rares.kumo.core.config.JWTConfiguration;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
+import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.User;
 import is.rares.kumo.repository.UserRepository;
+import is.rares.kumo.security.AuthorizationInterceptor;
 import is.rares.kumo.security.convertor.ClientLocationConvertor;
 import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.domain.CurrentUser;
@@ -98,7 +100,9 @@ public class AuthenticationService {
     }
 
     public TokenDataResponse refreshToken(String refreshToken) {
-        Token currentToken = this.tokenStore.findByRefreshToken(refreshToken);
+        Token currentToken = tokenStore.findByRefreshToken(refreshToken);
+
+        tokenStore.checkTokenValidity(refreshToken);
 
         final TokenDataResponse tokenDataResponse = TokenDataResponse.builder()
                 .jwtToken(jwtService.generateAccessToken(currentToken.getUserId(), currentToken.getTokenType()))
@@ -125,4 +129,17 @@ public class AuthenticationService {
         return new BooleanResponse(user.getTokenType() == TokenType.TWO_FA_TOKEN);
     }
 
+    public void logout(CurrentUser user) {
+        String jwtToken = user.getPassword().substring(AuthorizationInterceptor.BEARER_ATTRIBUTE.length());
+
+        Optional<Token> tokenOptional = tokenRepository.findByJwtToken(jwtToken);
+
+        if (tokenOptional.isEmpty())
+            throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN);
+
+        Token token = tokenOptional.get();
+
+        tokenStore.blacklistToken(jwtToken);
+        tokenStore.blacklistToken(token.getRefreshToken());
+    }
 }

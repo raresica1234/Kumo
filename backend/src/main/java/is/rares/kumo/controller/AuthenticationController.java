@@ -13,7 +13,6 @@ import is.rares.kumo.controller.responses.BooleanResponse;
 import is.rares.kumo.controller.responses.user.RegisterInviteResponse;
 import is.rares.kumo.controller.responses.user.TokenDataResponse;
 import is.rares.kumo.domain.user.Feature;
-import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.annotation.HasTokenType;
@@ -21,6 +20,7 @@ import is.rares.kumo.security.annotation.NotAuthenticated;
 import is.rares.kumo.security.enums.TokenType;
 import is.rares.kumo.security.model.LoggedClientModel;
 import is.rares.kumo.security.services.AuthenticationService;
+import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.service.RegisterInviteService;
 import is.rares.kumo.service.UserService;
 import jakarta.validation.Valid;
@@ -78,6 +78,17 @@ public class AuthenticationController {
         return userService.register(request, registerInvite);
     }
 
+    @Operation(summary = "Logout", operationId = "logout", responses = {
+            @ApiResponse(responseCode = "200",description = "Successfully logged out"),
+            @ApiResponse(responseCode = "401", description = "Not authorized"),
+    })
+    @Authenticated
+    @HasTokenType({TokenType.TWO_FA_TOKEN, TokenType.NORMAL_TOKEN})
+    @PostMapping(value = "/logout")
+    public void logout() {
+        authenticationService.logout(currentUserService.getUser());
+    }
+
     @Operation(summary = "Is Register by invites required", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BooleanResponse.class))),
     })
@@ -86,6 +97,19 @@ public class AuthenticationController {
     public BooleanResponse registerByInvites() {
         return userService.registerInviteRequired();
     }
+
+    @Operation(summary = "Is register invite valid", responses = {
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BooleanResponse.class))),
+    })
+    @Authenticated
+    @HasTokenType(TokenType.REGISTER_INVITE_TOKEN)
+    @GetMapping(value = "/validRegisterInvite", produces = MediaType.APPLICATION_JSON)
+    public BooleanResponse validRegisterInvite() {
+        String token = currentUserService.getUser().getPassword().substring(BEARER_ATTRIBUTE.length());
+
+        return new BooleanResponse(registerInviteService.validateInvite(token));
+    }
+
 
     @Operation(summary = "Create register invite", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = String.class))),
@@ -98,7 +122,7 @@ public class AuthenticationController {
     @HasAuthority(Feature.CREATE_REGISTER_INVITE)
     @PostMapping(value = "/createRegisterInvite", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public RegisterInviteResponse createRegisterInvite(@Parameter(name = "Register invite request", required = true)
-                                          @Valid @RequestBody CreateRegisterInviteRequest registerInviteRequest) {
+                                                       @Valid @RequestBody CreateRegisterInviteRequest registerInviteRequest) {
         return registerInviteService.createRegisterInvite(registerInviteRequest);
     }
 

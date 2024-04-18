@@ -10,6 +10,113 @@
 			"name": "Authentication",
 			"item": [
 				{
+					"name": "Register Invite",
+					"item": [
+						{
+							"name": "Register Invite Required",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/authenticate/requireRegisterInvite",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"authenticate",
+										"requireRegisterInvite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register Invite Valid",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{registerInvite}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/authenticate/validRegisterInvite",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"authenticate",
+										"validRegisterInvite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Register Invite",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"registerInvite\", jsonData.invite);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwtToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"validitySeconds\": 0,\n    \"uses\": 0\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/authenticate/createRegisterInvite",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"authenticate",
+										"createRegisterInvite"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Login",
 					"event": [
 						{
@@ -30,7 +137,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\",\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"0.0.0.8\",\n    \"locationType\": \"WEB\"\n  }\n}",
+							"raw": "{\n  \"password\": \"Parola!2\",\n  \"username\": \"rares1234\",\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"0.0.0.8\",\n    \"locationType\": \"WEB\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,19 +159,59 @@
 					"response": []
 				},
 				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwtToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/authenticate/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"authenticate",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Register",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Register-Invite",
-								"value": "eyJhbGciOiJFUzUxMiJ9.eyJyYW5kb21JZCI6IjJjNGYwMzE0LWE2MzItNDE0ZS05NWJiLWQ5MTM1OTRmNTU1YyIsIm1heFVzYWdlIjowLCJ2YWxpZGl0eSI6MzE1MzYwMDAwMCwidG9rZW5UeXBlIjoiUkVHSVNURVJfSU5WSVRFX1RPS0VOIiwic3ViIjoiUmVnaXN0ZXIgSW52aXRlIiwiaXNzIjoiS3VtbyIsImlhdCI6MTcwMzYyODAzOSwiZXhwIjo0ODU3MjI4MDM5LCJqdGkiOiI0ZmNiZDA0Ny0xZTFkLTRkYzUtOTZjMC1lNTY3NWY4NmM1OGUifQ.ACNSSiYgxPxOcoBHgb0Y2JkKXf7VDw8kXYG7hiBV2TEK4TqdzRKC3EvS8JSvPHWsfxnZ8yQcvBp26pFqjLjL_0-TAKdAsVTr3z0hI-wbNLNrcdhpOKB1uR8vbM4cE032cT6KSNT4oDqGudEZRr4y2KEBhHSewS9Xyd2bvyT4GXW8ziho",
+								"value": "{{registerInvite}}",
 								"type": "default"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"ma1il2@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica12342\"\n}",
+							"raw": "{\n  \"email\": \"ma1il2@gmail.com\",\n  \"password\": \"Rares123\",\n  \"username\": \"raresica12343\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,7 +263,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"jG3YEg\"\n}",
+							"raw": "{\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"1.1.1.1\",\n    \"locationType\": \"WEB\"\n  },\n  \"code\": \"z3Cv4N\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -232,79 +379,6 @@
 								"api",
 								"authenticate",
 								"require2FA"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Register Invite Required",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/authenticate/requireRegisterInvite",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"authenticate",
-								"requireRegisterInvite"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Register Invite",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"postman.setEnvironmentVariable(\"registerInvite\", jsonData.invite);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwtToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"validitySeconds\": 0,\n    \"uses\": 0\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/authenticate/createRegisterInvite",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"authenticate",
-								"createRegisterInvite"
 							]
 						}
 					},

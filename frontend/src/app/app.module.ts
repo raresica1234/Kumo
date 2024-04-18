@@ -11,10 +11,23 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorAlertComponent } from './shared/components/alerts/error-alert/error-alert.component';
 import { authenticationInterceptor } from './shared/services/session/authentication.interceptor';
+import { NavigationComponent } from './shared/components/navigation/navigation.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [AppComponent, ErrorAlertComponent],
-  imports: [BrowserModule, AppRoutingModule, ApiModule, BrowserAnimationsModule, ToastrModule.forRoot()],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ApiModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   providers: [
     [
       { provide: BASE_PATH, useValue: environment.basePath },
@@ -26,5 +39,6 @@ import { authenticationInterceptor } from './shared/services/session/authenticat
     ],
   ],
   bootstrap: [AppComponent],
+  exports: [],
 })
 export class AppModule {}

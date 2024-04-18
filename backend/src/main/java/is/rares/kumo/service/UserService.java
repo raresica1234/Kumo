@@ -6,6 +6,7 @@ import is.rares.kumo.convertor.UserConvertor;
 import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
+import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.AccountDetails;
 import is.rares.kumo.domain.user.Role;
 import is.rares.kumo.domain.user.User;
@@ -52,9 +53,8 @@ public class UserService {
 
 
     public ResponseEntity<String> register(RegisterRequest request, @Nullable String registerInvite) {
-        if (kumoConfig.isInviteBasedRegistration()) {
-            registerInviteService.validateInvite(registerInvite);
-        }
+        if (kumoConfig.isInviteBasedRegistration() && !registerInviteService.validateInvite(registerInvite))
+            throw new KumoException(AuthorizationErrorCodes.INVALID_REGISTER_INVITE);
 
         if (userRepository.findByUsername(request.getUsername()).isPresent())
             throw new KumoException(AccountCodeErrorCodes.DUPLICATE_USERNAME);
@@ -75,6 +75,10 @@ public class UserService {
             Role ownerRole = roleService.getOwnerRoleOrCreateIfNotExists();
             ownerRole.getUsers().add(user);
             roleRepository.save(ownerRole);
+        }
+
+        if (kumoConfig.isInviteBasedRegistration()) {
+            registerInviteService.incrementInviteUsage(registerInvite);
         }
 
         return new ResponseEntity<>("{}", HttpStatus.OK);

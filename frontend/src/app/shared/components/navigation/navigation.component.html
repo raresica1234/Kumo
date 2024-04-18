@@ -1,0 +1,16 @@
+<mat-toolbar>
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1>Kumo</h1>
+
+  <span class="flex-auto flex-shrink flex-grow"></span>
+
+  <button mat-flat-button>
+    <mat-icon>person</mat-icon>
+    {{ username }}
+  </button>
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
+</mat-toolbar>

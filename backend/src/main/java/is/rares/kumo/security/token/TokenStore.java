@@ -27,9 +27,12 @@ public class TokenStore {
 
     public void checkTokenValidity(String jwt) {
         if (redisTemplate.opsForValue().get(TOKEN_DOCUMENT_NAME + jwt) != null) // token was blacklisted
-            throw new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR, "Invalid authentication");
+            throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid authentication");
     }
 
+    public void blacklistToken(String jwt) {
+        redisTemplate.opsForValue().set(TOKEN_DOCUMENT_NAME + jwt, jwt);
+    }
 }
 
 

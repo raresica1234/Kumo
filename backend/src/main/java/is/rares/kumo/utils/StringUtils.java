@@ -8,6 +8,7 @@ import java.util.Random;
 public class StringUtils {
     private final Random randomInstance = new Random();
 
+    // TODO: Use secure random
     public String generateRandomString(int length) {
         int leftLimit = 48; // '0'
         int rightLimit = 122; // 'z'

@@ -8,9 +8,9 @@ import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.RegisterInvite;
 import is.rares.kumo.domain.user.RegisterInviteStatus;
 import is.rares.kumo.repository.RegisterInviteRepository;
+import is.rares.kumo.security.enums.TokenClaims;
 import is.rares.kumo.security.services.JwtService;
-import is.rares.kumo.security.services.JwtUserService;
-import is.rares.kumo.security.services.AuthenticationService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -46,17 +46,40 @@ public class RegisterInviteService {
         return new RegisterInviteResponse(jwt);
     }
 
-    public void validateInvite(String registerInvite) {
-        Optional<RegisterInvite> registerInviteOptional = registerInviteRepository.findByJwtToken(registerInvite);
+    public boolean validateInvite(String registerInviteString) {
+        Optional<RegisterInvite> registerInviteOptional = registerInviteRepository.findByJwtToken(registerInviteString);
         if (registerInviteOptional.isEmpty())
-            throw new KumoException(AuthorizationErrorCodes.INVALID_REGISTER_INVITE);
+            return false;
+
+        RegisterInvite registerInvite = registerInviteOptional.get();
+
+        return registerInvite.getStatus().equals(RegisterInviteStatus.VALID);
+    }
+
+    @Transactional
+    public void incrementInviteUsage(String registerInviteString) {
+        Optional<RegisterInvite> registerInviteOptional = registerInviteRepository.findByJwtToken(registerInviteString);
+        if (registerInviteOptional.isEmpty())
+            throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid register invite.");
 
         try {
-            Claims claims = jwtService.extractAllClaims(registerInvite);
+            Claims claims = jwtService.extractAllClaims(registerInviteString);
 
-            System.out.println(claims);
-        } catch(Exception e) {
-            throw new KumoException(AuthorizationErrorCodes.INVALID_REGISTER_INVITE);
+            Integer maxUsage = (Integer) claims.get(TokenClaims.MAX_USAGE.getClaim());
+
+            RegisterInvite registerInvite = registerInviteOptional.get();
+
+            registerInvite.setUsageCount(registerInvite.getUsageCount() + 1);
+            if (registerInvite.getUsageCount() >= maxUsage && maxUsage != 0)
+                registerInvite.setStatus(RegisterInviteStatus.INVALID);
+
+            registerInviteRepository.updateUsageCountAndStatusByUuid(registerInvite.getUuid(),
+                    registerInvite.getUsageCount(), registerInvite.getStatus());
+
+        } catch (Exception e) {
+            throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid register invite.");
+
         }
+
     }
 }

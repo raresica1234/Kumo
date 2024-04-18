@@ -20,4 +20,6 @@ public interface TokenRepository extends BasePagingAndSortingRepository<Token> {
     void updateTokenUsage(@Param("date") Date date, @Param("jwtToken") String jwtToken);
 
     Optional<Token> findByRefreshToken(String refreshToken);
+
+    Optional<Token> findByJwtToken(String jwtToken);
 }

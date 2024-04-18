@@ -33,13 +33,20 @@ public class JwtUserService implements UserDetailsService {
             final Claims userClaims = jwtService.extractAllClaims(jwt);
 
             final String username = userClaims.getSubject();
-            final UUID userId = UUID.fromString(username);
-            final Date expirationDate = userClaims.getExpiration();
 
             if (!userClaims.containsKey(TokenClaims.TOKEN_TYPE.getClaim()))
                 throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid token");
 
             TokenType tokenType = TokenType.valueOf((String) userClaims.get(TokenClaims.TOKEN_TYPE.getClaim()));
+
+            UUID userId;
+            if (tokenType.equals(TokenType.REGISTER_INVITE_TOKEN))
+                userId = UUID.randomUUID();
+            else
+                userId = UUID.fromString(username);
+
+            final Date expirationDate = userClaims.getExpiration();
+
 
             return new CurrentUser(userId, username, "Bearer " + jwt, new ArrayList<>(), tokenType, expirationDate);
 

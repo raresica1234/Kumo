@@ -11,6 +11,7 @@ export class SessionService {
   private static USER_DATA_STORAGE_LOCATION = 'user';
   public accessToken;
   public refreshToken;
+  public registerInvite: string | null = null;
 
   constructor() {
     this.accessToken = localStorage.getItem(SessionService.ACCESS_TOKEN_STORAGE_LOCATION);
@@ -25,9 +26,18 @@ export class SessionService {
     localStorage.setItem(SessionService.REFRESH_TOKEN_STORAGE_LOCATION, tokenData.refreshToken);
   }
 
-  removeLocalStorageItems() {
+  removeSessionFromLocalStorage() {
+    this.removeUserDataFromLocalStorage();
+    this.removeTokensFromLocalStorage();
+  }
+
+  removeTokensFromLocalStorage() {
     localStorage.removeItem(SessionService.ACCESS_TOKEN_STORAGE_LOCATION);
     localStorage.removeItem(SessionService.REFRESH_TOKEN_STORAGE_LOCATION);
+  }
+
+  removeUserDataFromLocalStorage() {
+    localStorage.removeItem(SessionService.USER_DATA_STORAGE_LOCATION);
   }
 
   setTwoFARequired(value: boolean) {
@@ -47,5 +57,9 @@ export class SessionService {
 
   setUserData(userData: UserModel) {
     localStorage.setItem(SessionService.USER_DATA_STORAGE_LOCATION, JSON.stringify(userData));
+  }
+
+  setRegisterInvite(token: string) {
+    this.registerInvite = token;
   }
 }
