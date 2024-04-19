@@ -1,6 +1,6 @@
 package is.rares.kumo.security.annotation;
 
-import is.rares.kumo.domain.user.Feature;
+import is.rares.kumo.security.enums.Feature;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

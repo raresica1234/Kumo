@@ -8,22 +8,40 @@
 
   <mat-menu #appMenu="matMenu">
     <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
-    <button mat-menu-item><mat-icon>exit_to_app</mat-icon>Sign out</button>
+    <button *ngIf="isAdmin" mat-menu-item (click)="navigateTo('admin/')">
+      <mat-icon>admin_panel_settings</mat-icon>Admin Panel
+    </button>
+    <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Sign out</button>
   </mat-menu>
 
-  <button mat-flat-button [matMenuTriggerFor]="appMenu">
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
     <mat-icon>person</mat-icon>
-    {{ username }}
   </button>
 </mat-toolbar>
 
 <mat-sidenav-container autosize class="h-full">
-  <mat-sidenav [opened]="sidenav" mode="side" class="h-full">
-    <mat-nav-list>
-      <button mat-flat-button>
-        <mat-icon>house</mat-icon>
-        Dashboard
-      </button>
+  <mat-sidenav [opened]="sidenav" mode="side" class="h-full md:w-[150px]">
+    <mat-nav-list class="nav-list">
+      @if (adminPanel) {
+        <mat-list-item>
+          <button mat-flat-button (click)="navigateTo('/')">
+            <mat-icon>home</mat-icon>
+            Home
+          </button>
+        </mat-list-item>
+        <mat-divider />
+        <mat-list-item>
+          <button mat-flat-button (click)="navigateTo('admin/path_point')">
+            <mat-icon>timeline</mat-icon>
+            Path Points
+          </button>
+        </mat-list-item>
+      } @else {
+        <button mat-flat-button>
+          <mat-icon>house</mat-icon>
+          Dashboard
+        </button>
+      }
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

@@ -1,6 +1,6 @@
 package is.rares.kumo.security.token;
 
-import is.rares.kumo.repository.BasePagingAndSortingRepository;
+import is.rares.kumo.repository.user.BasePagingAndSortingRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

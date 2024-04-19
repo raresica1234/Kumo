@@ -28,7 +28,7 @@ public class ControllerArchitectureTests {
     @ArchTest
     public static final ArchRule controllersShouldNotAccessDomainObjects = noClasses()
             .that().resideInAPackage("..controller..")
-            .should().dependOnClassesThat().resideInAPackage("..domain..");
+            .should().dependOnClassesThat().resideInAPackage("..kumo..domain..");
 
     private static final ArchCondition<JavaMethod> methodAnnotatedWithRequestBodyShouldBeValid =
             new ArchCondition<>("Methods annotated with @RequestBody should be annotated with @Valid") {

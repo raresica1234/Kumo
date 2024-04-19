@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TokenDataResponse, UserModel } from '../../api-models';
+import { Feature } from '../../models/features';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ export class SessionService {
   private static REFRESH_TOKEN_STORAGE_LOCATION = 'refreshToken';
   private static TWO_FA_REQUIRED_STORAGE_LOCATION = 'twoFARequired';
   private static USER_DATA_STORAGE_LOCATION = 'user';
+  private static FEATURES_STORAGE_LOCATION = 'features';
   public accessToken;
   public refreshToken;
   public registerInvite: string | null = null;
@@ -29,6 +31,7 @@ export class SessionService {
   removeSessionFromLocalStorage() {
     this.removeUserDataFromLocalStorage();
     this.removeTokensFromLocalStorage();
+    this.removeFeaturesFromLocalStorage();
   }
 
   removeTokensFromLocalStorage() {
@@ -40,15 +43,29 @@ export class SessionService {
     localStorage.removeItem(SessionService.USER_DATA_STORAGE_LOCATION);
   }
 
+  removeFeaturesFromLocalStorage() {
+    localStorage.removeItem(SessionService.FEATURES_STORAGE_LOCATION);
+  }
+
   setTwoFARequired(value: boolean) {
     if (!value) localStorage.removeItem(SessionService.TWO_FA_REQUIRED_STORAGE_LOCATION);
     else localStorage.setItem(SessionService.TWO_FA_REQUIRED_STORAGE_LOCATION, 'true');
   }
 
-  getUserData() {
+  getFeatures(): Feature[] | null {
+    const value = localStorage.getItem(SessionService.FEATURES_STORAGE_LOCATION);
+    if (value) return JSON.parse(value);
+    return null;
+  }
+
+  setFeatures(value: Feature[]) {
+    localStorage.setItem(SessionService.FEATURES_STORAGE_LOCATION, JSON.stringify(value));
+  }
+
+  getUserData(): UserModel | null {
     const value = localStorage.getItem(SessionService.USER_DATA_STORAGE_LOCATION);
     if (value) return JSON.parse(value);
-    return value;
+    return null;
   }
 
   isTwoFARequired() {

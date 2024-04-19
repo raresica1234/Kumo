@@ -1,5 +1,6 @@
 package is.rares.kumo.controller;
 
+import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.model.UserModel;
 import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.security.annotation.Authenticated;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/users")
@@ -29,6 +31,13 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     public UserModel getUser() {
         return userService.getUser(currentUserService.getUser());
+    }
+
+    @Authenticated
+    @HasTokenType
+    @GetMapping(path = "features", produces = MediaType.APPLICATION_JSON)
+    public List<Feature> getFeatures() {
+        return userService.getFeatures(currentUserService.getUser());
     }
 
 }

@@ -1,4 +1,4 @@
-package is.rares.kumo.repository;
+package is.rares.kumo.repository.user;
 
 import is.rares.kumo.domain.user.User;
 import org.springframework.stereotype.Repository;

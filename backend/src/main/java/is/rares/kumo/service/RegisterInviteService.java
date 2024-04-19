@@ -7,7 +7,8 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.RegisterInvite;
 import is.rares.kumo.domain.user.RegisterInviteStatus;
-import is.rares.kumo.repository.RegisterInviteRepository;
+import is.rares.kumo.repository.user.RegisterInviteRepository;
+import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.TokenClaims;
 import is.rares.kumo.security.services.JwtService;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static is.rares.kumo.security.AuthorizationInterceptor.BEARER_ATTRIBUTE;
 
 @Service
 
@@ -78,8 +81,10 @@ public class RegisterInviteService {
 
         } catch (Exception e) {
             throw new KumoException(AuthorizationErrorCodes.INVALID_TOKEN, "Invalid register invite.");
-
         }
+    }
 
+    public boolean validateInviteForUser(CurrentUser user) {
+        return validateInvite(user.getPassword().substring(BEARER_ATTRIBUTE.length()));
     }
 }

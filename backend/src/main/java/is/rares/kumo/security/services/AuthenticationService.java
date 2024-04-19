@@ -9,7 +9,7 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.User;
-import is.rares.kumo.repository.UserRepository;
+import is.rares.kumo.repository.user.UserRepository;
 import is.rares.kumo.security.AuthorizationInterceptor;
 import is.rares.kumo.security.convertor.ClientLocationConvertor;
 import is.rares.kumo.security.domain.ClientLocation;

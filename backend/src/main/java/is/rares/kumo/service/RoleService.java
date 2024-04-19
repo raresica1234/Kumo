@@ -1,8 +1,8 @@
 package is.rares.kumo.service;
 
-import is.rares.kumo.domain.user.Feature;
+import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.domain.user.Role;
-import is.rares.kumo.repository.RoleRepository;
+import is.rares.kumo.repository.user.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

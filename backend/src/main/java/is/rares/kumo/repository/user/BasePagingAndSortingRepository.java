@@ -1,4 +1,4 @@
-package is.rares.kumo.repository;
+package is.rares.kumo.repository.user;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;

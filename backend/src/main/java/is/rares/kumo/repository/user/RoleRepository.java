@@ -1,8 +1,7 @@
-package is.rares.kumo.repository;
+package is.rares.kumo.repository.user;
 
 import is.rares.kumo.domain.user.Role;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.ws.rs.QueryParam;

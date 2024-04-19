@@ -12,7 +12,7 @@ import is.rares.kumo.controller.requests.user.RegisterRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
 import is.rares.kumo.controller.responses.user.RegisterInviteResponse;
 import is.rares.kumo.controller.responses.user.TokenDataResponse;
-import is.rares.kumo.domain.user.Feature;
+import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.annotation.HasTokenType;
@@ -100,14 +100,13 @@ public class AuthenticationController {
 
     @Operation(summary = "Is register invite valid", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BooleanResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Register invite invalid"),
     })
     @Authenticated
     @HasTokenType(TokenType.REGISTER_INVITE_TOKEN)
     @GetMapping(value = "/validRegisterInvite", produces = MediaType.APPLICATION_JSON)
     public BooleanResponse validRegisterInvite() {
-        String token = currentUserService.getUser().getPassword().substring(BEARER_ATTRIBUTE.length());
-
-        return new BooleanResponse(registerInviteService.validateInvite(token));
+        return new BooleanResponse(registerInviteService.validateInviteForUser(currentUserService.getUser()));
     }
 
 

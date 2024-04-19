@@ -8,11 +8,12 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.AccountDetails;
+import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.domain.user.Role;
 import is.rares.kumo.domain.user.User;
 import is.rares.kumo.model.UserModel;
-import is.rares.kumo.repository.RoleRepository;
-import is.rares.kumo.repository.UserRepository;
+import is.rares.kumo.repository.user.RoleRepository;
+import is.rares.kumo.repository.user.UserRepository;
 import is.rares.kumo.security.domain.CurrentUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -97,5 +99,13 @@ public class UserService {
 
     public BooleanResponse registerInviteRequired() {
         return new BooleanResponse(kumoConfig.isInviteBasedRegistration());
+    }
+
+    public List<Feature> getFeatures(CurrentUser currentUser) {
+        User user = findByUserId(currentUser.getId());
+
+        return user.getRoles().stream()
+                .flatMap(role -> role.getFeatures().stream())
+                .toList();
     }
 }

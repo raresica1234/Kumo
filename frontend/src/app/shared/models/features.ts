@@ -1,0 +1,4 @@
+export enum Feature {
+  OWNER = 'OWNER',
+  CREATE_REGISTER_INVITE = 'CREATE_REGISTER_INVITE',
+}

@@ -9,21 +9,25 @@ import {
   UserControllerService,
   UserModel,
 } from '../../api-models';
-import { catchError, concatMap, map, Observable, Subscription, tap, throwError } from 'rxjs';
+import { concatMap, map, Observable, switchMap, tap } from 'rxjs';
 import { SessionService } from './session.service';
+import { GeneralService } from '../general.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private user: UserModel | undefined;
+  private user: UserModel | null;
 
   constructor(
     private ipService: IpService,
     private authenticationController: AuthenticationControllerService,
     private sessionService: SessionService,
     private userController: UserControllerService,
-  ) {}
+    private generalService: GeneralService,
+  ) {
+    this.user = null;
+  }
 
   isAuthenticated(): boolean {
     this.user = this.sessionService.getUserData();
@@ -66,10 +70,15 @@ export class AuthService {
   }
 
   fetchCurrentUser() {
-    return this.userController.getUser().pipe(
-      tap((userData) => {
-        this.sessionService.setUserData(userData);
-        this.user = userData;
+    return this.generalService.init().pipe(
+      switchMap((features) => {
+        return this.userController.getUser().pipe(
+          tap((userData) => {
+            this.sessionService.setUserData(userData);
+            this.user = userData;
+            this.generalService.init();
+          }),
+        );
       }),
     );
   }
@@ -82,6 +91,7 @@ export class AuthService {
     return this.authenticationController.logout().pipe(
       tap(() => {
         this.sessionService.removeSessionFromLocalStorage();
+        this.generalService.removeFeatures();
       }),
     );
   }

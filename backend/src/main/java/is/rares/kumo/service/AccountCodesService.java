@@ -7,7 +7,7 @@ import is.rares.kumo.domain.user.User;
 import is.rares.kumo.domain.user.AccountCodeStatus;
 import is.rares.kumo.domain.user.AccountCodeType;
 import is.rares.kumo.controller.requests.user.AccountCodeRequest;
-import is.rares.kumo.repository.AccountCodeRepository;
+import is.rares.kumo.repository.user.AccountCodeRepository;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;

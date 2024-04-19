@@ -4,10 +4,11 @@ import { HomeComponent } from './views/home/home.component';
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
 import { NavigationComponent } from '../../shared/components/navigation/navigation.component';
-import { AppModule } from '../../app.module';
+import { AdminHomeComponent } from './views/admin/admin-home/admin-home.component';
+import { PathPointComponent } from './views/admin/path-point/path-point.component';
 
 @NgModule({
-  declarations: [LayoutComponent, HomeComponent],
+  declarations: [LayoutComponent, HomeComponent, AdminHomeComponent, PathPointComponent],
   imports: [CommonModule, LayoutRoutingModule, NavigationComponent],
   bootstrap: [LayoutComponent],
 })

@@ -1,6 +1,7 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
+import is.rares.kumo.domain.explore.ExploreRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -27,7 +28,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     String password;
 
-    boolean isUsing2FA;
+    boolean using2FA;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "detail_id")
@@ -38,6 +39,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<ExploreRole> exploreRoles = new HashSet<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

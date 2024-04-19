@@ -2,9 +2,8 @@ package is.rares.kumo.security.aspect;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
-import is.rares.kumo.domain.user.AuthorityType;
-import is.rares.kumo.domain.user.Feature;
-import is.rares.kumo.repository.RoleRepository;
+import is.rares.kumo.security.enums.Feature;
+import is.rares.kumo.repository.user.RoleRepository;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.domain.CurrentUser;
 import org.aspectj.lang.JoinPoint;
