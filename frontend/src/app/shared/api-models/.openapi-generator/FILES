@@ -4,6 +4,7 @@ api.module.ts
 api/api.ts
 api/authenticationController.service.ts
 api/explorerController.service.ts
+api/pathPointController.service.ts
 api/userController.service.ts
 configuration.ts
 encoder.ts
@@ -15,8 +16,13 @@ model/clientLocationModel.ts
 model/createRegisterInviteRequest.ts
 model/loginRequest.ts
 model/models.ts
+model/pagePathPointModel.ts
+model/pageable.ts
+model/pageableObject.ts
+model/pathPointModel.ts
 model/registerInviteResponse.ts
 model/registerRequest.ts
+model/sortObject.ts
 model/tokenDataResponse.ts
 model/userModel.ts
 param.ts

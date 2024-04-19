@@ -65,11 +65,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
   }
 
   logout() {
-    const sub = this.authService.signOut().subscribe(() => {
-      window.location.reload();
-    });
-
-    this.subscriptionManager.add(sub);
+    this.authService.signOut();
   }
 
   toggleSidenav() {

@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="dark:mat-primary">
   <button mat-icon-button (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
@@ -14,13 +14,13 @@
     <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Sign out</button>
   </mat-menu>
 
-  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+  <button mat-icon-button [matMenuTriggerFor]="appMenu" color="primary">
     <mat-icon>person</mat-icon>
   </button>
 </mat-toolbar>
 
 <mat-sidenav-container autosize class="h-full">
-  <mat-sidenav [opened]="sidenav" mode="side" class="h-full md:w-[150px]">
+  <mat-sidenav [opened]="sidenav" mode="side" class="h-full md:w-[180px]">
     <mat-nav-list class="nav-list">
       @if (adminPanel) {
         <mat-list-item>
@@ -44,7 +44,7 @@
       }
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content class="p-4">
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

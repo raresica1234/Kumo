@@ -88,11 +88,16 @@ export class AuthService {
   }
 
   signOut() {
-    return this.authenticationController.logout().pipe(
-      tap(() => {
-        this.sessionService.removeSessionFromLocalStorage();
-        this.generalService.removeFeatures();
-      }),
-    );
+    this.authenticationController.logout().subscribe({
+      next: this.finishSignOut.bind(this),
+      error: this.finishSignOut.bind(this),
+    });
+  }
+
+  private finishSignOut() {
+    console.log('finished sign out');
+    this.sessionService.removeSessionFromLocalStorage();
+    this.generalService.removeFeatures();
+    window.location.reload();
   }
 }

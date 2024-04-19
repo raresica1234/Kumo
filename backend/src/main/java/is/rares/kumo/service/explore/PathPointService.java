@@ -5,7 +5,10 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.PathPointErrorCodes;
 import is.rares.kumo.model.explore.PathPointModel;
 import is.rares.kumo.repository.explore.PathPointRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,10 +68,11 @@ public class PathPointService {
         pathPointRepository.deleteById(id);
     }
 
-    public List<PathPointModel> getPathPoints(String name, Pageable pageable) {
-        return pathPointRepository.findByPathContainsIgnoreCase(name, pageable).stream()
-                .map(pathPointConvertor::mapEntityToModel)
-                .toList();
+    public Page<PathPointModel> getPathPoints(String name, Pageable pageable) {
+        var page = pathPointRepository.findByPathContainsIgnoreCase(name, pageable);
+
+        return new PageImpl<>(page.stream().map(pathPointConvertor::mapEntityToModel).toList(), pageable,
+                page.getTotalElements());
     }
 }
 

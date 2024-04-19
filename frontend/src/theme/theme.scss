@@ -6,20 +6,21 @@
 
 @include mat.core();
 
-$my-accent: mat.define-palette(mat.$pink-palette);
+$accent-light: mat.define-palette(mat.$orange-palette);
+$accent-dark: mat.define-palette(mat.$orange-palette, 300, 300, 500);
 
-// The "warn" palette is optional and defaults to red if not specified.
-$my-warn: mat.define-palette(mat.$red-palette);
+$warn-light: mat.define-palette(mat.$red-palette);
+$warn-dark: mat.define-palette(mat.$red-palette, 300, 300, 500);
 
-$primary-dark: mat.define-palette(mat.$blue-gray-palette);
 $primary-light: mat.define-palette(mat.$blue-palette);
+$primary-dark: mat.define-palette(mat.$blue-palette, 300, 300, 500);
 
 $dark-theme: mat.define-dark-theme(
   (
     color: (
       primary: $primary-dark,
-      accent: $my-accent,
-      warn: $my-warn,
+      accent: $accent-dark,
+      warn: $warn-dark,
     ),
     typography: mat.define-typography-config(),
     density: 0,
@@ -30,8 +31,8 @@ $light-theme: mat.define-light-theme(
   (
     color: (
       primary: $primary-light,
-      accent: $my-accent,
-      warn: $my-warn,
+      accent: $accent-light,
+      warn: $warn-light,
     ),
     typography: mat.define-typography-config(),
     density: 0,

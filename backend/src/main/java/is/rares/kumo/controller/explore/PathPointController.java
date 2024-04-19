@@ -12,6 +12,7 @@ import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.service.explore.PathPointService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,14 +31,14 @@ public class PathPointController {
     }
 
     @Operation(summary = "Get path points", responses = {
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = List.class))),
+            @ApiResponse(responseCode = "200"),
             @ApiResponse(responseCode = "409", description = "Duplicate path point"),
     })
     @Authenticated
     @HasTokenType
     @HasAuthority(Feature.GET_PATH_POINT)
     @GetMapping(produces = MediaType.APPLICATION_JSON)
-    public List<PathPointModel> getPathPoint(@RequestParam(defaultValue = "") String name,
+    public Page<PathPointModel> getPathPoint(@RequestParam(defaultValue = "") String name,
                                              Pageable pageable) {
         return pathPointService.getPathPoints(name, pageable);
     }
