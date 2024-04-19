@@ -11,6 +11,8 @@ const reservedErrors = [
 export const httpErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const toaster = inject(AlertService);
 
+  // TODO: add automatic refresh token flow
+
   return next(req).pipe(
     catchError((httpErrorResponse: HttpErrorResponse) => {
       let message = '';

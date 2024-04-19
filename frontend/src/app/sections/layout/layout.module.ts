@@ -7,7 +7,7 @@ import { NavigationComponent } from '../../shared/components/navigation/navigati
 import { AppModule } from '../../app.module';
 
 @NgModule({
-  declarations: [LayoutComponent],
+  declarations: [LayoutComponent, HomeComponent],
   imports: [CommonModule, LayoutRoutingModule, NavigationComponent],
   bootstrap: [LayoutComponent],
 })

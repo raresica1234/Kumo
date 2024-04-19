@@ -1,16 +1,32 @@
 <mat-toolbar>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
   <h1>Kumo</h1>
 
   <span class="flex-auto flex-shrink flex-grow"></span>
 
-  <button mat-flat-button>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
+    <button mat-menu-item><mat-icon>exit_to_app</mat-icon>Sign out</button>
+  </mat-menu>
+
+  <button mat-flat-button [matMenuTriggerFor]="appMenu">
     <mat-icon>person</mat-icon>
     {{ username }}
   </button>
-  <button mat-icon-button (click)="logout()">
-    <mat-icon>exit_to_app</mat-icon>
-  </button>
 </mat-toolbar>
+
+<mat-sidenav-container autosize class="h-full">
+  <mat-sidenav [opened]="sidenav" mode="side" class="h-full">
+    <mat-nav-list>
+      <button mat-flat-button>
+        <mat-icon>house</mat-icon>
+        Dashboard
+      </button>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
