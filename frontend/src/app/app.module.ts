@@ -11,7 +11,6 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorAlertComponent } from './shared/components/alerts/error-alert/error-alert.component';
 import { authenticationInterceptor } from './shared/services/session/authentication.interceptor';
-import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';

@@ -47,7 +47,7 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
         {
           displayName: 'Is Root',
           type: 'checkbox',
-          name: 'is_root',
+          name: 'root',
           required: false,
         },
       ],

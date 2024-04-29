@@ -5,18 +5,18 @@
   </button>
 </div>
 <div>
-  <form class="w-full p-2" [formGroup]="formGroup">
+  <form class="w-full p-2" [formGroup]="formGroup" (ngSubmit)="test()">
     @for (entry of data.entries; track entry) {
-      <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
-        @if (entry.type == "text") {
+      @if (entry.type === "checkbox") {
+        <mat-checkbox [formControlName]="entry.name">
+          {{ entry.displayName }}
+        </mat-checkbox>
+      } @else {
+        <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
           <mat-label>{{ entry.displayName }}</mat-label>
           <input matInput [name]="entry.name" [formControlName]="entry.name" [placeholder]="entry.displayName" />
-        } @else if (entry.type == "checkbox") {
-          <mat-checkbox [name]="entry.name" [formControlName]="entry.name">
-            {{ entry.displayName }}
-          </mat-checkbox>
-        }
-      </mat-form-field>
+        </mat-form-field>
+      }
     }
   </form>
 </div>
