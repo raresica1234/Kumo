@@ -6,7 +6,7 @@
       <div class="flex flex-row justify-center py-8">
         <mat-spinner> </mat-spinner>
       </div>
-    } @else if (inviteRequired && inviteValid) {
+    } @else if ((inviteRequired && inviteValid) || !inviteRequired) {
       <form class="mt-3 w-full p-4" [formGroup]="signUpForm" (ngSubmit)="singUp()">
         <mat-form-field class="w-full pb-3">
           <mat-label>Username</mat-label>
