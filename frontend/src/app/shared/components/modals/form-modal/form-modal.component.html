@@ -1,11 +1,11 @@
 <div class="flex flex-row justify-between p-4 pb-0">
-  <h1 class="title">{{ data.title }}</h1>
+  <h1 class="my-auto-force">{{ data.title }}</h1>
   <button mat-icon-button class="my-auto scale-75 transform" [mat-dialog-close]="undefined">
     <mat-icon>close</mat-icon>
   </button>
 </div>
 <div>
-  <form class="w-full p-2" [formGroup]="formGroup" (ngSubmit)="test()">
+  <form class="w-full p-2" [formGroup]="formGroup">
     @for (entry of data.entries; track entry) {
       @if (entry.type === "checkbox") {
         <mat-checkbox [formControlName]="entry.name">
@@ -22,6 +22,14 @@
 </div>
 
 <div mat-dialog-actions class="flex w-full flex-row justify-between">
-  <button mat-flat-button color="primary" [mat-dialog-close]="data.object" class="flex-grow">Confirm</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [mat-dialog-close]="createObject()"
+    class="flex-grow"
+    [disabled]="!formGroup.valid"
+  >
+    Confirm
+  </button>
   <button mat-flat-button color="warn" [mat-dialog-close]="undefined" class="flex-grow">Cancel</button>
 </div>

@@ -16,7 +16,6 @@ import { ConfirmModalData } from '../../../models/modal/confirm-modal-data';
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButtonModule, MatDialogClose, MatIconModule],
   templateUrl: './confirm-modal.component.html',
-  styleUrl: './confirm-modal.component.scss',
 })
 export class ConfirmModalComponent {
   constructor(

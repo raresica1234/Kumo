@@ -27,8 +27,6 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrl: './table.component.scss',
 })
 export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
-  //TODO: Change actions to kebab menu
-
   @Input({ required: true })
   public columns!: ColumnDefinition[];
 

@@ -5,6 +5,11 @@
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
 
+.my-auto-force {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
 @layer base {
   :root {
     --color-elevation-starter: white;

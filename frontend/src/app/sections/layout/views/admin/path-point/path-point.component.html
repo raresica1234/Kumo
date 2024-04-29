@@ -1,4 +1,10 @@
-<h1>{{ title }}</h1>
+<div class="flex">
+  <h1 class="my-auto-force">{{ title }}</h1>
+  <span class="flex-grow"></span>
+  <button mat-icon-button (click)="addPathPoint()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
 <hr class="mb-4 border-gray-400" />
 
 <app-table

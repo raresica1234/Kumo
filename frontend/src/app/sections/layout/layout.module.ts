@@ -9,10 +9,21 @@ import { PathPointComponent } from './views/admin/path-point/path-point.componen
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { TableComponent } from '../../shared/components/table/table.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [LayoutComponent, HomeComponent, AdminHomeComponent, PathPointComponent],
-  imports: [CommonModule, LayoutRoutingModule, NavigationComponent, MatTableModule, MatSortModule, TableComponent],
+  imports: [
+    CommonModule,
+    LayoutRoutingModule,
+    NavigationComponent,
+    MatTableModule,
+    MatSortModule,
+    TableComponent,
+    MatButtonModule,
+    MatIconModule,
+  ],
   bootstrap: [LayoutComponent],
 })
 export class LayoutModule {}
