@@ -53,6 +53,8 @@ public class OwnerImporterService {
                 roleRepository.save(ownerRole);
             }
         } else {
+            // TODO: Make sure this works for owner account created on the fly
+
             if (StringUtils.isEmpty(kumoConfig.getOwnerEmail()) || StringUtils.isEmpty(kumoConfig.getOwnerPassword())) {
                 log.error("Could not create owner account because email or password not set.");
                 System.exit(0);

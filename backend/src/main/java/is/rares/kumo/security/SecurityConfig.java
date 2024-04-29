@@ -96,7 +96,7 @@ public class SecurityConfig {
         var requestMappingAnnotation = AnnotationUtils.findAnnotation(method, RequestMapping.class);
         if (requestMappingAnnotation != null) {
             RequestMethod requestMethod = DefaultUtils.firstOrNull(requestMappingAnnotation.method());
-            String requestPath = DefaultUtils.combineNullablePaths(basePath, DefaultUtils.firstOrNull(requestMappingAnnotation.path()));
+            String requestPath = DefaultUtils.combineNullableURLs(basePath, DefaultUtils.firstOrNull(requestMappingAnnotation.path()));
             if (requestMethod != null && requestPath != null) {
                 log.info("Added permitAll for {} {}", requestMethod.asHttpMethod(), requestPath);
                 authorizationConfig.requestMatchers(requestMethod.asHttpMethod(), requestPath).permitAll();
@@ -105,7 +105,7 @@ public class SecurityConfig {
     }
 
     private boolean applyingAuthenticationForHttpMethodIsPossible(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizationConfig, String basePath, String annotationRequestPath, HttpMethod httpMethod) {
-        String requestPath = DefaultUtils.combineNullablePaths(basePath, annotationRequestPath);
+        String requestPath = DefaultUtils.combineNullableURLs(basePath, annotationRequestPath);
         if (requestPath != null) {
             log.info("Added permitAll for {} {}", httpMethod, requestPath);
             authorizationConfig.requestMatchers(httpMethod, requestPath).permitAll();
