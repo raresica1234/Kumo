@@ -4,6 +4,8 @@ import { HomeComponent } from './views/home/home.component';
 import { LayoutComponent } from './layout.component';
 import { AdminHomeComponent } from './views/admin/admin-home/admin-home.component';
 import { PathPointComponent } from './views/admin/path-point/path-point.component';
+import { permissionGuard } from '../../shared/guards/permission.guard';
+import { Feature } from '../../shared/models/features';
 
 const routes: Routes = [
   {
@@ -19,11 +21,13 @@ const routes: Routes = [
         path: 'admin',
         component: AdminHomeComponent,
         data: { title: 'Admin Panel' },
+        canActivate: [permissionGuard([Feature.ADMIN])],
       },
       {
         path: 'admin/path_point',
         component: PathPointComponent,
         data: { title: 'Path Points' },
+        canActivate: [permissionGuard([Feature.ADMIN, Feature.GET_PATH_POINT])],
       },
     ],
   },

@@ -30,7 +30,7 @@
           </button>
         </mat-list-item>
         <mat-divider />
-        <mat-list-item>
+        <mat-list-item *ngIf="getPathPoint">
           <button mat-flat-button (click)="navigateTo('admin/path_point')">
             <mat-icon>timeline</mat-icon>
             Path Points

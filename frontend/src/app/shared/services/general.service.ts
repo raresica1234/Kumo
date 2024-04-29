@@ -41,4 +41,12 @@ export class GeneralService {
   removeFeatures() {
     this.featuresList = null;
   }
+
+  hasFeatures(permissions: Feature[]) {
+    if (this.isOwner) return true;
+
+    return permissions
+      .map((feature) => !!this.featuresList?.includes(feature))
+      .reduce((previousValue, currentValue) => previousValue && currentValue, true);
+  }
 }

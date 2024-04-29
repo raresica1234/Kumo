@@ -9,6 +9,8 @@ import lombok.Getter;
 public enum Feature {
     OWNER("owner"),
 
+    ADMIN("admin"),
+
     CREATE_REGISTER_INVITE("create_register_invite"),
 
     GET_PATH_POINT("get_path_point"),

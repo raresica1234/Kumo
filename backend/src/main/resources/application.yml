@@ -17,7 +17,7 @@ springdoc:
 
 kumo:
   registration:
-    inviteBased: true
+    inviteBased: false
   owner:
     username: raresica1234
 

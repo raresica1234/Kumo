@@ -30,12 +30,16 @@ import { NgIf } from '@angular/common';
   ],
 })
 export class NavigationComponent implements OnDestroy, OnInit {
+  // TODO: Fix buttons hover effect being weird (corners don't mark the whole button as hovered)
+  // TODO: Make nav menu be responsive and automatically close on small screens
+
   subscriptionManager: Subscription = new Subscription();
 
   username: string;
 
   sidenav: boolean = true;
   isAdmin: boolean = false;
+  getPathPoint: boolean = false;
   adminPanel: boolean = false;
 
   constructor(
@@ -57,7 +61,8 @@ export class NavigationComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.isAdmin = this.generalService.hasFeature(Feature.OWNER);
+    this.isAdmin = this.generalService.hasFeature(Feature.ADMIN);
+    this.getPathPoint = this.generalService.hasFeature(Feature.GET_PATH_POINT);
   }
 
   ngOnDestroy(): void {

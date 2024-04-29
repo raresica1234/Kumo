@@ -29,7 +29,7 @@
     class="flex-grow"
     [disabled]="!formGroup.valid"
   >
-    Confirm
+    {{ data.type === "add" ? "Add" : "Update" }}
   </button>
   <button mat-flat-button color="warn" [mat-dialog-close]="undefined" class="flex-grow">Cancel</button>
 </div>
