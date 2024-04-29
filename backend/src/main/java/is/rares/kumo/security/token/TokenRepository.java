@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -22,4 +23,10 @@ public interface TokenRepository extends BasePagingAndSortingRepository<Token> {
     Optional<Token> findByRefreshToken(String refreshToken);
 
     Optional<Token> findByJwtToken(String jwtToken);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update Token set client_location_id = :clientLocationId where uuid = :uuid", nativeQuery =
+            true)
+    void updateClientLocationIdByUuid(@Param("uuid") UUID uuid, @Param("clientLocationId") UUID clientLocationId);
 }

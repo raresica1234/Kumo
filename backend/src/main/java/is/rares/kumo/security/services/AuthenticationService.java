@@ -110,7 +110,8 @@ public class AuthenticationService {
                 .validityMs(jwtConfiguration.getAccessTokenValidity())
                 .build();
 
-        this.asyncTokenStore.saveUserToken(tokenDataResponse, currentToken.getUserId(), currentToken.getClientLocation().getUuid(), currentToken.getTokenType());
+        this.asyncTokenStore.saveUserToken(tokenDataResponse, currentToken.getUserId(),
+                currentToken.getClientLocation().getUuid(), currentToken.getTokenType());
         return tokenDataResponse;
     }
 

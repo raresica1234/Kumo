@@ -36,7 +36,7 @@ public class Token extends BaseEntity {
     @Column(name="client_location_id", insertable = false, updatable = false)
     UUID clientLocationId;
 
-    Date lastActivityDate;
+    Date lastActivityDate = new Date();
 
     UUID userId;
 

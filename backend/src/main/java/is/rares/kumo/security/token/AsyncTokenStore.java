@@ -22,7 +22,7 @@ public class AsyncTokenStore {
 
     @Async
     public void saveUserToken(TokenDataResponse tokenDataResponse, UUID userId, ClientLocation clientLocation, TokenType tokenType) {
-        this.tokenRepository.save(Token.builder()
+        tokenRepository.save(Token.builder()
                 .jwtToken(tokenDataResponse.getJwtToken())
                 .refreshToken(tokenDataResponse.getRefreshToken())
                 .validityMs(tokenDataResponse.getValidityMs())
@@ -34,20 +34,21 @@ public class AsyncTokenStore {
 
     @Async
     public void saveUserToken(TokenDataResponse tokenDataResponse, UUID userId, UUID clientLocationId, TokenType tokenType) {
-        this.tokenRepository.save(Token.builder()
+        Token entity = tokenRepository.save(Token.builder()
                 .jwtToken(tokenDataResponse.getJwtToken())
                 .refreshToken(tokenDataResponse.getRefreshToken())
                 .validityMs(tokenDataResponse.getValidityMs())
                 .userId(userId)
-                .clientLocationId(clientLocationId)
                 .tokenType(tokenType)
                 .build());
+
+        tokenRepository.updateClientLocationIdByUuid(entity.getUuid(), clientLocationId);
     }
 
     @Async
     @Transactional
     public void updateTokenUsage(String jwt) {
-        this.tokenRepository.updateTokenUsage(new Date(), jwt);
+        tokenRepository.updateTokenUsage(new Date(), jwt);
     }
 
 }
