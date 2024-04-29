@@ -1,5 +1,8 @@
+import { ThemePalette } from '@angular/material/core';
+
 export default interface TableAction {
+  name: string;
   icon: string;
-  color?: string;
-  action: (id: string) => void;
+  color?: ThemePalette;
+  action: (object: any) => void;
 }

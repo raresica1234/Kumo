@@ -9,11 +9,20 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import TableAction from '../../models/table/table-action';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatProgressBarModule, MatButtonModule, MatIconModule],
+  imports: [
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
@@ -55,7 +64,7 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
   length: number = 0;
 
   ngOnInit(): void {
-    this.displayColumns = this.columns.map((column) => column.name);
+    this.displayColumns = this.columns.map((column) => column.fieldName);
 
     if (this.actions.length != 0) {
       this.displayColumns = [...this.displayColumns, 'actions'];

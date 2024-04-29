@@ -1,0 +1,27 @@
+<div class="flex flex-row justify-between p-4 pb-0">
+  <h1 class="title">{{ data.title }}</h1>
+  <button mat-icon-button class="my-auto scale-75 transform" [mat-dialog-close]="undefined">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div>
+  <form class="w-full p-2" [formGroup]="formGroup">
+    @for (entry of data.entries; track entry) {
+      <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
+        @if (entry.type == "text") {
+          <mat-label>{{ entry.displayName }}</mat-label>
+          <input matInput [name]="entry.name" [formControlName]="entry.name" [placeholder]="entry.displayName" />
+        } @else if (entry.type == "checkbox") {
+          <mat-checkbox [name]="entry.name" [formControlName]="entry.name">
+            {{ entry.displayName }}
+          </mat-checkbox>
+        }
+      </mat-form-field>
+    }
+  </form>
+</div>
+
+<div mat-dialog-actions class="flex w-full flex-row justify-between">
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.object" class="flex-grow">Confirm</button>
+  <button mat-flat-button color="warn" [mat-dialog-close]="undefined" class="flex-grow">Cancel</button>
+</div>

@@ -9,11 +9,7 @@ import {
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-export interface DialogData {
-  title?: string;
-  text?: string;
-}
+import { ConfirmModalData } from '../../../models/modal/confirm-modal-data';
 
 @Component({
   selector: 'app-modal',
@@ -25,6 +21,6 @@ export interface DialogData {
 export class ConfirmModalComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModalData,
   ) {}
 }

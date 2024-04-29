@@ -7,25 +7,29 @@
   aria-describedby="Path Points Table"
 >
   @for (column of columns; track column) {
-    <ng-container [matColumnDef]="column.name">
+    <ng-container [matColumnDef]="column.fieldName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sortable">
         {{ column.displayName }}
       </th>
-      <td mat-cell *matCellDef="let element">{{ element[column.name] }}</td>
+      <td mat-cell *matCellDef="let element">{{ element[column.fieldName] }}</td>
     </ng-container>
   }
 
   @if (actions.length !== 0) {
     <ng-container [matColumnDef]="'actions'">
-      <th mat-header-cell *matHeaderCellDef></th>
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element" class="w-0">
-        <div class="flex flex-row">
+        <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionsMenu="matMenu">
           @for (action of actions; track action) {
-            <button mat-icon-button (click)="action.action(element.uuid)" [color]="action.color">
-              <mat-icon>{{ action.icon }}</mat-icon>
+            <button mat-menu-item (click)="action.action(element)">
+              <mat-icon [color]="action.color">{{ action.icon }}</mat-icon>
+              {{ action.name }}
             </button>
           }
-        </div>
+        </mat-menu>
       </td>
     </ng-container>
   }

@@ -6,6 +6,8 @@ import { Subject, Subscription } from 'rxjs';
 import ColumnDefinition from '../../../../../shared/models/table/column-definition';
 import TableAction from '../../../../../shared/models/table/table-action';
 import { ModalService } from '../../../../../shared/components/modals/modal.service';
+import { AlertService } from '../../../../../shared/services/alert.service';
+import FormModalData from '../../../../../shared/models/modal/form-modal-data';
 
 @Component({
   selector: 'app-path-point',
@@ -22,22 +24,49 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
     route: ActivatedRoute,
     private pathPointController: PathPointControllerService,
     private modalService: ModalService,
+    private alertService: AlertService,
   ) {
     super(route);
 
     this.createColumns();
     this.createActions();
+
+    const obj = { uuid: '6f9b9b8d-bc5f-4374-a88f-a130d6b2f01e', path: '/medida4', root: true };
+
+    const formModalData: FormModalData = {
+      object: obj,
+      title: 'Edit Path Point',
+      type: 'update',
+      entries: [
+        {
+          displayName: 'Path',
+          type: 'text',
+          name: 'path',
+          required: true,
+        },
+        {
+          displayName: 'Is Root',
+          type: 'checkbox',
+          name: 'is_root',
+          required: false,
+        },
+      ],
+    };
+    modalService.openFormModal(formModalData, {
+      onConfirm: (object) => console.log(object),
+      onClose: () => console.log('closed'),
+    });
   }
 
   private createColumns() {
     this.columns = [
       {
-        name: 'path',
+        fieldName: 'path',
         displayName: 'Path',
         sortable: true,
       },
       {
-        name: 'root',
+        fieldName: 'root',
         displayName: 'Is Root',
         sortable: true,
       },
@@ -47,25 +76,31 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
   private createActions() {
     this.actions = [
       {
+        name: 'Edit',
         icon: 'edit',
         color: 'primary',
-        action: (id) => {
-          console.log(id);
+        action: (object) => {
+          console.log(object);
           return false;
         },
       },
       {
+        name: 'Delete',
         icon: 'delete',
         color: 'warn',
-        action: (id) => {
-          this.modalService.openConfirmModal('Delete Path Point', 'Are you sure you want to delete this Path Point?', {
-            onConfirm: () => {
-              const sub = this.pathPointController.deletePathPoint(id).subscribe((_) => {
-                this.refreshTable.next(true);
-              });
-              this.subscriptionManager.add(sub);
+        action: (object) => {
+          this.modalService.openConfirmModal(
+            { title: 'Delete Path Point', text: 'Are you sure you want to delete this Path Point?' },
+            {
+              onConfirm: () => {
+                const sub = this.pathPointController.deletePathPoint(object.uuid).subscribe((_) => {
+                  this.refreshTable.next(true);
+                  this.alertService.success('Successfully deleted Path Point');
+                });
+                this.subscriptionManager.add(sub);
+              },
             },
-          });
+          );
         },
       },
     ];

@@ -1,5 +1,5 @@
 export default interface ColumnDefinition {
   displayName: string;
-  name: string;
+  fieldName: string;
   sortable: boolean;
 }
