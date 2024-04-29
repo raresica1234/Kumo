@@ -1,5 +1,5 @@
 export default interface TableAction {
   icon: string;
   color?: string;
-  action: (id: string) => boolean;
+  action: (id: string) => void;
 }

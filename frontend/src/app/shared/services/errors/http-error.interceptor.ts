@@ -67,7 +67,6 @@ function handleAuthorizationIssue(
         catchError((err) => {
           isRefreshing = false;
 
-          // TODO: Investigate issue where sign out is called even though it should just refresh
           authService.signOut();
 
           return throwError(() => err);

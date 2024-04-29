@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseComponent } from '../../../../../shared/components/base.component';
 import { ActivatedRoute } from '@angular/router';
 import { PathPointControllerService } from '../../../../../shared/api-models';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import ColumnDefinition from '../../../../../shared/models/table/column-definition';
 import TableAction from '../../../../../shared/models/table/table-action';
+import { ModalService } from '../../../../../shared/components/modals/modal.service';
 
 @Component({
   selector: 'app-path-point',
@@ -12,16 +13,23 @@ import TableAction from '../../../../../shared/models/table/table-action';
   styleUrl: './path-point.component.scss',
 })
 export class PathPointComponent extends BaseComponent implements OnInit, OnDestroy {
-  columns: ColumnDefinition[];
-  private subscriptionManager: Subscription = new Subscription();
-  actions: TableAction[];
+  columns!: ColumnDefinition[];
+  actions!: TableAction[];
+  refreshTable: Subject<boolean> = new Subject<boolean>();
+  private subscriptionManager!: Subscription;
 
   public constructor(
     route: ActivatedRoute,
     private pathPointController: PathPointControllerService,
+    private modalService: ModalService,
   ) {
     super(route);
 
+    this.createColumns();
+    this.createActions();
+  }
+
+  private createColumns() {
     this.columns = [
       {
         name: 'path',
@@ -34,7 +42,9 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
         sortable: true,
       },
     ];
+  }
 
+  private createActions() {
     this.actions = [
       {
         icon: 'edit',
@@ -48,8 +58,14 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
         icon: 'delete',
         color: 'warn',
         action: (id) => {
-          console.log(id);
-          return false;
+          this.modalService.openConfirmModal('Delete Path Point', 'Are you sure you want to delete this Path Point?', {
+            onConfirm: () => {
+              const sub = this.pathPointController.deletePathPoint(id).subscribe((_) => {
+                this.refreshTable.next(true);
+              });
+              this.subscriptionManager.add(sub);
+            },
+          });
         },
       },
     ];

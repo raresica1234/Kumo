@@ -1,0 +1,14 @@
+<div class="flex flex-row justify-between p-4">
+  <h1>{{ data.title }}</h1>
+  <button mat-icon-button class="scale-75 transform" [mat-dialog-close]="'CANCEL'">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <p>{{ data.text }}</p>
+</div>
+
+<div mat-dialog-actions class="flex w-full flex-row justify-between">
+  <button mat-flat-button color="primary" [mat-dialog-close]="'CONFIRM'" class="flex-grow">Confirm</button>
+  <button mat-flat-button color="warn" [mat-dialog-close]="'CANCEL'" class="flex-grow">Cancel</button>
+</div>

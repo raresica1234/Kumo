@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { map, Observable, startWith, Subscription, switchMap } from 'rxjs';
+import { map, Observable, startWith, Subject, Subscription, switchMap } from 'rxjs';
 import ColumnDefinition from '../../models/table/column-definition';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Pageable } from '../../api-models';
@@ -18,6 +18,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './table.component.scss',
 })
 export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
+  //TODO: Change actions to kebab menu
+
   @Input({ required: true })
   public columns!: ColumnDefinition[];
 
@@ -26,6 +28,9 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input()
   public actions: TableAction[] = [];
+
+  @Input()
+  public refreshTable!: Subject<boolean>;
 
   @ViewChild(MatSort)
   sort!: MatSort;
@@ -84,6 +89,11 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.processPageChange();
     this.fetchElements();
+
+    this.refreshTable.subscribe((value) => {
+      console.log('refresh');
+      if (value) this.fetchElements();
+    });
   }
 
   private processPageChange() {

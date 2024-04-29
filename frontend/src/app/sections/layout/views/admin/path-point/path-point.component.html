@@ -1,4 +1,9 @@
 <h1>{{ title }}</h1>
 <hr class="mb-4" />
 
-<app-table [columns]="columns" [fetchFunction]="fetchFunction()" [actions]="actions"></app-table>
+<app-table
+  [columns]="columns"
+  [fetchFunction]="fetchFunction()"
+  [actions]="actions"
+  [refreshTable]="refreshTable"
+></app-table>
