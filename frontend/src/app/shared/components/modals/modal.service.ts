@@ -27,7 +27,7 @@ export class ModalService {
 
   public openFormModal(data: FormModalData, callbacks: FormModalCallbacks): void {
     const dialogRef = this.dialog.open(FormModalComponent, {
-      width: '300px',
+      width: '350px',
       data: data,
     });
 

@@ -29,7 +29,17 @@
     class="flex-grow"
     [disabled]="!formGroup.valid || this.callFailed"
   >
-    {{ data.type === "add" ? "Add" : "Update" }}
+    @switch (data.type) {
+      @case ("add") {
+        Add
+      }
+      @case ("update") {
+        Update
+      }
+      @case ("search") {
+        Search
+      }
+    }
   </button>
   <button mat-flat-button color="warn" [mat-dialog-close]="undefined" class="flex-grow">Cancel</button>
 </div>

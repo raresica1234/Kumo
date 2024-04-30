@@ -31,7 +31,7 @@ public class RegisterInviteService {
         this.jwtService = jwtService;
     }
 
-    public RegisterInviteResponse createRegisterInvite(CreateRegisterInviteRequest createRegisterInviteRequest) {
+    public RegisterInviteResponse create(CreateRegisterInviteRequest createRegisterInviteRequest) {
         long validity = createRegisterInviteRequest.getValiditySeconds();
         if (validity == 0)
             validity = 100 * 365 * 24 * 60 * 60L; // 100 years

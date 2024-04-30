@@ -21,11 +21,11 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { BooleanResponse } from '../model/booleanResponse';
 // @ts-ignore
-import { PagePathPointModel } from '../model/pagePathPointModel';
+import { ExplorationRoleModel } from '../model/explorationRoleModel';
+// @ts-ignore
+import { PageExplorationRoleModel } from '../model/pageExplorationRoleModel';
 // @ts-ignore
 import { Pageable } from '../model/pageable';
-// @ts-ignore
-import { PathPointModel } from '../model/pathPointModel';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -36,7 +36,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class PathPointControllerService {
+export class ExplorationRoleControllerService {
 
     protected basePath = 'http://localhost:8080';
     public defaultHeaders = new HttpHeaders();
@@ -98,17 +98,17 @@ export class PathPointControllerService {
     }
 
     /**
-     * Create path point
-     * @param pathPointModel 
+     * Create exploration role
+     * @param explorationRoleModel 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createPathPoint(pathPointModel: PathPointModel, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PathPointModel>;
-    public createPathPoint(pathPointModel: PathPointModel, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PathPointModel>>;
-    public createPathPoint(pathPointModel: PathPointModel, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PathPointModel>>;
-    public createPathPoint(pathPointModel: PathPointModel, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (pathPointModel === null || pathPointModel === undefined) {
-            throw new Error('Required parameter pathPointModel was null or undefined when calling createPathPoint.');
+    public createExplorationRole(explorationRoleModel: ExplorationRoleModel, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ExplorationRoleModel>;
+    public createExplorationRole(explorationRoleModel: ExplorationRoleModel, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ExplorationRoleModel>>;
+    public createExplorationRole(explorationRoleModel: ExplorationRoleModel, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ExplorationRoleModel>>;
+    public createExplorationRole(explorationRoleModel: ExplorationRoleModel, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (explorationRoleModel === null || explorationRoleModel === undefined) {
+            throw new Error('Required parameter explorationRoleModel was null or undefined when calling createExplorationRole.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -151,11 +151,11 @@ export class PathPointControllerService {
             }
         }
 
-        let localVarPath = `/api/explore/path_point`;
-        return this.httpClient.request<PathPointModel>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/explore/role`;
+        return this.httpClient.request<ExplorationRoleModel>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: pathPointModel,
+                body: explorationRoleModel,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -166,17 +166,17 @@ export class PathPointControllerService {
     }
 
     /**
-     * Delete path point
+     * Delete exploration role
      * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deletePathPoint(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<BooleanResponse>;
-    public deletePathPoint(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<BooleanResponse>>;
-    public deletePathPoint(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<BooleanResponse>>;
-    public deletePathPoint(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public deleteExplorationRole(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<BooleanResponse>;
+    public deleteExplorationRole(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<BooleanResponse>>;
+    public deleteExplorationRole(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<BooleanResponse>>;
+    public deleteExplorationRole(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deletePathPoint.');
+            throw new Error('Required parameter id was null or undefined when calling deleteExplorationRole.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -210,7 +210,7 @@ export class PathPointControllerService {
             }
         }
 
-        let localVarPath = `/api/explore/path_point/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}`;
+        let localVarPath = `/api/explore/role/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}`;
         return this.httpClient.request<BooleanResponse>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -224,18 +224,18 @@ export class PathPointControllerService {
     }
 
     /**
-     * Get path points
+     * Get exploration roles
      * @param pageable 
      * @param name 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getPathPoints(pageable: Pageable, name?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PagePathPointModel>;
-    public getPathPoints(pageable: Pageable, name?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PagePathPointModel>>;
-    public getPathPoints(pageable: Pageable, name?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PagePathPointModel>>;
-    public getPathPoints(pageable: Pageable, name?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public getExplorationRoles(pageable: Pageable, name?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PageExplorationRoleModel>;
+    public getExplorationRoles(pageable: Pageable, name?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PageExplorationRoleModel>>;
+    public getExplorationRoles(pageable: Pageable, name?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PageExplorationRoleModel>>;
+    public getExplorationRoles(pageable: Pageable, name?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         if (pageable === null || pageable === undefined) {
-            throw new Error('Required parameter pageable was null or undefined when calling getPathPoints.');
+            throw new Error('Required parameter pageable was null or undefined when calling getExplorationRoles.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -279,8 +279,8 @@ export class PathPointControllerService {
             }
         }
 
-        let localVarPath = `/api/explore/path_point`;
-        return this.httpClient.request<PagePathPointModel>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/explore/role`;
+        return this.httpClient.request<PageExplorationRoleModel>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -294,17 +294,17 @@ export class PathPointControllerService {
     }
 
     /**
-     * Update path point
-     * @param pathPointModel 
+     * Update exploration role
+     * @param explorationRoleModel 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updatePathPoint(pathPointModel: PathPointModel, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PathPointModel>;
-    public updatePathPoint(pathPointModel: PathPointModel, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PathPointModel>>;
-    public updatePathPoint(pathPointModel: PathPointModel, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PathPointModel>>;
-    public updatePathPoint(pathPointModel: PathPointModel, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
-        if (pathPointModel === null || pathPointModel === undefined) {
-            throw new Error('Required parameter pathPointModel was null or undefined when calling updatePathPoint.');
+    public updateExplorationRole(explorationRoleModel: ExplorationRoleModel, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ExplorationRoleModel>;
+    public updateExplorationRole(explorationRoleModel: ExplorationRoleModel, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ExplorationRoleModel>>;
+    public updateExplorationRole(explorationRoleModel: ExplorationRoleModel, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ExplorationRoleModel>>;
+    public updateExplorationRole(explorationRoleModel: ExplorationRoleModel, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (explorationRoleModel === null || explorationRoleModel === undefined) {
+            throw new Error('Required parameter explorationRoleModel was null or undefined when calling updateExplorationRole.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -347,11 +347,11 @@ export class PathPointControllerService {
             }
         }
 
-        let localVarPath = `/api/explore/path_point`;
-        return this.httpClient.request<PathPointModel>('put', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/explore/role`;
+        return this.httpClient.request<ExplorationRoleModel>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: pathPointModel,
+                body: explorationRoleModel,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

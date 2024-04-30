@@ -9,6 +9,7 @@ import lombok.*;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -33,4 +34,18 @@ public class Role extends BaseEntity {
     )
     @JsonIgnore
     private Set<User> users = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Role role = (Role) o;
+        return Objects.equals(name, role.name) && Objects.equals(features, role.features) && Objects.equals(users, role.users);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, features, users);
+    }
 }

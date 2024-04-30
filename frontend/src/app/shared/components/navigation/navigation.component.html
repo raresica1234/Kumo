@@ -6,15 +6,18 @@
 
   <span class="flex-auto flex-shrink flex-grow"></span>
 
-  <mat-menu #appMenu="matMenu">
+  <mat-menu #appMenu="matMenu" class="w-[150px]">
     <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
     <button *ngIf="isAdmin" mat-menu-item (click)="navigateTo('admin/')">
-      <mat-icon>admin_panel_settings</mat-icon>Admin Panel
+      <mat-icon>admin_panel_settings</mat-icon>
+      Admin
     </button>
+    <mat-divider />
     <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Sign out</button>
   </mat-menu>
 
-  <button mat-icon-button [matMenuTriggerFor]="appMenu" color="primary">
+  <button mat-flat-button [matMenuTriggerFor]="appMenu" color="primary">
+    {{ username }}
     <mat-icon>person</mat-icon>
   </button>
 </mat-toolbar>
@@ -30,10 +33,16 @@
           </button>
         </mat-list-item>
         <mat-divider />
-        <mat-list-item *ngIf="getPathPoint">
-          <button mat-flat-button (click)="navigateTo('admin/path_point')">
+        <mat-list-item *ngIf="getPathPoint" (click)="navigateTo('admin/path_point')">
+          <button mat-flat-button>
             <mat-icon>timeline</mat-icon>
             Path Points
+          </button>
+        </mat-list-item>
+        <mat-list-item *ngIf="getExplorationRole" (click)="navigateTo('admin/exploration_role')">
+          <button mat-flat-button>
+            <mat-icon>supervisor_account</mat-icon>
+            Exploration Roles
           </button>
         </mat-list-item>
       } @else {

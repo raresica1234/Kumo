@@ -1,7 +1,6 @@
 package is.rares.kumo.security.token;
 
 import is.rares.kumo.core.exceptions.KumoException;
-import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

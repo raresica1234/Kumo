@@ -3,8 +3,6 @@ package is.rares.kumo.controller.requests.user;
 import io.swagger.v3.oas.annotations.media.Schema;
 import is.rares.kumo.security.model.ClientLocationModel;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

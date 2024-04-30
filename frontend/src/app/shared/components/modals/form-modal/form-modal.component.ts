@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgForOf, NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AlertService } from '../../../services/alert.service';
+import { createObject } from 'rxjs/internal/util/createObject';
 
 @Component({
   selector: 'app-form-modal',
@@ -70,16 +71,20 @@ export class FormModalComponent implements OnInit, OnDestroy {
   }
 
   submitFunction() {
-    const sub = this.data.submitFunction?.(this.createObject()).subscribe({
-      next: (result) => {
-        this.dialogRef.close(result);
-      },
-      error: (error) => {
-        this.callFailed = true;
-        this.alertService.error(error);
-      },
-    });
-    this.subscriptionManager.add(sub);
+    if (this.data.submitFunction) {
+      const sub = this.data.submitFunction(this.createObject()).subscribe({
+        next: (result) => {
+          this.dialogRef.close(result);
+        },
+        error: (error) => {
+          this.callFailed = true;
+          this.alertService.error(error);
+        },
+      });
+      this.subscriptionManager.add(sub);
+    } else {
+      this.dialogRef.close(this.createObject());
+    }
   }
 
   ngOnDestroy(): void {

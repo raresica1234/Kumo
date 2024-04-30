@@ -1,14 +1,11 @@
 package is.rares.kumo.security.services;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import is.rares.kumo.core.exceptions.KumoException;
-import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
 import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.security.domain.CurrentUser;
-import is.rares.kumo.security.enums.TokenType;
 import is.rares.kumo.security.enums.TokenClaims;
-import is.rares.kumo.security.services.KeyLoaderService;
+import is.rares.kumo.security.enums.TokenType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

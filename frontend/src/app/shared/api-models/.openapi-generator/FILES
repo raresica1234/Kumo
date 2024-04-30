@@ -3,6 +3,7 @@ README.md
 api.module.ts
 api/api.ts
 api/authenticationController.service.ts
+api/explorationRoleController.service.ts
 api/explorerController.service.ts
 api/pathPointController.service.ts
 api/userController.service.ts
@@ -14,8 +15,10 @@ model/accountCodeRequest.ts
 model/booleanResponse.ts
 model/clientLocationModel.ts
 model/createRegisterInviteRequest.ts
+model/explorationRoleModel.ts
 model/loginRequest.ts
 model/models.ts
+model/pageExplorationRoleModel.ts
 model/pagePathPointModel.ts
 model/pageable.ts
 model/pageableObject.ts

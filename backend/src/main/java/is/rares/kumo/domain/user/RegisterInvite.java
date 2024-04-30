@@ -3,12 +3,10 @@ package is.rares.kumo.domain.user;
 import is.rares.kumo.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -20,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "register_invite")
 public class RegisterInvite extends BaseEntity {
-    @Column(name="jwt_token", columnDefinition = "TEXT", unique = true)
+    @Column(name = "jwt_token", columnDefinition = "TEXT", unique = true)
     private String jwtToken;
 
     private int usageCount = 0;
@@ -34,18 +32,18 @@ public class RegisterInvite extends BaseEntity {
     private RegisterInviteStatus status;
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         RegisterInvite that = (RegisterInvite) o;
-        return getUuid() != null && Objects.equals(getUuid(), that.getUuid());
+        return usageCount == that.usageCount && Objects.equals(jwtToken, that.jwtToken) &&
+                Objects.equals(createdAt, that.createdAt) && Objects.equals(expireDate, that.expireDate) &&
+                status == that.status;
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), jwtToken, usageCount, createdAt, expireDate, status);
     }
 }

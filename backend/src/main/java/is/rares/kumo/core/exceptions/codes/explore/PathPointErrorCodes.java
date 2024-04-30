@@ -1,5 +1,6 @@
-package is.rares.kumo.core.exceptions.codes;
+package is.rares.kumo.core.exceptions.codes.explore;
 
+import is.rares.kumo.core.exceptions.codes.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 

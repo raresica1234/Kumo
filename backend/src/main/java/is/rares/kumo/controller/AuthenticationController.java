@@ -122,7 +122,7 @@ public class AuthenticationController {
     @PostMapping(value = "/createRegisterInvite", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public RegisterInviteResponse createRegisterInvite(@Parameter(name = "Register invite request", required = true)
                                                        @Valid @RequestBody CreateRegisterInviteRequest registerInviteRequest) {
-        return registerInviteService.createRegisterInvite(registerInviteRequest);
+        return registerInviteService.create(registerInviteRequest);
     }
 
     @Operation(summary = "Validate 2FA code", responses = {

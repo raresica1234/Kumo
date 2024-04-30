@@ -6,6 +6,7 @@ import { AdminHomeComponent } from './views/admin/admin-home/admin-home.componen
 import { PathPointComponent } from './views/admin/path-point/path-point.component';
 import { permissionGuard } from '../../shared/guards/permission.guard';
 import { Feature } from '../../shared/models/features';
+import { ExplorationRoleComponent } from './views/admin/exploration-role/exploration-role.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,12 @@ const routes: Routes = [
         component: PathPointComponent,
         data: { title: 'Path Points' },
         canActivate: [permissionGuard([Feature.ADMIN, Feature.GET_PATH_POINT])],
+      },
+      {
+        path: 'admin/exploration_role',
+        component: ExplorationRoleComponent,
+        data: { title: 'Exploration Roles' },
+        canActivate: [permissionGuard([Feature.ADMIN, Feature.GET_EXPLORATION_ROLE])],
       },
     ],
   },

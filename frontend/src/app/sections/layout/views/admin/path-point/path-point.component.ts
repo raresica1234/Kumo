@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseComponent } from '../../../../../shared/components/base.component';
 import { ActivatedRoute } from '@angular/router';
-import { PathPointControllerService } from '../../../../../shared/api-models';
+import { Pageable, PathPointControllerService } from '../../../../../shared/api-models';
 import { Observable, Subject, Subscription, tap } from 'rxjs';
 import ColumnDefinition from '../../../../../shared/models/table/column-definition';
 import TableAction from '../../../../../shared/models/table/table-action';
@@ -16,19 +16,19 @@ import { Feature } from '../../../../../shared/models/features';
   templateUrl: './path-point.component.html',
 })
 export class PathPointComponent extends BaseComponent implements OnInit, OnDestroy {
-  // TODO: Some errors can be caught in the modal so the user doesn't have to rewrite everything: path point already exists, invalid path
-  // TODO: Check if path is valid (exists) on backend, also show in modal
-
   columns!: ColumnDefinition[];
   actions!: TableAction[];
   refreshTable: Subject<boolean> = new Subject<boolean>();
-  private subscriptionManager!: Subscription;
+  private subscriptionManager: Subscription = new Subscription();
 
   private pathPointFormModalData!: FormModalData;
+  private pathPointSearchModalData!: FormModalData;
 
   addPathPointPermission: boolean = false;
   updatePathPointPermission: boolean = false;
   deletePathPointPermission: boolean = false;
+
+  private searchString: string = '';
 
   public constructor(
     route: ActivatedRoute,
@@ -43,12 +43,12 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
     this.updatePathPointPermission = generalService.hasFeature(Feature.UPDATE_PATH_POINT);
     this.deletePathPointPermission = generalService.hasFeature(Feature.DELETE_PATH_POINT);
 
-    this.createForModalData();
+    this.createFormModalData();
     this.createColumns();
     this.createActions();
   }
 
-  private createForModalData() {
+  private createFormModalData() {
     this.pathPointFormModalData = {
       type: 'update',
       entries: [
@@ -62,6 +62,19 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
           displayName: 'Is Root',
           type: 'checkbox',
           name: 'root',
+          required: false,
+        },
+      ],
+    };
+
+    this.pathPointSearchModalData = {
+      type: 'search',
+      title: 'Filter Path Points',
+      entries: [
+        {
+          displayName: 'Path',
+          type: 'text',
+          name: 'path',
           required: false,
         },
       ],
@@ -90,7 +103,7 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
         name: 'Edit',
         icon: 'edit',
         color: 'primary',
-        action: this.editPathPoint.bind(this),
+        action: this.updatePathPoint.bind(this),
       });
 
     if (this.deletePathPointPermission)
@@ -107,7 +120,9 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
   }
 
   fetchFunction() {
-    return this.pathPointController.getPathPoint.bind(this.pathPointController);
+    return (pageable: Pageable): Observable<any> => {
+      return this.pathPointController.getPathPoints(pageable, this.searchString);
+    };
   }
 
   addPathPoint() {
@@ -127,7 +142,7 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
     });
   }
 
-  private editPathPoint(object: any) {
+  private updatePathPoint(object: any) {
     const modalData: FormModalData = {
       ...this.pathPointFormModalData,
       title: 'Edit Path Point',
@@ -162,6 +177,17 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
         },
       },
     );
+  }
+
+  searchPathPoint() {
+    const modalData = { ...this.pathPointSearchModalData, object: { path: this.searchString } };
+
+    this.modalService.openFormModal(modalData, {
+      onConfirm: (obj) => {
+        this.searchString = obj.path;
+        this.refreshTable.next(true);
+      },
+    });
   }
 
   ngOnDestroy(): void {

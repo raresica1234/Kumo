@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,15 +31,14 @@ public class PathPointController {
 
     @Operation(summary = "Get path points", responses = {
             @ApiResponse(responseCode = "200"),
-            @ApiResponse(responseCode = "409", description = "Duplicate path point"),
     })
     @Authenticated
     @HasTokenType
     @HasAuthority(Feature.GET_PATH_POINT)
     @GetMapping(produces = MediaType.APPLICATION_JSON)
-    public Page<PathPointModel> getPathPoint(@RequestParam(defaultValue = "") String name,
-                                             Pageable pageable) {
-        return pathPointService.getPathPoints(name, pageable);
+    public Page<PathPointModel> getPathPoints(@RequestParam(defaultValue = "") String name,
+                                              Pageable pageable) {
+        return pathPointService.get(name, pageable);
     }
 
     @Operation(summary = "Create path point", responses = {
@@ -52,7 +50,7 @@ public class PathPointController {
     @HasAuthority(Feature.CREATE_PATH_POINT)
     @PostMapping(consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public PathPointModel createPathPoint(@Valid @RequestBody PathPointModel pathPointModel) {
-        return pathPointService.createPathPoint(pathPointModel);
+        return pathPointService.create(pathPointModel);
     }
 
     @Operation(summary = "Update path point", responses = {
@@ -66,11 +64,11 @@ public class PathPointController {
     @HasAuthority(Feature.UPDATE_PATH_POINT)
     @PutMapping(consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public PathPointModel updatePathPoint(@Valid @RequestBody PathPointModel pathPointModel) {
-        return pathPointService.updatePathPoint(pathPointModel);
+        return pathPointService.update(pathPointModel);
     }
 
     @Operation(summary = "Delete path point", responses = {
-            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = PathPointModel.class))),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = BooleanResponse.class))),
             @ApiResponse(responseCode = "404", description = "Path point not found"),
     })
     @Authenticated
@@ -78,7 +76,7 @@ public class PathPointController {
     @HasAuthority(Feature.DELETE_PATH_POINT)
     @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON)
     public BooleanResponse deletePathPoint(@PathVariable UUID id) {
-        pathPointService.deletePathPoint(id);
+        pathPointService.delete(id);
 
         return new BooleanResponse(true);
     }

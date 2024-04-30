@@ -24,7 +24,6 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
   ],
   templateUrl: './table.component.html',
-  styleUrl: './table.component.scss',
 })
 export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input({ required: true })

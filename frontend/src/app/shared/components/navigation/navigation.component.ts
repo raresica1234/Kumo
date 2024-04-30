@@ -40,6 +40,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
   sidenav: boolean = true;
   isAdmin: boolean = false;
   getPathPoint: boolean = false;
+  getExplorationRole: boolean = false;
   adminPanel: boolean = false;
 
   constructor(
@@ -63,6 +64,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.isAdmin = this.generalService.hasFeature(Feature.ADMIN);
     this.getPathPoint = this.generalService.hasFeature(Feature.GET_PATH_POINT);
+    this.getExplorationRole = this.generalService.hasFeature(Feature.GET_EXPLORATION_ROLE);
   }
 
   ngOnDestroy(): void {

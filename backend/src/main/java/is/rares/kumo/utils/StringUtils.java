@@ -3,7 +3,6 @@ package is.rares.kumo.utils;
 import lombok.experimental.UtilityClass;
 
 import java.security.SecureRandom;
-import java.util.Random;
 
 @UtilityClass
 public class StringUtils {

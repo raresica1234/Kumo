@@ -1,7 +1,7 @@
 package is.rares.kumo.domain.user;
 
 import is.rares.kumo.domain.BaseEntity;
-import is.rares.kumo.domain.explore.ExploreRole;
+import is.rares.kumo.domain.explore.ExplorationRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -41,7 +41,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Set<ExploreRole> exploreRoles = new HashSet<>();
+    private Set<ExplorationRole> explorationRoles = new HashSet<>();
 
 
     @Override
