@@ -25,9 +25,9 @@
   <button
     mat-flat-button
     color="primary"
-    [mat-dialog-close]="createObject()"
+    (click)="submitFunction()"
     class="flex-grow"
-    [disabled]="!formGroup.valid"
+    [disabled]="!formGroup.valid || this.callFailed"
   >
     {{ data.type === "add" ? "Add" : "Update" }}
   </button>

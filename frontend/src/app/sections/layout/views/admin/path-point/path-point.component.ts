@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseComponent } from '../../../../../shared/components/base.component';
 import { ActivatedRoute } from '@angular/router';
 import { PathPointControllerService } from '../../../../../shared/api-models';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, tap } from 'rxjs';
 import ColumnDefinition from '../../../../../shared/models/table/column-definition';
 import TableAction from '../../../../../shared/models/table/table-action';
 import { ModalService } from '../../../../../shared/components/modals/modal.service';
@@ -50,8 +50,6 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
 
   private createForModalData() {
     this.pathPointFormModalData = {
-      object: {},
-      title: 'Edit Path Point',
       type: 'update',
       entries: [
         {
@@ -113,39 +111,35 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
   }
 
   addPathPoint() {
-    this.pathPointFormModalData = {
+    const modalData: FormModalData = {
       ...this.pathPointFormModalData,
       title: 'Add Path Point',
       object: undefined,
       type: 'add',
+      submitFunction: this.pathPointController.createPathPoint.bind(this.pathPointController),
     };
 
-    this.modalService.openFormModal(this.pathPointFormModalData, {
+    this.modalService.openFormModal(modalData, {
       onConfirm: (object) => {
-        const sub = this.pathPointController.createPathPoint(object).subscribe((_) => {
-          this.refreshTable.next(true);
-          this.alertService.success('Successfully added Path Point');
-        });
-        this.subscriptionManager.add(sub);
+        this.refreshTable.next(true);
+        this.alertService.success('Successfully added Path Point');
       },
     });
   }
 
   private editPathPoint(object: any) {
-    this.pathPointFormModalData = {
+    const modalData: FormModalData = {
       ...this.pathPointFormModalData,
       title: 'Edit Path Point',
       object: object,
       type: 'update',
+      submitFunction: this.pathPointController.updatePathPoint.bind(this.pathPointController),
     };
 
-    this.modalService.openFormModal(this.pathPointFormModalData, {
+    this.modalService.openFormModal(modalData, {
       onConfirm: (object) => {
-        const sub = this.pathPointController.updatePathPoint(object).subscribe((_) => {
-          this.refreshTable.next(true);
-          this.alertService.success('Successfully updated Path Point');
-        });
-        this.subscriptionManager.add(sub);
+        this.refreshTable.next(true);
+        this.alertService.success('Successfully updated Path Point');
       },
     });
   }
@@ -155,9 +149,14 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
       { title: 'Delete Path Point', text: 'Are you sure you want to delete this Path Point?' },
       {
         onConfirm: () => {
-          const sub = this.pathPointController.deletePathPoint(object.uuid).subscribe((_) => {
-            this.refreshTable.next(true);
-            this.alertService.success('Successfully deleted Path Point');
+          const sub = this.pathPointController.deletePathPoint(object.uuid).subscribe({
+            next: (_) => {
+              this.refreshTable.next(true);
+              this.alertService.success('Successfully deleted Path Point');
+            },
+            error: (error) => {
+              this.alertService.error(error);
+            },
           });
           this.subscriptionManager.add(sub);
         },

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -14,6 +14,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgForOf, NgIf } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-form-modal',
@@ -33,12 +35,17 @@ import { NgForOf, NgIf } from '@angular/common';
   ],
   templateUrl: './form-modal.component.html',
 })
-export class FormModalComponent implements OnInit {
+export class FormModalComponent implements OnInit, OnDestroy {
+  private subscriptionManager: Subscription = new Subscription();
+
   formGroup: FormGroup = new FormGroup<any>({});
+
+  callFailed: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<FormModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: FormModalData,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +55,8 @@ export class FormModalComponent implements OnInit {
         new FormControl(this.data.object?.[entry.name] ?? '', entry.required ? [Validators.required] : []),
       );
     });
+
+    this.formGroup.valueChanges.subscribe((_) => (this.callFailed = false));
   }
 
   createObject() {
@@ -58,5 +67,22 @@ export class FormModalComponent implements OnInit {
     });
 
     return result;
+  }
+
+  submitFunction() {
+    const sub = this.data.submitFunction?.(this.createObject()).subscribe({
+      next: (result) => {
+        this.dialogRef.close(result);
+      },
+      error: (error) => {
+        this.callFailed = true;
+        this.alertService.error(error);
+      },
+    });
+    this.subscriptionManager.add(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionManager.unsubscribe();
   }
 }

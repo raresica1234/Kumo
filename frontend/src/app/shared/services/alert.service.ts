@@ -9,7 +9,7 @@ export class AlertService {
     toaster.toastrConfig.maxOpened = 5;
     toaster.toastrConfig.newestOnTop = false;
     toaster.toastrConfig.positionClass = 'toast-bottom-right';
-    toaster.toastrConfig.timeOut = 0;
+    toaster.toastrConfig.timeOut = 5000;
     toaster.toastrConfig.preventDuplicates = true;
     toaster.toastrConfig.tapToDismiss = false;
   }

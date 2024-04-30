@@ -32,8 +32,6 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
         toaster.error('Server unavailable');
       }
 
-      toaster.error(message);
-
       return throwError(() => message);
     }),
   );
