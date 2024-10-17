@@ -11,7 +11,7 @@ import is.rares.kumo.core.exceptions.codes.AuthorizationErrorCodes;
 import is.rares.kumo.domain.user.User;
 import is.rares.kumo.repository.user.UserRepository;
 import is.rares.kumo.security.AuthorizationInterceptor;
-import is.rares.kumo.security.convertor.ClientLocationConvertor;
+import is.rares.kumo.security.mapping.ClientLocationMapping;
 import is.rares.kumo.security.domain.ClientLocation;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.security.enums.TokenType;
@@ -47,7 +47,7 @@ public class AuthenticationService {
 
     private final AccountCodesService accountCodesService;
 
-    private final ClientLocationConvertor clientLocationConvertor;
+    private final ClientLocationMapping clientLocationMapping;
 
     @Autowired
     public AuthenticationService(JwtService jwtService, JWTConfiguration jwtConfiguration,
@@ -57,7 +57,7 @@ public class AuthenticationService {
                                  UserService userService,
                                  PasswordEncoder passwordEncoder,
                                  AccountCodesService accountCodesService,
-                                 ClientLocationConvertor clientLocationConvertor,
+                                 ClientLocationMapping clientLocationMapping,
                                  TokenRepository tokenRepository) {
         this.jwtService = jwtService;
         this.jwtConfiguration = jwtConfiguration;
@@ -67,7 +67,7 @@ public class AuthenticationService {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.accountCodesService = accountCodesService;
-        this.clientLocationConvertor = clientLocationConvertor;
+        this.clientLocationMapping = clientLocationMapping;
         this.tokenRepository = tokenRepository;
     }
 
@@ -93,7 +93,7 @@ public class AuthenticationService {
         if (user.isUsing2FA() && isFirstLogin)
             accountCodesService.generateTwoFactorCode(user);
 
-        ClientLocation clientLocation = clientLocationConvertor.mapModelToEntity(clientLocationModel);
+        ClientLocation clientLocation = clientLocationMapping.mapModelToEntity(clientLocationModel);
 
         this.asyncTokenStore.saveUserToken(tokenDataResponse, user.getUuid(), clientLocation, tokenType);
         return tokenDataResponse;

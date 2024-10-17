@@ -1,6 +1,6 @@
 package is.rares.kumo.service.explore;
 
-import is.rares.kumo.convertor.explore.PermissionConvertor;
+import is.rares.kumo.mapping.explore.PermissionMapping;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.ExplorationRoleErrorCodes;
 import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
@@ -20,16 +20,16 @@ import java.util.UUID;
 @Service
 public class PermissionService {
     private final PermissionRepository permissionRepository;
-    private final PermissionConvertor permissionConvertor;
+    private final PermissionMapping permissionMapping;
     private final PathPointRepository pathPointRepository;
     private final ExplorationRoleRepository explorationRoleRepository;
 
     public PermissionService(PermissionRepository permissionRepository,
-                             PermissionConvertor permissionConvertor,
+                             PermissionMapping permissionMapping,
                              PathPointRepository pathPointRepository,
                              ExplorationRoleRepository explorationRoleRepository) {
         this.permissionRepository = permissionRepository;
-        this.permissionConvertor = permissionConvertor;
+        this.permissionMapping = permissionMapping;
         this.pathPointRepository = pathPointRepository;
         this.explorationRoleRepository = explorationRoleRepository;
     }
@@ -37,7 +37,7 @@ public class PermissionService {
     public Page<PermissionModel> get(String path, String role, Pageable pageable) {
         var result =
                 permissionRepository.findByPathAndRole(path, role, pageable);
-        return new PageImpl<>(result.stream().map(permissionConvertor::mapEntityToModel).toList(), pageable, result.getTotalElements());
+        return new PageImpl<>(result.stream().map(permissionMapping::mapEntityToModel).toList(), pageable, result.getTotalElements());
     }
 
     public PermissionShortModel create(PermissionShortModel model) {
@@ -52,14 +52,14 @@ public class PermissionService {
         if (permissionRepository.existsByPathPoint_UuidAndExplorationRole_Uuid(model.getPathPointId(), model.getExplorationRoleId()))
             throw new KumoException(PermissionErrorCodes.DUPLICATE_PERMISSION);
 
-        var domainEntity = permissionConvertor.mapShortModelToEntity(model);
+        var domainEntity = permissionMapping.mapShortModelToEntity(model);
 
         domainEntity.setPathPoint(pathPointOptional.get());
         domainEntity.setExplorationRole(explorationRoleOptional.get());
 
         permissionRepository.save(domainEntity);
 
-        return permissionConvertor.mapEntityToShortModel(domainEntity);
+        return permissionMapping.mapEntityToShortModel(domainEntity);
     }
 
     public PermissionShortModel update(PermissionShortModel model) {
@@ -95,7 +95,7 @@ public class PermissionService {
 
         permissionRepository.save(domainEntity);
 
-        return permissionConvertor.mapEntityToShortModel(domainEntity);
+        return permissionMapping.mapEntityToShortModel(domainEntity);
     }
     
     public void delete(UUID id) {

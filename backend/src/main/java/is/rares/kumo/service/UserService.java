@@ -2,7 +2,7 @@ package is.rares.kumo.service;
 
 import is.rares.kumo.controller.requests.user.RegisterRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
-import is.rares.kumo.convertor.UserConvertor;
+import is.rares.kumo.mapping.UserMapping;
 import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.AccountCodeErrorCodes;
@@ -30,7 +30,7 @@ public class UserService {
     private final KumoConfig kumoConfig;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final UserConvertor userConvertor;
+    private final UserMapping userMapping;
 
     private final RoleService roleService;
     private final RoleRepository roleRepository;
@@ -40,14 +40,14 @@ public class UserService {
     public UserService(KumoConfig kumoConfig,
                        PasswordEncoder passwordEncoder,
                        UserRepository userRepository,
-                       UserConvertor userConvertor,
+                       UserMapping userMapping,
                        RoleService roleService,
                        RoleRepository roleRepository,
                        RegisterInviteService registerInviteService) {
         this.kumoConfig = kumoConfig;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.userConvertor = userConvertor;
+        this.userMapping = userMapping;
         this.roleService = roleService;
         this.roleRepository = roleRepository;
         this.registerInviteService = registerInviteService;
@@ -94,7 +94,7 @@ public class UserService {
     public UserModel getUser(CurrentUser currentUser) {
         User user = findByUserId(currentUser.getId());
 
-        return userConvertor.mapEntityToModel(user);
+        return userMapping.mapEntityToModel(user);
     }
 
     public BooleanResponse registerInviteRequired() {

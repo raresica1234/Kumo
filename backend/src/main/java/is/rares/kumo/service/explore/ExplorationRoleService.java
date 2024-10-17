@@ -1,6 +1,6 @@
 package is.rares.kumo.service.explore;
 
-import is.rares.kumo.convertor.explore.ExplorationRoleConvertor;
+import is.rares.kumo.mapping.explore.ExplorationRoleMapping;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.ExplorationRoleErrorCodes;
 import is.rares.kumo.model.explore.ExplorationRoleModel;
@@ -16,18 +16,18 @@ import java.util.UUID;
 public class ExplorationRoleService {
     private final ExplorationRoleRepository explorationRoleRepository;
 
-    private final ExplorationRoleConvertor explorationRoleConvertor;
+    private final ExplorationRoleMapping explorationRoleMapping;
 
     public ExplorationRoleService(ExplorationRoleRepository explorationRoleRepository,
-                                  ExplorationRoleConvertor explorationRoleConvertor) {
+                                  ExplorationRoleMapping explorationRoleMapping) {
         this.explorationRoleRepository = explorationRoleRepository;
-        this.explorationRoleConvertor = explorationRoleConvertor;
+        this.explorationRoleMapping = explorationRoleMapping;
     }
 
     public Page<ExplorationRoleModel> get(String name, Pageable pageable) {
         var page = explorationRoleRepository.findByNameContainsIgnoreCase(name, pageable);
 
-        return new PageImpl<>(page.stream().map(explorationRoleConvertor::mapEntityToModel).toList(), pageable,
+        return new PageImpl<>(page.stream().map(explorationRoleMapping::mapEntityToModel).toList(), pageable,
                 page.getTotalElements());
     }
 
@@ -36,11 +36,11 @@ public class ExplorationRoleService {
         if (optional.isPresent())
             throw new KumoException(ExplorationRoleErrorCodes.DUPLICATE_ROLE);
 
-        var exploreRole = explorationRoleConvertor.mapModelToEntity(model);
+        var exploreRole = explorationRoleMapping.mapModelToEntity(model);
 
         exploreRole = explorationRoleRepository.save(exploreRole);
 
-        return explorationRoleConvertor.mapEntityToModel(exploreRole);
+        return explorationRoleMapping.mapEntityToModel(exploreRole);
     }
 
     public ExplorationRoleModel update(ExplorationRoleModel model) {
@@ -62,7 +62,7 @@ public class ExplorationRoleService {
 
         explorationRole = explorationRoleRepository.save(explorationRole);
 
-        return explorationRoleConvertor.mapEntityToModel(explorationRole);
+        return explorationRoleMapping.mapEntityToModel(explorationRole);
     }
     
     public void delete(UUID id) {

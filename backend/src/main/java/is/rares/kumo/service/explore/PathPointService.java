@@ -1,6 +1,6 @@
 package is.rares.kumo.service.explore;
 
-import is.rares.kumo.convertor.explore.PathPointConvertor;
+import is.rares.kumo.mapping.explore.PathPointMapping;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
 import is.rares.kumo.model.explore.PathPointModel;
@@ -17,18 +17,18 @@ import java.util.UUID;
 public class PathPointService {
     private final PathPointRepository pathPointRepository;
 
-    private final PathPointConvertor pathPointConvertor;
+    private final PathPointMapping pathPointMapping;
 
     public PathPointService(PathPointRepository pathPointRepository,
-                            PathPointConvertor pathPointConvertor) {
+                            PathPointMapping pathPointMapping) {
         this.pathPointRepository = pathPointRepository;
-        this.pathPointConvertor = pathPointConvertor;
+        this.pathPointMapping = pathPointMapping;
     }
 
     public Page<PathPointModel> get(String name, Pageable pageable) {
         var page = pathPointRepository.findByPathContainsIgnoreCase(name, pageable);
 
-        return new PageImpl<>(page.stream().map(pathPointConvertor::mapEntityToModel).toList(), pageable,
+        return new PageImpl<>(page.stream().map(pathPointMapping::mapEntityToModel).toList(), pageable,
                 page.getTotalElements());
     }
 
@@ -40,11 +40,11 @@ public class PathPointService {
         if (optional.isPresent())
             throw new KumoException(PathPointErrorCodes.DUPLICATE_PATH_POINT);
 
-        var pathPoint = pathPointConvertor.mapModelToEntity(pathPointModel);
+        var pathPoint = pathPointMapping.mapModelToEntity(pathPointModel);
 
         pathPoint = pathPointRepository.save(pathPoint);
 
-        return pathPointConvertor.mapEntityToModel(pathPoint);
+        return pathPointMapping.mapEntityToModel(pathPoint);
     }
 
     public PathPointModel update(PathPointModel pathPointModel) {
@@ -70,7 +70,7 @@ public class PathPointService {
 
         pathPoint = pathPointRepository.save(pathPoint);
 
-        return pathPointConvertor.mapEntityToModel(pathPoint);
+        return pathPointMapping.mapEntityToModel(pathPoint);
     }
 
     public void delete(UUID id) {
