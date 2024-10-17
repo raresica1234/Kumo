@@ -1,12 +1,12 @@
 package is.rares.kumo.domain.explore;
 
 import is.rares.kumo.domain.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,6 +21,9 @@ public class PathPoint extends BaseEntity {
 
     @Column
     boolean root;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pathPoint", cascade = CascadeType.REMOVE)
+    private Set<Permission> permissions = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

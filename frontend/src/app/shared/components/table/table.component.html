@@ -11,7 +11,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sortable">
         {{ column.displayName }}
       </th>
-      <td mat-cell *matCellDef="let element">{{ element[column.fieldName] }}</td>
+      <td mat-cell *matCellDef="let element">{{ getValueOfFieldFormElement(element, column.fieldName) }}</td>
     </ng-container>
   }
 

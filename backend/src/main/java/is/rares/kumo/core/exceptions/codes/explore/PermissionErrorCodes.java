@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
-public enum PathPointErrorCodes implements BaseErrorCode {
-    DUPLICATE_PATH_POINT("1", HttpStatus.CONFLICT, "Path point already exists"),
+public enum PermissionErrorCodes implements BaseErrorCode {
+    DUPLICATE_PERMISSION("1", HttpStatus.CONFLICT, "Permission with this path point and exploration role already exists"),
     ID_MISSING("2", HttpStatus.BAD_REQUEST, "Id is missing"),
     NOT_FOUND("3", HttpStatus.NOT_FOUND, "Path point not found"),
-    PATH_DOES_NOT_EXIST("4", HttpStatus.NOT_FOUND, "Path does not exist")
 
     ;
 
@@ -19,7 +18,7 @@ public enum PathPointErrorCodes implements BaseErrorCode {
 
     @Override
     public String getErrorCode() {
-        return "PathPoint" + errorCode;
+        return "Permission" + errorCode;
     }
 
     @Override

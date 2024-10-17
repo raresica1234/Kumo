@@ -10,16 +10,16 @@
  * Do not edit the class manually.
  */
 import { PageableObject } from './pageableObject';
+import { PermissionModel } from './permissionModel';
 import { SortObject } from './sortObject';
-import { PathPointModel } from './pathPointModel';
 
 
-export interface PagePathPointModel { 
+export interface PagePermissionModel { 
     totalElements?: number;
     totalPages?: number;
     pageable?: PageableObject;
     size?: number;
-    content?: Array<PathPointModel>;
+    content?: Array<PermissionModel>;
     number?: number;
     sort?: SortObject;
     numberOfElements?: number;

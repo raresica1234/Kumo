@@ -4,7 +4,9 @@ import is.rares.kumo.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -33,6 +35,13 @@ public class Permission extends BaseEntity {
 
     @Column(name = "path_point_id", insertable = false, updatable = false)
     private UUID pathPointId;
+
+    @ManyToOne
+    @JoinColumn(name = "exploration_role_id")
+    private ExplorationRole explorationRole;
+
+    @Column(name = "exploration_role_id", insertable = false, updatable = false)
+    private UUID explorationRoleId;
 
     @Override
     public boolean equals(Object o) {

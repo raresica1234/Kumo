@@ -30,9 +30,9 @@ export class ExplorationRoleComponent extends BaseComponent implements OnInit, O
   private explorationRoleFormModalData!: FormModalData;
   private explorationRoleSearchModalData!: FormModalData;
 
-  addExplorationRolePermission: boolean = false;
-  updateExplorationRolePermission: boolean = false;
-  deleteExplorationRolePermission: boolean = false;
+  addExplorationRoleFeature: boolean = false;
+  updateExplorationRoleFeature: boolean = false;
+  deleteExplorationRoleFeature: boolean = false;
 
   private searchString: string = '';
 
@@ -45,9 +45,9 @@ export class ExplorationRoleComponent extends BaseComponent implements OnInit, O
   ) {
     super(route);
 
-    this.addExplorationRolePermission = generalService.hasFeature(Feature.CREATE_EXPLORATION_ROLE);
-    this.updateExplorationRolePermission = generalService.hasFeature(Feature.UPDATE_EXPLORATION_ROLE);
-    this.deleteExplorationRolePermission = generalService.hasFeature(Feature.DELETE_EXPLORATION_ROLE);
+    this.addExplorationRoleFeature = generalService.hasFeature(Feature.CREATE_EXPLORATION_ROLE);
+    this.updateExplorationRoleFeature = generalService.hasFeature(Feature.UPDATE_EXPLORATION_ROLE);
+    this.deleteExplorationRoleFeature = generalService.hasFeature(Feature.DELETE_EXPLORATION_ROLE);
 
     this.createFormModalData();
     this.createColumns();
@@ -93,7 +93,7 @@ export class ExplorationRoleComponent extends BaseComponent implements OnInit, O
 
   private createActions() {
     this.actions = [];
-    if (this.updateExplorationRolePermission)
+    if (this.updateExplorationRoleFeature)
       this.actions.push({
         name: 'Edit',
         icon: 'edit',
@@ -101,7 +101,7 @@ export class ExplorationRoleComponent extends BaseComponent implements OnInit, O
         action: this.updateExplorationRole.bind(this),
       });
 
-    if (this.deleteExplorationRolePermission)
+    if (this.deleteExplorationRoleFeature)
       this.actions.push({
         name: 'Delete',
         icon: 'delete',
@@ -171,11 +171,11 @@ export class ExplorationRoleComponent extends BaseComponent implements OnInit, O
   }
 
   searchExplorationRole() {
-    const modalData = { ...this.explorationRoleSearchModalData, object: { path: this.searchString } };
+    const modalData = { ...this.explorationRoleSearchModalData, object: { name: this.searchString } };
 
     this.modalService.openFormModal(modalData, {
       onConfirm: (obj) => {
-        this.searchString = obj.path;
+        this.searchString = obj.name;
         this.refreshTable.next(true);
       },
     });

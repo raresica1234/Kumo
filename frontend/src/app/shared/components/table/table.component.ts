@@ -76,7 +76,8 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (sort.direction === '') {
       this.pageable.sort = [];
     }
-    this.pageable.sort = [sort.active, sort.direction];
+    this.pageable.sort = [`${sort.active},${sort.direction}`];
+    this.fetchElements();
   }
 
   private fetchElements() {
@@ -97,7 +98,6 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.fetchElements();
 
     this.refreshTable.subscribe((value) => {
-      console.log('refresh');
       if (value) this.fetchElements();
     });
   }
@@ -108,5 +108,15 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pageable.size = this.paginator.pageSize;
       this.fetchElements();
     });
+  }
+
+  getValueOfFieldFormElement(element: any, fieldName: string) {
+    if (!fieldName.includes('.')) return element[fieldName];
+    else {
+      const fields = fieldName.split('.');
+      let currentObject: any = element;
+      fields.forEach((field) => (currentObject = currentObject[field]));
+      return currentObject;
+    }
   }
 }

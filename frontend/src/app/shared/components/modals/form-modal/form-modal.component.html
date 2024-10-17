@@ -11,12 +11,37 @@
         <mat-checkbox [formControlName]="entry.name">
           {{ entry.displayName }}
         </mat-checkbox>
+      } @else if (entry.type == "dropdown") {
+        <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
+          <mat-label>{{ entry.displayName }}</mat-label>
+          <input
+            matInput
+            type="text"
+            [matAutocomplete]="auto"
+            [formControlName]="entry.name"
+            [placeholder]="entry.displayName"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="displayDropdownField(entry)"
+            (opened)="switchToSearchMode(entry)"
+            (closed)="resetFilter(entry)"
+            (optionSelected)="optionSelected(entry, $event)"
+          >
+            @if (values.has(entry.name)) {
+              @for (option of values.get(entry.name); track values) {
+                <mat-option [value]="option.uuid">{{ displayField(entry, option) }} </mat-option>
+              }
+            }
+          </mat-autocomplete>
+        </mat-form-field>
       } @else {
         <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
           <mat-label>{{ entry.displayName }}</mat-label>
           <input matInput [name]="entry.name" [formControlName]="entry.name" [placeholder]="entry.displayName" />
         </mat-form-field>
       }
+      <br />
     }
   </form>
 </div>

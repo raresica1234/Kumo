@@ -9,22 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { PageableObject } from './pageableObject';
-import { SortObject } from './sortObject';
+import { ExplorationRoleModel } from './explorationRoleModel';
 import { PathPointModel } from './pathPointModel';
 
 
-export interface PagePathPointModel { 
-    totalElements?: number;
-    totalPages?: number;
-    pageable?: PageableObject;
-    size?: number;
-    content?: Array<PathPointModel>;
-    number?: number;
-    sort?: SortObject;
-    numberOfElements?: number;
-    first?: boolean;
-    last?: boolean;
-    empty?: boolean;
+/**
+ * Permission Model
+ */
+export interface PermissionModel { 
+    uuid?: string;
+    pathPoint?: PathPointModel;
+    explorationRole?: ExplorationRoleModel;
+    read: boolean;
+    write: boolean;
+    _delete: boolean;
+    modifyRoot: boolean;
 }
 

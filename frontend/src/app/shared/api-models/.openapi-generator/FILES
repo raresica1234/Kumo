@@ -6,6 +6,7 @@ api/authenticationController.service.ts
 api/explorationRoleController.service.ts
 api/explorerController.service.ts
 api/pathPointController.service.ts
+api/permissionController.service.ts
 api/userController.service.ts
 configuration.ts
 encoder.ts
@@ -20,9 +21,12 @@ model/loginRequest.ts
 model/models.ts
 model/pageExplorationRoleModel.ts
 model/pagePathPointModel.ts
+model/pagePermissionModel.ts
 model/pageable.ts
 model/pageableObject.ts
 model/pathPointModel.ts
+model/permissionModel.ts
+model/permissionShortModel.ts
 model/registerInviteResponse.ts
 model/registerRequest.ts
 model/sortObject.ts

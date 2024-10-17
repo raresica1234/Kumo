@@ -472,7 +472,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/explore/path_point?page=1&size=2&sort=root,desc",
+									"raw": "{{baseUrl}}/api/explore/path_point",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -480,20 +480,6 @@
 										"api",
 										"explore",
 										"path_point"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "size",
-											"value": "2"
-										},
-										{
-											"key": "sort",
-											"value": "root,desc"
-										}
 									]
 								}
 							},
@@ -505,7 +491,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/explore/path_point/415e2d38-e6a9-4ef1-b824-aa6af04ccbf6",
+									"raw": "{{baseUrl}}/api/explore/path_point/a1b1301d-0f79-4726-9d49-13884ee7526c",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -513,7 +499,239 @@
 										"api",
 										"explore",
 										"path_point",
-										"415e2d38-e6a9-4ef1-b824-aa6af04ccbf6"
+										"a1b1301d-0f79-4726-9d49-13884ee7526c"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Exploration Role",
+					"item": [
+						{
+							"name": "Get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/role?page=0&size=10&sort=&name=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"role"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "name",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/role",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\": \"8d714f74-fbd3-4010-838c-28edfc8cb7ff\",\n    \"name\": \"Test4\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/role",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"role"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/role/5ba97b9e-3c49-40d4-9251-579b4c39a9e3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"role",
+										"5ba97b9e-3c49-40d4-9251-579b4c39a9e3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Permission",
+					"item": [
+						{
+							"name": "Get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/permission?page=0&size=10&sort=explorationRole.name,desc",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"permission"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										},
+										{
+											"key": "sort",
+											"value": "explorationRole.name,desc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"pathPointId\": \"a1b1301d-0f79-4726-9d49-13884ee7526c\",\n    \"explorationRoleId\": \"070e0a44-c706-4728-8856-fe376d9aca97\",\n    \"read\": true,\n    \"write\": true,\n    \"delete\": true,\n    \"modifyRoot\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/permission",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"permission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\": \"429ef03f-a3df-4ede-aa84-eca3c3fb700d\",\n    \"pathPointId\": \"12de679f-0baf-4c55-a859-ae5c93b4bb08\",\n    \"explorationRoleId\": \"5ba97b9e-3c49-40d4-9251-579b4c39a9e3\",\n    \"read\": true,\n    \"write\": false,\n    \"delete\": false,\n    \"modifyRoot\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/permission",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"permission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/permission/d12e4e4b-240a-48dd-9863-c7b6256727a8",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"permission",
+										"d12e4e4b-240a-48dd-9863-c7b6256727a8"
 									]
 								}
 							},

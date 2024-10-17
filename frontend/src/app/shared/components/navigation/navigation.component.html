@@ -45,6 +45,12 @@
             Exploration Roles
           </button>
         </mat-list-item>
+        <mat-list-item *ngIf="getPermission" (click)="navigateTo('admin/permission')">
+          <button mat-flat-button>
+            <mat-icon>lock</mat-icon>
+            Permissions
+          </button>
+        </mat-list-item>
       } @else {
         <button mat-flat-button>
           <mat-icon>house</mat-icon>

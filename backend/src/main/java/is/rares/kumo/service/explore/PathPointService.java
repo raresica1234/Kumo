@@ -5,6 +5,7 @@ import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
 import is.rares.kumo.model.explore.PathPointModel;
 import is.rares.kumo.repository.explore.PathPointRepository;
+import is.rares.kumo.utils.FileUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,9 @@ public class PathPointService {
     }
 
     public PathPointModel create(PathPointModel pathPointModel) {
+        if (!FileUtils.directoryExists(pathPointModel.getPath()))
+            throw new KumoException(PathPointErrorCodes.PATH_DOES_NOT_EXIST);
+
         var optional = pathPointRepository.findByPathAndRoot(pathPointModel.getPath(), pathPointModel.isRoot());
         if (optional.isPresent())
             throw new KumoException(PathPointErrorCodes.DUPLICATE_PATH_POINT);
@@ -44,6 +48,9 @@ public class PathPointService {
     }
 
     public PathPointModel update(PathPointModel pathPointModel) {
+        if (!FileUtils.directoryExists(pathPointModel.getPath()))
+            throw new KumoException(PathPointErrorCodes.PATH_DOES_NOT_EXIST);
+
         if (pathPointModel.getUuid() == null)
             throw new KumoException(PathPointErrorCodes.ID_MISSING);
 

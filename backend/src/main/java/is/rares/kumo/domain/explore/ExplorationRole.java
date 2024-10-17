@@ -27,6 +27,9 @@ public class ExplorationRole extends BaseEntity {
     )
     private Set<User> users = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "explorationRole", cascade = CascadeType.REMOVE)
+    private Set<Permission> permissions = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
