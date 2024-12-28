@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  frontend:
+    image: kumo_frontend
+    ports:
+      - 8080:80
+    depends_on:
+      - backend
+  backend:
+    image: kumo_backend
+    depends_on:
+      - postgres
+      - redis
+  postgres:
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=kumo
+    volumes: 
+      - ./db:/var/lib/postgresql/data
+  redis:
+    image: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis

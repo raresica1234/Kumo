@@ -3,3 +3,7 @@ spring:
     url: jdbc:postgresql://postgres:5432/kumo
 redis:
   host: redis
+
+kumo:
+  cors:
+    origin: change-me

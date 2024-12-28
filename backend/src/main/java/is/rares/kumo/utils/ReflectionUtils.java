@@ -2,12 +2,18 @@ package is.rares.kumo.utils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @UtilityClass
@@ -23,30 +29,27 @@ public class ReflectionUtils {
         }
     }
 
-    public Set<Class<?>> getAllClassesFromPackageRecursive(String packageName) {
-        try (InputStream stream = ClassLoader.getSystemClassLoader()
-                .getResourceAsStream(packageName.replaceAll("[.]", "/"))) {
-            if (stream == null) {
-                log.error("Stream is null when trying to open {}", packageName);
-                return new HashSet<>();
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+    public Set<Class<?>> findClassesAnnotatedWith(String packageName, Class<? extends Annotation> annotation)
+    {
+        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
+        provider.addIncludeFilter(new AnnotationTypeFilter(annotation));
 
-            Set<Class<?>> result = new HashSet<>();
+        Set<Class<?>> classes = new HashSet<>();
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.endsWith(".class"))
-                    result.add(getClass(line, packageName));
-                else
-                    result.addAll(getAllClassesFromPackageRecursive(packageName + "." + line));
-            }
-
-            return result;
-        } catch (IOException e) {
-            log.error("Could not find classes in package {}", packageName);
-            return new HashSet<>();
-        }
+        Set<BeanDefinition> beanDefs = provider.findCandidateComponents(packageName);
+        beanDefs.stream()
+                .map(BeanDefinition::getBeanClassName)
+                .map(name -> {
+                    try {
+                        return Class.forName(name);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Class {} not found", name);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .forEach(classes::add);
+        return classes;
     }
 }
 

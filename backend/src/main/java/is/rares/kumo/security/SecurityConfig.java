@@ -4,10 +4,18 @@ import is.rares.kumo.controller.AuthenticationController;
 import is.rares.kumo.security.annotation.NotAuthenticated;
 import is.rares.kumo.utils.DefaultUtils;
 import is.rares.kumo.utils.ReflectionUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,16 +28,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 @Slf4j
 public class SecurityConfig {
     private final AuthorizationInterceptor authorizationInterceptor;
-
-    public SecurityConfig(AuthorizationInterceptor authorizationInterceptor) {
-        this.authorizationInterceptor = authorizationInterceptor;
-    }
+    private final GenericApplicationContext applicationContext;
+    private final ApplicationArguments applicationArguments;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,7 +60,7 @@ public class SecurityConfig {
     }
 
     public void applyAnnotationDeclaredAuthentication(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizationConfig) {
-        var classes = ReflectionUtils.getAllClassesFromPackageRecursive(AuthenticationController.class.getPackageName());
+        var classes = ReflectionUtils.findClassesAnnotatedWith(AuthenticationController.class.getPackageName(), RestController.class);
 
         for (Class<?> clazz : classes) {
             if (!clazz.getName().endsWith("Controller"))

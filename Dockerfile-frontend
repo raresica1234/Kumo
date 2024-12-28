@@ -1,0 +1,15 @@
+FROM ubuntu 
+# look into alpine and see if it's smaller
+
+RUN apt-get -y update && apt-get -y install nginx
+
+COPY nginx/default /etc/nginx/sites-available/default
+
+RUN mkdir -p /var/www/html
+
+COPY frontend/dist/kumo/browser/* /var/www/html/.
+
+EXPOSE 80/tcp
+
+# Configure logs
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
