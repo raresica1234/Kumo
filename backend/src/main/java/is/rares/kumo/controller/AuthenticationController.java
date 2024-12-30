@@ -24,6 +24,7 @@ import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.service.RegisterInviteService;
 import is.rares.kumo.service.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -37,22 +38,13 @@ import static is.rares.kumo.security.AuthorizationInterceptor.BEARER_ATTRIBUTE;
 @RestController
 @Slf4j
 @RequestMapping(path = "/api/authenticate")
+@AllArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final UserService userService;
     private final CurrentUserService currentUserService;
     private final RegisterInviteService registerInviteService;
-
-    public AuthenticationController(AuthenticationService authenticationService,
-                                    UserService userService,
-                                    CurrentUserService currentUserService,
-                                    RegisterInviteService registerInviteService) {
-        this.authenticationService = authenticationService;
-        this.userService = userService;
-        this.currentUserService = currentUserService;
-        this.registerInviteService = registerInviteService;
-    }
 
     @Operation(summary = "Login", operationId = "login", responses = {
             @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = TokenDataResponse.class))),

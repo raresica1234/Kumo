@@ -10,6 +10,7 @@ import is.rares.kumo.model.explore.PermissionShortModel;
 import is.rares.kumo.repository.explore.ExplorationRoleRepository;
 import is.rares.kumo.repository.explore.PathPointRepository;
 import is.rares.kumo.repository.explore.PermissionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,21 +19,12 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class PermissionService {
     private final PermissionRepository permissionRepository;
     private final PermissionMapping permissionMapping;
     private final PathPointRepository pathPointRepository;
     private final ExplorationRoleRepository explorationRoleRepository;
-
-    public PermissionService(PermissionRepository permissionRepository,
-                             PermissionMapping permissionMapping,
-                             PathPointRepository pathPointRepository,
-                             ExplorationRoleRepository explorationRoleRepository) {
-        this.permissionRepository = permissionRepository;
-        this.permissionMapping = permissionMapping;
-        this.pathPointRepository = pathPointRepository;
-        this.explorationRoleRepository = explorationRoleRepository;
-    }
 
     public Page<PermissionModel> get(String path, String role, Pageable pageable) {
         var result =

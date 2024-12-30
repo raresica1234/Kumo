@@ -128,7 +128,8 @@
 									"postman.setEnvironmentVariable(\"jwtToken\", jsonData.jwtToken);",
 									"postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -137,7 +138,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"password\": \"Rares123\",\n  \"username\": \"raresica1234\",\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"0.0.0.8\",\n    \"locationType\": \"WEB\"\n  }\n}",
+							"raw": "{\n  \"username\": \"raresica1234\",\n  \"password\": \"Parola!2\",\n  \"clientLocation\": {\n    \"country\": \"Country\",\n    \"ipAddress\": \"0.0.0.8\",\n    \"locationType\": \"WEB\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -668,7 +669,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"pathPointId\": \"a1b1301d-0f79-4726-9d49-13884ee7526c\",\n    \"explorationRoleId\": \"070e0a44-c706-4728-8856-fe376d9aca97\",\n    \"read\": true,\n    \"write\": true,\n    \"delete\": true,\n    \"modifyRoot\": true\n}",
+									"raw": "{\n    \"pathPointId\": \"c23bf56a-b3ce-4ddf-a4fb-4b44c3a851f3\",\n    \"explorationRoleId\": \"199075b1-47e5-4219-b798-b0ecf7c47259\",\n    \"read\": true,\n    \"write\": true,\n    \"delete\": true,\n    \"modifyRoot\": true\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -732,6 +733,121 @@
 										"explore",
 										"permission",
 										"d12e4e4b-240a-48dd-9863-c7b6256727a8"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Exploration User Roles",
+					"item": [
+						{
+							"name": "Get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/userRole?page=0&size=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"userRole"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "roleName",
+											"value": "Admin",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "raresica12345",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set user exploration roles",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\": \"2b1f1166-12d0-41d2-a2d0-78f17ea3f370\",\n    \"explorationRoles\": [\"d94df344-c879-421c-83e1-b4d2addcf9fa\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/userRole",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"userRole"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "roleName",
+											"value": "Admin",
+											"disabled": true
+										},
+										{
+											"key": "username",
+											"value": "raresica1234",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unassign user exploration role",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/explore/userRole/2b1f1166-12d0-41d2-a2d0-78f17ea3f370/199075b1-47e5-4219-b798-b0ecf7c47259",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"explore",
+										"userRole",
+										"2b1f1166-12d0-41d2-a2d0-78f17ea3f370",
+										"199075b1-47e5-4219-b798-b0ecf7c47259"
 									]
 								}
 							},

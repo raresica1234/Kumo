@@ -10,4 +10,6 @@ import java.util.UUID;
 @NoRepositoryBean
 public interface BasePagingAndSortingRepository<T> extends PagingAndSortingRepository<T, UUID>, CrudRepository<T, UUID> {
     Optional<T> findByUuid(UUID id);
+
+    boolean existsByUuid(UUID id);
 }

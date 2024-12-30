@@ -13,6 +13,4 @@ public interface ExplorationRoleRepository extends BasePagingAndSortingRepositor
     Optional<ExplorationRole> findByName(String name);
 
     Page<ExplorationRole> findByNameContainsIgnoreCase(String name, Pageable pageable);
-
-
 }

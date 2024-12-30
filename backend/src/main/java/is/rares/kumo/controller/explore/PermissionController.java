@@ -13,6 +13,7 @@ import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.service.explore.PermissionService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +23,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/explore/permission")
+@AllArgsConstructor
 public class PermissionController {
     private final PermissionService permissionService;
-
-    public PermissionController(PermissionService permissionService) {
-        this.permissionService = permissionService;
-    }
 
     @Operation(summary = "Get permissions", responses = {
             @ApiResponse(responseCode = "200"),

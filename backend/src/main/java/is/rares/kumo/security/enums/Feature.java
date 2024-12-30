@@ -28,10 +28,9 @@ public enum Feature {
     UPDATE_EXPLORATION_PERMISSION("update_exploration_permission"),
     DELETE_EXPLORATION_PERMISSION("delete_exploration_permission"),
 
-    GET_USER_EXPLORATION_PERMISSION( "get_user_exploration_permission"),
-    CREATE_USER_EXPLORATION_PERMISSION("create_user_exploration_permission"),
-    UPDATE_USER_EXPLORATION_PERMISSION("update_user_exploration_permission"),
-    DELETE_USER_EXPLORATION_PERMISSION("delete_user_exploration_permission")
+    GET_USER_EXPLORATION_ROLE("get_user_exploration_role"),
+    UNASSIGN_USER_EXPLORATION_ROLE("unassign_user_exploration_role"),
+    SET_USER_EXPLORATION_ROLES("set_user_exploration_roles"),
 
     ;
 

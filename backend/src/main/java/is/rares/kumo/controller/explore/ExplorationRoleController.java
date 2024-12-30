@@ -12,6 +12,7 @@ import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.service.explore.ExplorationRoleService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/explore/role")
+@AllArgsConstructor
 public class ExplorationRoleController {
 
     private final ExplorationRoleService explorationRoleService;
-
-    public ExplorationRoleController(ExplorationRoleService explorationRoleService) {
-        this.explorationRoleService = explorationRoleService;
-    }
 
     @Operation(summary = "Get exploration roles", responses = {
             @ApiResponse(responseCode = "200"),

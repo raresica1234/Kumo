@@ -1,11 +1,12 @@
 package is.rares.kumo.service.explore;
 
-import is.rares.kumo.mapping.explore.PathPointMapping;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
+import is.rares.kumo.mapping.explore.PathPointMapping;
 import is.rares.kumo.model.explore.PathPointModel;
 import is.rares.kumo.repository.explore.PathPointRepository;
 import is.rares.kumo.utils.FileUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,16 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class PathPointService {
     private final PathPointRepository pathPointRepository;
 
     private final PathPointMapping pathPointMapping;
-
-    public PathPointService(PathPointRepository pathPointRepository,
-                            PathPointMapping pathPointMapping) {
-        this.pathPointRepository = pathPointRepository;
-        this.pathPointMapping = pathPointMapping;
-    }
 
     public Page<PathPointModel> get(String name, Pageable pageable) {
         var page = pathPointRepository.findByPathContainsIgnoreCase(name, pageable);

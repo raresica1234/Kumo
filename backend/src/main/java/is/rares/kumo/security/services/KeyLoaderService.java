@@ -35,6 +35,7 @@ public class KeyLoaderService {
         } catch (IOException e) {
             log.warn("Exception: {}", e.getMessage());
             log.error("Failed: ", e);
+            System.exit(0);
         }
     }
 
@@ -52,6 +53,7 @@ public class KeyLoaderService {
         } catch (IOException e) {
             log.warn("Exception: {}", e.getMessage());
             log.error("Failed: ", e);
+            System.exit(0);
         }
     }
 }

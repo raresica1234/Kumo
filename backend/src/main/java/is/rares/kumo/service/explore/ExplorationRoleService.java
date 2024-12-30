@@ -1,10 +1,11 @@
 package is.rares.kumo.service.explore;
 
-import is.rares.kumo.mapping.explore.ExplorationRoleMapping;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.ExplorationRoleErrorCodes;
+import is.rares.kumo.mapping.explore.ExplorationRoleMapping;
 import is.rares.kumo.model.explore.ExplorationRoleModel;
 import is.rares.kumo.repository.explore.ExplorationRoleRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,16 +14,11 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ExplorationRoleService {
     private final ExplorationRoleRepository explorationRoleRepository;
 
     private final ExplorationRoleMapping explorationRoleMapping;
-
-    public ExplorationRoleService(ExplorationRoleRepository explorationRoleRepository,
-                                  ExplorationRoleMapping explorationRoleMapping) {
-        this.explorationRoleRepository = explorationRoleRepository;
-        this.explorationRoleMapping = explorationRoleMapping;
-    }
 
     public Page<ExplorationRoleModel> get(String name, Pageable pageable) {
         var page = explorationRoleRepository.findByNameContainsIgnoreCase(name, pageable);
@@ -64,7 +60,7 @@ public class ExplorationRoleService {
 
         return explorationRoleMapping.mapEntityToModel(explorationRole);
     }
-    
+
     public void delete(UUID id) {
         if (!explorationRoleRepository.existsById(id))
             throw new KumoException(ExplorationRoleErrorCodes.NOT_FOUND);
