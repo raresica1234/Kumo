@@ -86,6 +86,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(super.hashCode(), username, email, password, using2FA, accountDetails, detailId);
     }
 }

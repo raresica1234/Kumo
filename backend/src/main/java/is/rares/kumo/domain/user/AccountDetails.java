@@ -29,6 +29,6 @@ public class AccountDetails extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(super.hashCode(), firstName, lastName);
     }
 }

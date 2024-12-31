@@ -41,6 +41,6 @@ public class ExplorationRole extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, users);
+        return Objects.hash(super.hashCode(), name);
     }
 }

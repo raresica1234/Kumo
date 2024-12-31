@@ -46,6 +46,6 @@ public class Role extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, features, users);
+        return Objects.hash(super.hashCode(), name, features);
     }
 }
