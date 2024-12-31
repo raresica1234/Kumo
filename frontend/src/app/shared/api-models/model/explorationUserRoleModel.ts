@@ -9,22 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { PageableObject } from './pageableObject';
 import { ExplorationRoleModel } from './explorationRoleModel';
-import { SortObject } from './sortObject';
 
 
-export interface PageExplorationRoleModel { 
-    totalElements?: number;
-    totalPages?: number;
-    pageable?: PageableObject;
-    size?: number;
-    content?: Array<ExplorationRoleModel>;
-    number?: number;
-    sort?: SortObject;
-    first?: boolean;
-    last?: boolean;
-    numberOfElements?: number;
-    empty?: boolean;
+/**
+ * Exploration User Role
+ */
+export interface ExplorationUserRoleModel { 
+    uuid?: string;
+    username?: string;
+    roles?: Array<ExplorationRoleModel>;
 }
 

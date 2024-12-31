@@ -51,6 +51,12 @@
             Permissions
           </button>
         </mat-list-item>
+        <mat-list-item *ngIf="getUserRoles" (click)="navigateTo('admin/user_explore_roles')">
+          <button mat-flat-button>
+            <mat-icon>person_add</mat-icon>
+            User Exploration Roles
+          </button>
+        </mat-list-item>
       } @else {
         <button mat-flat-button>
           <mat-icon>house</mat-icon>

@@ -67,7 +67,7 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
     };
 
     this.modalService.openFormModal(modalData, {
-      onConfirm: (object) => {
+      onConfirm: (_) => {
         this.refreshTable.next(true);
         this.alertService.success('Successfully added Path Point');
       },
@@ -166,7 +166,7 @@ export class PathPointComponent extends BaseComponent implements OnInit, OnDestr
     };
 
     this.modalService.openFormModal(modalData, {
-      onConfirm: (object) => {
+      onConfirm: (_) => {
         this.refreshTable.next(true);
         this.alertService.success('Successfully updated Path Point');
       },

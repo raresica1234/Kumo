@@ -1,11 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import FormModalData from '../../../models/modal/form-modal-data';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,11 +7,11 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validator
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { NgForOf, NgIf } from '@angular/common';
 import { debounceTime, Subscription } from 'rxjs';
 import { AlertService } from '../../../services/alert.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import FormModalEntry from '../../../models/modal/form-modal-entry';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-form-modal',
@@ -26,15 +20,13 @@ import FormModalEntry from '../../../models/modal/form-modal-entry';
     MatButtonModule,
     MatDialogClose,
     MatIconModule,
-    MatDialogContent,
     MatDialogActions,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
-    NgForOf,
-    NgIf,
     MatAutocompleteModule,
+    MatChipsModule,
   ],
   templateUrl: './form-modal.component.html',
 })
@@ -44,11 +36,19 @@ export class FormModalComponent implements OnInit, OnDestroy {
   // search in it. If the user types anything in the box, the first input is
   // ignored as the mode switches from display to search
 
+  // TODO: typing gibberish doesn't just display nothing, shit gets reset
+
+  // TODO: left to do for multiselect-dropdown:
+  //      - autocomplete active, when clicking remove on chip, it doesn't update
+
   private subscriptionManager: Subscription = new Subscription();
 
   formGroup: FormGroup = new FormGroup<any>({});
 
   values: Map<string, any[]> = new Map();
+
+  multiSelectValues: Map<string, any[]> = new Map();
+  multiSelectRemainingValues: Map<string, any[]> = new Map();
 
   callFailed: boolean = false;
 
@@ -67,11 +67,16 @@ export class FormModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.data.entries.forEach((entry) => {
       const formControl = new FormControl(
-        this.data.object?.[entry.name] ?? '',
+        { value: this.data.object?.[entry.name] ?? '', disabled: !!entry.disabled },
         entry.required ? [Validators.required] : [],
       );
+
+      if (entry.type === 'multiselect-dropdown') {
+        this.multiSelectValues.set(entry.name, this.data.object?.[entry.name] ?? []);
+      }
+
       this.formGroup.addControl(entry.name, formControl);
-      if (entry.type === 'dropdown') {
+      if (entry.type === 'dropdown' || entry.type === 'multiselect-dropdown') {
         formControl.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
           if (this.ignoreFirstValueChange.get(entry.name)) {
             this.ignoreFirstValueChange.set(entry.name, false);
@@ -116,20 +121,15 @@ export class FormModalComponent implements OnInit, OnDestroy {
     else return value;
   }
 
-  private fetchNecessaryObjectsForDropdown(entry: FormModalEntry) {
-    if (entry.type === 'dropdown') {
-      entry.fetchFunction?.(this.filters.get(entry.name) ?? '').subscribe((values) => {
-        this.values.set(entry.name, values.content);
-      });
-    }
-  }
-
   createObject() {
     const result = { ...this.data.object };
 
     this.data.entries.forEach((entry) => {
       if (entry.type === 'dropdown') {
         result[entry.name] = this.currentSelected.get(entry.name)['uuid'];
+      } else if (entry.type === 'multiselect-dropdown') {
+        const entryValues = this.multiSelectValues.get(entry.name)?.map((object) => object['uuid']);
+        result[entry.name] = entryValues || [];
       } else {
         result[entry.name] = this.formGroup.get(entry.name)!.value;
       }
@@ -159,21 +159,6 @@ export class FormModalComponent implements OnInit, OnDestroy {
     this.subscriptionManager.unsubscribe();
   }
 
-  private createCurrentSelectedObjectsForDropdowns() {
-    if (this.data.object === undefined) return;
-
-    this.data.entries.forEach((entry) => {
-      if (entry.type === 'dropdown') {
-        const fullPropertyName = entry.getFullObjectPropertyNameForUpdate!();
-        const currentObject = this.data.object[fullPropertyName];
-
-        this.currentSelected.set(entry.name, currentObject);
-        // Remove the full object as it pollutes the response of the modal
-        delete this.data.object[fullPropertyName];
-      }
-    });
-  }
-
   resetFilter(entry: FormModalEntry) {
     this.filters.set(entry.name, null);
     this.switchToDisplayMode(entry);
@@ -198,14 +183,68 @@ export class FormModalComponent implements OnInit, OnDestroy {
       control.setValue(this.displayField(entry, this.currentSelected.get(entry.name)));
   }
 
+  optionSelected(entry: FormModalEntry, event: MatAutocompleteSelectedEvent) {
+    const value = event.option.value;
+    const currentValue = this.values.get(entry.name)?.find((obj) => obj['uuid'] == value);
+    if (entry.type === 'multiselect-dropdown') {
+      const currentValues = this.multiSelectValues.get(entry.name) ?? [];
+      currentValues.push(currentValue);
+      this.multiSelectValues.set(entry.name, currentValues);
+    } else {
+      this.currentSelected.set(entry.name, currentValue);
+    }
+  }
+
+  private fetchNecessaryObjectsForDropdown(entry: FormModalEntry) {
+    if (entry.type === 'dropdown') {
+      entry.fetchFunction?.(this.filters.get(entry.name) ?? '').subscribe((values) => {
+        this.values.set(entry.name, values.content);
+      });
+    } else if (entry.type === 'multiselect-dropdown') {
+      entry.fetchFunction?.(this.filters.get(entry.name) ?? '').subscribe((values) => {
+        this.values.set(entry.name, values.content);
+        this.updateRemainingMultiSelectValues(entry);
+      });
+    }
+  }
+
+  private updateRemainingMultiSelectValues(entry: FormModalEntry) {
+    const remainingValues: any[] = this.values.get(entry.name) || [];
+
+    for (const currentValue of this.multiSelectValues.get(entry.name) || []) {
+      const index = remainingValues.findIndex((val) => val['uuid'] === currentValue['uuid']);
+      if (index < 0) continue;
+      remainingValues.splice(index, 1);
+    }
+
+    this.multiSelectRemainingValues.set(entry.name, remainingValues);
+  }
+
+  private createCurrentSelectedObjectsForDropdowns() {
+    if (this.data.object === undefined) return;
+
+    this.data.entries.forEach((entry) => {
+      if (entry.type === 'dropdown' || entry.type === 'multiselect-dropdown') {
+        const fullPropertyName = entry.getFullObjectPropertyNameForUpdate!();
+        const currentObject = this.data.object[fullPropertyName];
+
+        this.currentSelected.set(entry.name, currentObject);
+        // Remove the full object as it pollutes the response of the modal
+        delete this.data.object[fullPropertyName];
+      }
+    });
+  }
+
   private getControlForName(name: string): AbstractControl | null {
     return this.formGroup.get(name);
   }
 
-  optionSelected(entry: FormModalEntry, event: MatAutocompleteSelectedEvent) {
-    const value = event.option.value;
-    const currentValue = this.values.get(entry.name)?.find((obj) => obj['uuid'] == value);
-    this.currentSelected.set(entry.name, currentValue);
-    this.formGroup.get(entry.name);
+  removeFromMultiSelectDropdown(entry: FormModalEntry, value: any) {
+    const currentValues = this.multiSelectValues.get(entry.name) ?? [];
+    const index = currentValues?.indexOf(value);
+    if (index < 0) return;
+    currentValues.splice(index, 1);
+    this.multiSelectValues.set(entry.name, currentValues);
+    this.updateRemainingMultiSelectValues(entry);
   }
 }

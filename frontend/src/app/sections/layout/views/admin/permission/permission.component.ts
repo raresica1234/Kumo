@@ -26,7 +26,7 @@ import FormModalData from '../../../../../shared/models/modal/form-modal-data';
   imports: [MatButtonModule, MatIconModule, NgIf, TableComponent],
   templateUrl: './permission.component.html',
 })
-export class PermissionComponent extends BaseComponent implements OnInit, OnDestroy {
+export class PermissionComponent extends BaseComponent implements OnDestroy {
   columns!: ColumnDefinition[];
   actions!: TableAction[];
   refreshTable: Subject<boolean> = new Subject<boolean>();
@@ -43,9 +43,6 @@ export class PermissionComponent extends BaseComponent implements OnInit, OnDest
   private pathSearchString: string = '';
   private roleSearchString: string = '';
 
-  // TODO: Add search
-  // - use mat autocomplete functionality with dynamic search with debounce
-  // - create the Add permission thingy
   constructor(
     route: ActivatedRoute,
     private permissionController: PermissionControllerService,

@@ -35,6 +35,39 @@
             }
           </mat-autocomplete>
         </mat-form-field>
+      } @else if (entry.type == "multiselect-dropdown") {
+        <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
+          <mat-label>{{ entry.displayName }}</mat-label>
+          <mat-chip-grid #chipGrid>
+            @for (value of multiSelectValues.get(entry.name); track value) {
+              <mat-chip-row (removed)="removeFromMultiSelectDropdown(entry, value)">
+                {{ value[entry.getFullObjectPropertyNameForUpdate!()] }}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input
+            [matChipInputFor]="chipGrid"
+            [matAutocomplete]="auto"
+            [formControlName]="entry.name"
+            [placeholder]="entry.displayName"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="displayDropdownField(entry)"
+            (opened)="switchToSearchMode(entry)"
+            (closed)="resetFilter(entry)"
+            (optionSelected)="optionSelected(entry, $event)"
+          >
+            @if (multiSelectRemainingValues.has(entry.name)) {
+              @for (option of multiSelectRemainingValues.get(entry.name); track values) {
+                <mat-option [value]="option.uuid">{{ displayField(entry, option) }} </mat-option>
+              }
+            }
+          </mat-autocomplete>
+        </mat-form-field>
       } @else {
         <mat-form-field class="w-full" [hideRequiredMarker]="!entry.required">
           <mat-label>{{ entry.displayName }}</mat-label>

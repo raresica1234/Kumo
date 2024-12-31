@@ -1,9 +1,11 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
 api/authenticationController.service.ts
 api/explorationRoleController.service.ts
+api/explorationUserRoleController.service.ts
 api/explorerController.service.ts
 api/pathPointController.service.ts
 api/permissionController.service.ts
@@ -17,9 +19,11 @@ model/booleanResponse.ts
 model/clientLocationModel.ts
 model/createRegisterInviteRequest.ts
 model/explorationRoleModel.ts
+model/explorationUserRoleModel.ts
 model/loginRequest.ts
 model/models.ts
 model/pageExplorationRoleModel.ts
+model/pageExplorationUserRoleModel.ts
 model/pagePathPointModel.ts
 model/pagePermissionModel.ts
 model/pageable.ts
@@ -29,6 +33,7 @@ model/permissionModel.ts
 model/permissionShortModel.ts
 model/registerInviteResponse.ts
 model/registerRequest.ts
+model/setUserExplorationRolesRequest.ts
 model/sortObject.ts
 model/tokenDataResponse.ts
 model/userModel.ts

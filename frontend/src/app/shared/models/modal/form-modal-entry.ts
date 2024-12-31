@@ -5,8 +5,9 @@ export default interface FormModalEntry {
   displayName: string;
   name: string;
   searchField?: string;
-  type: 'text' | 'checkbox' | 'dropdown';
+  type: 'text' | 'checkbox' | 'dropdown' | 'multiselect-dropdown';
   required: boolean;
+  disabled?: boolean;
   validators?: ValidatorFn[];
   fetchFunction?: (search: string) => Observable<any>;
   displayFunction?: (object: any) => string;

@@ -17,5 +17,5 @@ public class ExplorationUserRoleModel {
     private UUID uuid;
     private String username;
 
-    private List<ExplorationRoleModel> roles;
+    private List<ExplorationRoleModel> explorationRoles;
 }

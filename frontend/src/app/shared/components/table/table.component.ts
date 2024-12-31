@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { map, Observable, startWith, Subject, Subscription, switchMap } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import ColumnDefinition from '../../models/table/column-definition';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Pageable } from '../../api-models';
@@ -10,6 +10,7 @@ import TableAction from '../../models/table/table-action';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-table',
@@ -22,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatChipsModule,
   ],
   templateUrl: './table.component.html',
 })
@@ -45,20 +47,16 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
   paginator!: MatPaginator;
 
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-
-  private subscriptionManager: Subscription = new Subscription();
-
   displayColumns!: string[];
-
+  isLoading: boolean = false;
+  length: number = 0;
+  private subscriptionManager: Subscription = new Subscription();
   private pageable: Pageable = {
     page: 0,
     size: 5,
     sort: [],
   };
-
   private elements!: any[];
-  isLoading: boolean = false;
-  length: number = 0;
 
   ngOnInit(): void {
     this.displayColumns = this.columns.map((column) => column.fieldName);
@@ -80,6 +78,26 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.fetchElements();
   }
 
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    this.processPageChange();
+    this.fetchElements();
+
+    this.refreshTable.subscribe((value) => {
+      if (value) this.fetchElements();
+    });
+  }
+
+  getValueOfFieldFormElement(element: any, fieldName: string) {
+    if (!fieldName.includes('.')) return element[fieldName];
+    else {
+      const fields = fieldName.split('.');
+      let currentObject: any = element;
+      fields.forEach((field) => (currentObject = currentObject[field]));
+      return currentObject;
+    }
+  }
+
   private fetchElements() {
     this.isLoading = true;
     const sub = this.fetchFunction(this.pageable).subscribe((elements) => {
@@ -92,31 +110,11 @@ export class TableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscriptionManager.add(sub);
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.processPageChange();
-    this.fetchElements();
-
-    this.refreshTable.subscribe((value) => {
-      if (value) this.fetchElements();
-    });
-  }
-
   private processPageChange() {
     this.paginator.page.subscribe(() => {
       this.pageable.page = this.paginator.pageIndex;
       this.pageable.size = this.paginator.pageSize;
       this.fetchElements();
     });
-  }
-
-  getValueOfFieldFormElement(element: any, fieldName: string) {
-    if (!fieldName.includes('.')) return element[fieldName];
-    else {
-      const fields = fieldName.split('.');
-      let currentObject: any = element;
-      fields.forEach((field) => (currentObject = currentObject[field]));
-      return currentObject;
-    }
   }
 }

@@ -10,16 +10,16 @@
  * Do not edit the class manually.
  */
 import { PageableObject } from './pageableObject';
-import { ExplorationRoleModel } from './explorationRoleModel';
 import { SortObject } from './sortObject';
+import { ExplorationUserRoleModel } from './explorationUserRoleModel';
 
 
-export interface PageExplorationRoleModel { 
+export interface PageExplorationUserRoleModel { 
     totalElements?: number;
     totalPages?: number;
     pageable?: PageableObject;
     size?: number;
-    content?: Array<ExplorationRoleModel>;
+    content?: Array<ExplorationUserRoleModel>;
     number?: number;
     sort?: SortObject;
     first?: boolean;
