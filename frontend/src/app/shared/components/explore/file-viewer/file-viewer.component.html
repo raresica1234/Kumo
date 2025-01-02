@@ -1,0 +1,12 @@
+<div class="file-grid">
+  @for (file of files; track file) {
+    <mat-card appearance="outlined" class="file-grid-card" (click)="navigateTo(file)">
+      @if (file.type === "DIRECTORY") {
+        <mat-icon class="file-grid-icon mat-primary">folder</mat-icon>
+      } @else {
+        <mat-icon class="file-grid-icon">insert_drive_file</mat-icon>
+      }
+      <mat-card-content class="file-grid-filename">{{ file.name }}</mat-card-content>
+    </mat-card>
+  }
+</div>

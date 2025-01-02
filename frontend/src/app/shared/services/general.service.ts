@@ -23,7 +23,7 @@ export class GeneralService {
   public init() {
     return this.userController.getFeatures().pipe(
       tap((features) => {
-        this.featuresList = features.map((feature) => Feature[feature as keyof typeof Feature]);
+        this.featuresList = Array.from(features).map((feature) => Feature[feature as keyof typeof Feature]);
         this.sessionService.setFeatures(this.featuresList);
         this.verifyOwner();
       }),

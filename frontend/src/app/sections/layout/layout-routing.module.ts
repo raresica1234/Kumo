@@ -9,6 +9,7 @@ import { Feature } from '../../shared/models/features';
 import { ExplorationRoleComponent } from './views/admin/exploration-role/exploration-role.component';
 import { PermissionComponent } from './views/admin/permission/permission.component';
 import { UserExplorationRoleComponent } from './views/admin/user-exploration-role/user-exploration-role.component';
+import { ExploreComponent } from './views/explore/explore.component';
 
 const routes: Routes = [
   {
@@ -17,8 +18,17 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomeComponent,
-        data: { title: 'Home' },
+        pathMatch: 'full',
+        component: ExploreComponent,
+      },
+      {
+        path: 'explore',
+        children: [
+          {
+            path: '**',
+            component: ExploreComponent,
+          },
+        ],
       },
       {
         path: 'admin',

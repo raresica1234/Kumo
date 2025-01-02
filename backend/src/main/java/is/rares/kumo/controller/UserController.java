@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/api/users")
@@ -32,7 +33,7 @@ public class UserController {
     @Authenticated
     @HasTokenType
     @GetMapping(path = "features", produces = MediaType.APPLICATION_JSON)
-    public List<Feature> getFeatures() {
+    public Set<Feature> getFeatures() {
         return userService.getFeatures(currentUserService.getUser());
     }
 

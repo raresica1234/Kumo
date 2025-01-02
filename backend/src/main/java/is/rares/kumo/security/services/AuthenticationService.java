@@ -117,7 +117,7 @@ public class AuthenticationService {
 
     public TokenDataResponse validateTwoFactorCode(AccountCodeRequest request, CurrentUser currentUser) {
         accountCodesService.validateAccountCode(request, currentUser);
-        return generateTokenDataResponse(userService.findByUserId(currentUser.getId()), request.getClientLocation(), false);
+        return generateTokenDataResponse(userService.getByUuid(currentUser.getId()), request.getClientLocation(), false);
     }
 
     public List<LoggedClientModel> getLoggedClients(CurrentUser user) {

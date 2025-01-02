@@ -1,21 +1,20 @@
 package is.rares.kumo.service.explore;
 
+import is.rares.kumo.domain.explore.Permission;
 import is.rares.kumo.mapping.explore.PermissionMapping;
 import is.rares.kumo.core.exceptions.KumoException;
-import is.rares.kumo.core.exceptions.codes.explore.ExplorationRoleErrorCodes;
-import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
 import is.rares.kumo.core.exceptions.codes.explore.PermissionErrorCodes;
 import is.rares.kumo.model.explore.PermissionModel;
 import is.rares.kumo.model.explore.PermissionShortModel;
-import is.rares.kumo.repository.explore.ExplorationRoleRepository;
-import is.rares.kumo.repository.explore.PathPointRepository;
 import is.rares.kumo.repository.explore.PermissionRepository;
+import is.rares.kumo.security.domain.CurrentUser;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,8 +22,8 @@ import java.util.UUID;
 public class PermissionService {
     private final PermissionRepository permissionRepository;
     private final PermissionMapping permissionMapping;
-    private final PathPointRepository pathPointRepository;
-    private final ExplorationRoleRepository explorationRoleRepository;
+    private final PathPointService pathPointService;
+    private final ExplorationRoleService explorationRoleService;
 
     public Page<PermissionModel> get(String path, String role, Pageable pageable) {
         var result =
@@ -33,21 +32,19 @@ public class PermissionService {
     }
 
     public PermissionShortModel create(PermissionShortModel model) {
-        var pathPointOptional = pathPointRepository.findByUuid(model.getPathPointId());
-        if (pathPointOptional.isEmpty())
-            throw new KumoException(PathPointErrorCodes.NOT_FOUND);
-
-        var explorationRoleOptional = explorationRoleRepository.findByUuid(model.getExplorationRoleId());
-        if (explorationRoleOptional.isEmpty())
-            throw new KumoException(ExplorationRoleErrorCodes.NOT_FOUND);
+        var pathPoint = pathPointService.getByUuid(model.getPathPointId());
+        var explorationRole = explorationRoleService.getByUuid(model.getExplorationRoleId());
 
         if (permissionRepository.existsByPathPoint_UuidAndExplorationRole_Uuid(model.getPathPointId(), model.getExplorationRoleId()))
             throw new KumoException(PermissionErrorCodes.DUPLICATE_PERMISSION);
 
+        if (pathPoint.isRoot() && !model.isRead())
+            throw new KumoException(PermissionErrorCodes.ROOT_PATHS_MUST_BE_READABLE);
+
         var domainEntity = permissionMapping.mapShortModelToEntity(model);
 
-        domainEntity.setPathPoint(pathPointOptional.get());
-        domainEntity.setExplorationRole(explorationRoleOptional.get());
+        domainEntity.setPathPoint(pathPoint);
+        domainEntity.setExplorationRole(explorationRole);
 
         permissionRepository.save(domainEntity);
 
@@ -63,13 +60,8 @@ public class PermissionService {
         if (permissionOptional.isEmpty())
             throw new KumoException(PermissionErrorCodes.NOT_FOUND);
 
-        var pathPointOptional = pathPointRepository.findByUuid(model.getPathPointId());
-        if (pathPointOptional.isEmpty())
-            throw new KumoException(PathPointErrorCodes.NOT_FOUND);
-
-        var explorationRoleOptional = explorationRoleRepository.findByUuid(model.getExplorationRoleId());
-        if (explorationRoleOptional.isEmpty())
-            throw new KumoException(ExplorationRoleErrorCodes.NOT_FOUND);
+        var pathPoint = pathPointService.getByUuid(model.getPathPointId());
+        var explorationRole = explorationRoleService.getByUuid(model.getExplorationRoleId());
 
         var domainEntity = permissionOptional.get();
 
@@ -78,8 +70,8 @@ public class PermissionService {
             throw new KumoException(PermissionErrorCodes.DUPLICATE_PERMISSION);
         }
 
-        domainEntity.setPathPoint(pathPointOptional.get());
-        domainEntity.setExplorationRole(explorationRoleOptional.get());
+        domainEntity.setPathPoint(pathPoint);
+        domainEntity.setExplorationRole(explorationRole);
         domainEntity.setRead(model.isRead());
         domainEntity.setWrite(model.isWrite());
         domainEntity.setDelete(model.isDelete());
@@ -96,4 +88,5 @@ public class PermissionService {
 
         permissionRepository.deleteById(id);
     }
+
 }

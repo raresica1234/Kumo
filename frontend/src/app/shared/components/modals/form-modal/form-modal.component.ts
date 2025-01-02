@@ -37,6 +37,7 @@ export class FormModalComponent implements OnInit, OnDestroy {
   // ignored as the mode switches from display to search
 
   // TODO: typing gibberish doesn't just display nothing, shit gets reset
+  //        - clearing the input also gets reset to the previous value
 
   // TODO: left to do for multiselect-dropdown:
   //      - autocomplete active, when clicking remove on chip, it doesn't update

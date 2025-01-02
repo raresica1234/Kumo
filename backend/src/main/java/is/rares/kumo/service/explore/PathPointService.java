@@ -2,6 +2,7 @@ package is.rares.kumo.service.explore;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
+import is.rares.kumo.domain.explore.PathPoint;
 import is.rares.kumo.mapping.explore.PathPointMapping;
 import is.rares.kumo.model.explore.PathPointModel;
 import is.rares.kumo.repository.explore.PathPointRepository;
@@ -12,13 +13,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class PathPointService {
     private final PathPointRepository pathPointRepository;
-
     private final PathPointMapping pathPointMapping;
 
     public Page<PathPointModel> get(String name, Pageable pageable) {
@@ -74,6 +75,16 @@ public class PathPointService {
             throw new KumoException(PathPointErrorCodes.NOT_FOUND);
 
         pathPointRepository.deleteById(id);
+    }
+
+    public PathPoint getByUuid(UUID uuid) {
+        return pathPointRepository.findByUuid(uuid).orElseThrow(
+                () -> new KumoException(PathPointErrorCodes.NOT_FOUND)
+        );
+    }
+
+    public List<PathPoint> getAllRootPathPoints() {
+        return pathPointRepository.findByRootTrue();
     }
 }
 

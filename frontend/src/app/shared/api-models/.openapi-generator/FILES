@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -20,6 +19,7 @@ model/clientLocationModel.ts
 model/createRegisterInviteRequest.ts
 model/explorationRoleModel.ts
 model/explorationUserRoleModel.ts
+model/explorerFileModel.ts
 model/loginRequest.ts
 model/models.ts
 model/pageExplorationRoleModel.ts

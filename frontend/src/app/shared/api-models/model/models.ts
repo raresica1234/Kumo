@@ -4,6 +4,7 @@ export * from './clientLocationModel';
 export * from './createRegisterInviteRequest';
 export * from './explorationRoleModel';
 export * from './explorationUserRoleModel';
+export * from './explorerFileModel';
 export * from './loginRequest';
 export * from './pageExplorationRoleModel';
 export * from './pageExplorationUserRoleModel';

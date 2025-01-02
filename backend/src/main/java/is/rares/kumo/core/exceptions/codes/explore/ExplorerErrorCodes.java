@@ -5,11 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
-public enum PermissionErrorCodes implements BaseErrorCode {
-    DUPLICATE_PERMISSION("1", HttpStatus.CONFLICT, "Permission with this path point and exploration role already exists"),
-    ID_MISSING("2", HttpStatus.BAD_REQUEST, "Id is missing"),
-    NOT_FOUND("3", HttpStatus.NOT_FOUND, "Permission not found"),
-    ROOT_PATHS_MUST_BE_READABLE("4", HttpStatus.BAD_REQUEST, "Root path points must be readable"),
+public enum ExplorerErrorCodes implements BaseErrorCode {
+    NOT_FOUND("1", HttpStatus.NOT_FOUND, "Path not found"),
     ;
 
     private final String errorCode;
@@ -18,7 +15,7 @@ public enum PermissionErrorCodes implements BaseErrorCode {
 
     @Override
     public String getErrorCode() {
-        return "Permission" + errorCode;
+        return "Explorer" + errorCode;
     }
 
     @Override

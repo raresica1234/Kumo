@@ -2,14 +2,20 @@ package is.rares.kumo.utils;
 
 import lombok.experimental.UtilityClass;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.File;
 
 @UtilityClass
 public class FileUtils {
 
     public boolean directoryExists(String path) {
-        return Files.exists(Paths.get(path));
+        File directory = new File(path);
+        return directory.exists() && directory.isDirectory();
+    }
+
+
+    public String getRealPath(String rootPath, String path) {
+        if (path.startsWith(rootPath.substring(1))) return "/" + path;
+        else return path;
     }
 }
 

@@ -1,0 +1,27 @@
+.file-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+.file-grid-card {
+  width: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.file-grid-icon {
+  font-size: 8rem /* 96px */;
+  line-height: 1;
+  width: 8rem;
+  height: 8rem;
+}
+
+.file-grid-filename {
+  width: 9rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+}

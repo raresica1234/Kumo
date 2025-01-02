@@ -6,6 +6,8 @@ import is.rares.kumo.security.enums.Feature;
 import is.rares.kumo.repository.user.RoleRepository;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.domain.CurrentUser;
+import is.rares.kumo.service.UserService;
+import lombok.AllArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -22,13 +24,10 @@ import java.util.stream.Collectors;
 
 @Aspect
 @Component
+@AllArgsConstructor
 public class HasAuthorityAspect {
 
-    private final RoleRepository roleRepository;
-
-    public HasAuthorityAspect(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
+    private final UserService userService;
 
 
     @Before("@annotation(is.rares.kumo.security.annotation.HasAuthority)")
@@ -44,7 +43,7 @@ public class HasAuthorityAspect {
         final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         final HasAuthority hasAuthorityAnnotation = AnnotationUtils.findAnnotation(method, HasAuthority.class);
         if (hasAuthorityAnnotation != null) {
-            Set<Feature> userFeatures = getAllUserFeatures(currentUser);
+            Set<Feature> userFeatures = userService.getFeatures(currentUser);
             if (userFeatures.contains(Feature.OWNER)) return;
 
             boolean missingAuthority = false;
@@ -59,11 +58,4 @@ public class HasAuthorityAspect {
             if (missingAuthority) throw new KumoException(AuthorizationErrorCodes.UNAUTHORIZED, "Access is denied");
         }
     }
-
-    Set<Feature> getAllUserFeatures(CurrentUser currentUser) {
-        return roleRepository.getAllRolesForUser(currentUser.getId()).stream()
-                .flatMap(role -> role.getFeatures().stream())
-                .collect(Collectors.toSet());
-    }
-
 }

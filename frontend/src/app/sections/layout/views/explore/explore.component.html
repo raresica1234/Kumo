@@ -1,0 +1,7 @@
+@if (notFound) {
+  <div class="flex h-full w-full flex-row justify-center">
+    <img src="https://http.cat/404" />
+  </div>
+} @else {
+  <app-file-viewer [files]="files" />
+}

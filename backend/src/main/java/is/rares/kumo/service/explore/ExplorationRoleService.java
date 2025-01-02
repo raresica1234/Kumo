@@ -2,6 +2,7 @@ package is.rares.kumo.service.explore;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.ExplorationRoleErrorCodes;
+import is.rares.kumo.domain.explore.ExplorationRole;
 import is.rares.kumo.mapping.explore.ExplorationRoleMapping;
 import is.rares.kumo.model.explore.ExplorationRoleModel;
 import is.rares.kumo.repository.explore.ExplorationRoleRepository;
@@ -11,13 +12,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class ExplorationRoleService {
     private final ExplorationRoleRepository explorationRoleRepository;
-
     private final ExplorationRoleMapping explorationRoleMapping;
 
     public Page<ExplorationRoleModel> get(String name, Pageable pageable) {
@@ -66,5 +67,15 @@ public class ExplorationRoleService {
             throw new KumoException(ExplorationRoleErrorCodes.NOT_FOUND);
 
         explorationRoleRepository.deleteById(id);
+    }
+
+    public ExplorationRole getByUuid(UUID uuid) {
+        return explorationRoleRepository.findByUuid(uuid).orElseThrow(
+                () -> new KumoException(ExplorationRoleErrorCodes.NOT_FOUND)
+        );
+    }
+
+    public List<ExplorationRole> getByUserUuid(UUID userId) {
+        return explorationRoleRepository.findByUsers_Uuid(userId);
     }
 }

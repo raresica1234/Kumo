@@ -27,6 +27,8 @@ import FormModalData from '../../../../../shared/models/modal/form-modal-data';
   templateUrl: './permission.component.html',
 })
 export class PermissionComponent extends BaseComponent implements OnDestroy {
+  // TODO: Root path points must be readable (add validation)
+
   columns!: ColumnDefinition[];
   actions!: TableAction[];
   refreshTable: Subject<boolean> = new Subject<boolean>();

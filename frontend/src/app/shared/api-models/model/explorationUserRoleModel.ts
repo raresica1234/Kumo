@@ -18,6 +18,6 @@ import { ExplorationRoleModel } from './explorationRoleModel';
 export interface ExplorationUserRoleModel { 
     uuid?: string;
     username?: string;
-    roles?: Array<ExplorationRoleModel>;
+    explorationRoles?: Array<ExplorationRoleModel>;
 }
 

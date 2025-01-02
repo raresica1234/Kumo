@@ -2,6 +2,7 @@ package is.rares.kumo.service;
 
 import is.rares.kumo.controller.requests.user.RegisterRequest;
 import is.rares.kumo.controller.responses.BooleanResponse;
+import is.rares.kumo.domain.explore.ExplorationRole;
 import is.rares.kumo.mapping.UserMapping;
 import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
@@ -15,16 +16,21 @@ import is.rares.kumo.model.UserModel;
 import is.rares.kumo.repository.user.RoleRepository;
 import is.rares.kumo.repository.user.UserRepository;
 import is.rares.kumo.security.domain.CurrentUser;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private final KumoConfig kumoConfig;
@@ -36,23 +42,6 @@ public class UserService {
     private final RoleRepository roleRepository;
 
     private final RegisterInviteService registerInviteService;
-
-    public UserService(KumoConfig kumoConfig,
-                       PasswordEncoder passwordEncoder,
-                       UserRepository userRepository,
-                       UserMapping userMapping,
-                       RoleService roleService,
-                       RoleRepository roleRepository,
-                       RegisterInviteService registerInviteService) {
-        this.kumoConfig = kumoConfig;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.userMapping = userMapping;
-        this.roleService = roleService;
-        this.roleRepository = roleRepository;
-        this.registerInviteService = registerInviteService;
-    }
-
 
     public ResponseEntity<String> register(RegisterRequest request, @Nullable String registerInvite) {
         if (kumoConfig.isInviteBasedRegistration() && !registerInviteService.validateInvite(registerInvite))
@@ -86,13 +75,13 @@ public class UserService {
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
-    public User findByUserId(UUID userId) {
+    public User getByUuid(UUID userId) {
         return this.userRepository.findByUuid(userId)
                 .orElseThrow(() -> new KumoException(AccountCodeErrorCodes.UNEXPECTED_ERROR));
     }
 
     public UserModel getUser(CurrentUser currentUser) {
-        User user = findByUserId(currentUser.getId());
+        User user = getByUuid(currentUser.getId());
 
         return userMapping.mapEntityToModel(user);
     }
@@ -101,11 +90,16 @@ public class UserService {
         return new BooleanResponse(kumoConfig.isInviteBasedRegistration());
     }
 
-    public List<Feature> getFeatures(CurrentUser currentUser) {
-        User user = findByUserId(currentUser.getId());
+    public Set<Feature> getFeatures(CurrentUser currentUser) {
+        User user = getByUuid(currentUser.getId());
 
         return user.getRoles().stream()
                 .flatMap(role -> role.getFeatures().stream())
-                .toList();
+                .collect(Collectors.toSet());
+    }
+
+    public boolean isUserOwner(CurrentUser currentUser) {
+        var features = getFeatures(currentUser);
+        return features.contains(Feature.OWNER);
     }
 }
