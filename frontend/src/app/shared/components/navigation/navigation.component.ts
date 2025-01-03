@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/session/auth.service';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { GeneralService } from '../../services/general.service';
 import { Feature } from '../../models/features';
 import { NgIf } from '@angular/common';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-navigation',
@@ -26,12 +27,11 @@ import { NgIf } from '@angular/common';
     MatListModule,
     RouterOutlet,
     NgIf,
-    RouterLink,
   ],
 })
 export class NavigationComponent implements OnDestroy, OnInit {
-  // TODO: Fix buttons hover effect being weird (corners don't mark the whole button as hovered)
-  // TODO: Make nav menu be responsive and automatically close on small screens
+  mobileQuery: MediaQueryList;
+  private readonly mobileQueryListener: () => void;
 
   subscriptionManager: Subscription = new Subscription();
 
@@ -49,8 +49,17 @@ export class NavigationComponent implements OnDestroy, OnInit {
     private router: Router,
     private authService: AuthService,
     private generalService: GeneralService,
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher,
   ) {
     this.username = authService.getCurrentUser()!.username;
+
+    this.mobileQuery = media.matchMedia('(max-width:600px)');
+    this.mobileQueryListener = () => changeDetectorRef.detectChanges();
+
+    this.mobileQuery.addEventListener('change', this.mobileQueryListener);
+
+    if (this.mobileQuery.matches) this.sidenav = false;
 
     this.router.events
       .pipe(
@@ -72,6 +81,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
+    this.mobileQuery.removeEventListener('change', this.mobileQueryListener);
     this.subscriptionManager.unsubscribe();
   }
 

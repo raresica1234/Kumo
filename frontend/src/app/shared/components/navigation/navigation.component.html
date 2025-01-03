@@ -1,71 +1,71 @@
-<mat-toolbar class="dark:mat-primary">
-  <button mat-icon-button (click)="toggleSidenav()">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <h1>Kumo</h1>
-
-  <span class="flex-auto flex-shrink flex-grow"></span>
-
-  <mat-menu #appMenu="matMenu" class="w-[150px]">
-    <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
-    <button *ngIf="isAdmin" mat-menu-item (click)="navigateTo('admin/')">
-      <mat-icon>admin_panel_settings</mat-icon>
-      Admin
+<div class="absolute bottom-0 left-0 right-0 top-0 flex flex-col" [class.is-mobile]="mobileQuery.matches">
+  <mat-toolbar class="dark:mat-primary nav-toolbar">
+    <button mat-icon-button (click)="toggleSidenav()">
+      <mat-icon>menu</mat-icon>
     </button>
-    <mat-divider />
-    <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Sign out</button>
-  </mat-menu>
+    <h1>Kumo</h1>
 
-  <button mat-flat-button [matMenuTriggerFor]="appMenu" color="primary">
-    {{ username }}
-    <mat-icon>person</mat-icon>
-  </button>
-</mat-toolbar>
+    <span class="flex-auto flex-shrink flex-grow"></span>
 
-<mat-sidenav-container autosize class="h-full">
-  <mat-sidenav [opened]="sidenav" mode="side" class="h-full md:w-[180px]">
-    <mat-nav-list class="nav-list">
-      @if (adminPanel) {
-        <mat-list-item>
+    <mat-menu #appMenu="matMenu" class="w-[150px]">
+      <button mat-menu-item><mat-icon>settings</mat-icon>Settings</button>
+      <button *ngIf="isAdmin" mat-menu-item (click)="navigateTo('admin/')">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Admin
+      </button>
+      <mat-divider />
+      <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Sign out</button>
+    </mat-menu>
+
+    <button mat-flat-button [matMenuTriggerFor]="appMenu" color="primary">
+      {{ username }}
+      <mat-icon>person</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="nav-container">
+    <mat-sidenav
+      [opened]="sidenav"
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [fixedInViewport]="mobileQuery.matches"
+      fixedTopGap="64"
+      style="width: 230px"
+      class="h-full"
+    >
+      <mat-nav-list class="nav-list">
+        @if (adminPanel) {
           <button mat-flat-button (click)="navigateTo('/')">
             <mat-icon>home</mat-icon>
             Home
           </button>
-        </mat-list-item>
-        <mat-divider />
-        <mat-list-item *ngIf="getPathPoint" (click)="navigateTo('admin/path_point')">
-          <button mat-flat-button>
+          <mat-divider />
+          <button mat-flat-button *ngIf="getPathPoint" (click)="navigateTo('admin/path_point')">
             <mat-icon>timeline</mat-icon>
             Path Points
           </button>
-        </mat-list-item>
-        <mat-list-item *ngIf="getExplorationRole" (click)="navigateTo('admin/exploration_role')">
-          <button mat-flat-button>
+          <button mat-flat-button *ngIf="getExplorationRole" (click)="navigateTo('admin/exploration_role')">
             <mat-icon>supervisor_account</mat-icon>
             Exploration Roles
           </button>
-        </mat-list-item>
-        <mat-list-item *ngIf="getPermission" (click)="navigateTo('admin/permission')">
-          <button mat-flat-button>
+          <button mat-flat-button *ngIf="getPermission" (click)="navigateTo('admin/permission')">
             <mat-icon>lock</mat-icon>
             Permissions
           </button>
-        </mat-list-item>
-        <mat-list-item *ngIf="getUserRoles" (click)="navigateTo('admin/user_explore_roles')">
-          <button mat-flat-button>
+          <button mat-flat-button *ngIf="getUserRoles" (click)="navigateTo('admin/user_explore_roles')">
             <mat-icon>person_add</mat-icon>
             User Exploration Roles
           </button>
-        </mat-list-item>
-      } @else {
-        <button mat-flat-button (click)="navigateTo('')">
-          <mat-icon>house</mat-icon>
-          Dashboard
-        </button>
-      }
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content class="p-4">
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+        } @else {
+          <button mat-flat-button (click)="navigateTo('')">
+            <mat-icon>house</mat-icon>
+            Dashboard
+          </button>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="p-4">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

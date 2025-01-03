@@ -1,8 +1,26 @@
-:host {
-  display: block;
-  height: 100%;
+.nav-toolbar {
+  height: 64px;
+}
+
+.is-mobile .nav-toolbar {
+  position: fixed;
+  z-index: 2;
+}
+
+.nav-container {
+  flex: 1;
+}
+
+.is-mobile .nav-container {
+  margin-top: 64px;
+  flex: 1 0 auto;
+}
+
+.nav-list {
+  @apply w-full;
 }
 
 .nav-list > button {
   @apply w-full;
+  justify-content: left;
 }
