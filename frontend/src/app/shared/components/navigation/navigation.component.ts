@@ -31,6 +31,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 })
 export class NavigationComponent implements OnDestroy, OnInit {
   mobileQuery: MediaQueryList;
+  tabletQuery: MediaQueryList;
   private readonly mobileQueryListener: () => void;
 
   subscriptionManager: Subscription = new Subscription();
@@ -54,12 +55,13 @@ export class NavigationComponent implements OnDestroy, OnInit {
   ) {
     this.username = authService.getCurrentUser()!.username;
 
-    this.mobileQuery = media.matchMedia('(max-width:600px)');
+    this.mobileQuery = media.matchMedia('(max-width:674px)');
+    this.tabletQuery = media.matchMedia('(min-width:675px) and (max-width:1079px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
 
     this.mobileQuery.addEventListener('change', this.mobileQueryListener);
 
-    if (this.mobileQuery.matches) this.sidenav = false;
+    if (this.mobileQuery.matches || this.tabletQuery.matches) this.sidenav = false;
 
     this.router.events
       .pipe(

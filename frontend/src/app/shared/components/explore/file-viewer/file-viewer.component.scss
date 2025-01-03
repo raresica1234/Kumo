@@ -1,18 +1,35 @@
 .file-container {
-  @apply flex flex-row flex-wrap gap-4;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  @screen md {
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  }
+  @screen sm {
+    grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+  }
+}
+
+.file-card-container {
+  @apply flex max-w-40 justify-center sm:max-w-20 md:max-w-28;
 }
 
 .file-grid-card {
-  @apply flex w-40 flex-col items-center
-    sm:w-20;
+  @apply flex h-36 w-36 flex-col items-center
+    sm:h-16 sm:w-16
+    md:h-24 md:w-24;
 }
 
 .file-grid-icon {
   @apply h-32 w-32 text-9xl
-  sm:h-[3.75rem] sm:w-[3.75rem] sm:text-6xl;
+  sm:h-12 sm:w-12 sm:text-5xl
+  md:h-20 md:w-20 md:text-7xl;
 }
 
 .file-grid-content {
-  @apply w-36 overflow-hidden text-ellipsis whitespace-nowrap p-0 text-center
-      sm:w-16 sm:text-xs;
+  @apply w-36 overflow-hidden text-ellipsis whitespace-nowrap  px-4 text-center
+      sm:w-16 sm:px-2 sm:text-xs
+      md:w-24 md:px-2 md:text-sm;
+
+  @apply pb-2 sm:pb-1 #{!important};
 }
