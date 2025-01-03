@@ -2,13 +2,17 @@
   @for (file of files; track file) {
     <div class="file-card-container">
       <mat-card appearance="outlined" class="file-grid-card" (click)="navigateTo(file)">
-        <mat-icon class="file-grid-icon" [class.mat-primary]="file.type === 'DIRECTORY'">
-          @if (file.type === "DIRECTORY") {
-            folder
-          } @else {
-            insert_drive_file
-          }
-        </mat-icon>
+        @if (file.type === "IMAGE") {
+          <img [attr.src]="getImageSourceFor(file) | secure | async" />
+        } @else {
+          <mat-icon class="file-grid-icon" [class.mat-primary]="file.type === 'DIRECTORY'">
+            @if (file.type === "DIRECTORY") {
+              folder
+            } @else {
+              insert_drive_file
+            }
+          </mat-icon>
+        }
         <mat-card-content class="file-grid-content">{{ file.name }}</mat-card-content>
       </mat-card>
     </div>

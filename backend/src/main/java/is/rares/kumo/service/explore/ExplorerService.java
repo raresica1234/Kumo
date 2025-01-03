@@ -11,6 +11,7 @@ import is.rares.kumo.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.net.URLDecoder;
@@ -27,6 +28,8 @@ public class ExplorerService {
     private final ExplorationRoleService explorationRoleService;
     private final UserService userService;
     private final ExplorerMapping explorerMapping;
+
+    // TODO: Don't display folders which don't have a read permission in linux
 
     public List<ExplorerFileModel> explore(String path, CurrentUser currentUser) {
         String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
@@ -129,7 +132,7 @@ public class ExplorerService {
             else if (!isDir1 && isDir2)
                 return 1;
             else return file1.getName().compareToIgnoreCase(file2.getName());
-        }).toList();
+        }).filter(File::canRead).toList();
     }
 
     private List<ExplorerFileModel> getRootPathPoints(CurrentUser currentUser) {
@@ -156,5 +159,55 @@ public class ExplorerService {
         //  based on the ones that are in subdirectories of other root ones
 
         return explorerMapping.mapPathPointsToModel(pathPoints);
+    }
+
+    public boolean canAccessPath(String path, CurrentUser currentUser) {
+        var isUserOwner = userService.isUserOwner(currentUser);
+
+        if (isUserOwner)
+            return canOwnerAccessPath(path);
+
+        var roles = explorationRoleService.getByUserUuid(currentUser.getId());
+        var permissionList = roles.stream().flatMap(role -> role.getPermissions().stream()).toList();
+
+        // Ensure root path point exists
+        var rootPermissionOptional = permissionList.stream()
+                .filter(permission -> permission.isRead() && permission.getPathPoint().isRoot())
+                .filter(permission -> path.startsWith(permission.getPathPoint().getPath())
+                        || path.startsWith(permission.getPathPoint().getPath().substring(1)))
+                .findFirst();
+
+        if (rootPermissionOptional.isEmpty())
+            return false;
+
+        String realPath = FileUtils.getRealPath(rootPermissionOptional.get().getPathPoint().getPath(), path);
+
+        // Check if the current path is blacklisted
+        var currentPathIsBlacklisted = permissionList.stream()
+                .anyMatch(permission ->
+                        realPath.startsWith(permission.getPathPoint().getPath()) && !permission.isRead());
+
+        if (currentPathIsBlacklisted)
+            return false;
+
+        return new File(realPath).exists();
+    }
+
+
+    private boolean canOwnerAccessPath(String path) {
+        var pathPoints = pathPointService.getAllRootPathPoints();
+        // Ensure a path point for the current path exists
+
+        // Check path point starts with path or remove the leading slash
+        var rootPathPointOptional = pathPoints.stream()
+                .filter(pathPoint -> path.startsWith(pathPoint.getPath()) || path.startsWith(pathPoint.getPath().substring(1)))
+                .findFirst();
+
+        if (rootPathPointOptional.isEmpty())
+            return false;
+
+        String realPath = FileUtils.getRealPath(rootPathPointOptional.get().getPath(), path);
+
+        return new File(realPath).exists();
     }
 }

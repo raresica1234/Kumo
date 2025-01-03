@@ -5,6 +5,7 @@ import is.rares.kumo.domain.explore.PathPoint;
 import is.rares.kumo.domain.explore.Permission;
 import is.rares.kumo.model.explore.ExplorerFileModel;
 import is.rares.kumo.model.explore.FileTypeModel;
+import jakarta.activation.MimetypesFileTypeMap;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -60,7 +61,16 @@ public interface ExplorerMapping {
     default FileTypeModel getFileType(File file) {
         if (file.isDirectory())
             return FileTypeModel.DIRECTORY;
+        if (isImage(file))
+            return FileTypeModel.IMAGE;
+
         return FileTypeModel.FILE;
+    }
+
+    default boolean isImage(File file) {
+        String mimeType = new MimetypesFileTypeMap().getContentType(file);
+        String type = mimeType.split("/")[0];
+        return type.equals("image");
     }
 
     List<ExplorerFileModel> mapPathPointsToModel(List<PathPoint> pathPointList);

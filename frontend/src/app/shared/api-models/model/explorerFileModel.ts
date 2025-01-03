@@ -23,9 +23,10 @@ export interface ExplorerFileModel {
     modifyRoot: boolean;
 }
 export namespace ExplorerFileModel {
-    export type TypeEnum = 'DIRECTORY' | 'FILE';
+    export type TypeEnum = 'DIRECTORY' | 'IMAGE' | 'FILE';
     export const TypeEnum = {
         DIRECTORY: 'DIRECTORY' as TypeEnum,
+        IMAGE: 'IMAGE' as TypeEnum,
         FILE: 'FILE' as TypeEnum
     };
 }
