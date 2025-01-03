@@ -1,0 +1,33 @@
+@layer base {
+  .dark {
+    .toast-container .ngx-toastr {
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .toast-error {
+      background-color: #9e5955 !important;
+    }
+
+    .toast-info {
+      background-color: #587b88 !important;
+    }
+
+    .toast-warning {
+      background-color: #c28d56 !important;
+    }
+
+    .toast-success {
+      background-color: #7a946f !important;
+    }
+
+    .ngx-toastr-message {
+      color: #fff;
+    }
+
+    .ngx-toastr-icon {
+      svg {
+        fill: #fff;
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<div class="flex">
+  <h1 class="my-auto-force">{{ title }}</h1>
+  <span class="flex-grow"></span>
+  <button mat-icon-button (click)="searchUserExplorationRoles()">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+<hr class="mb-4 border-gray-400" />
+
+<app-table
+  [columns]="columns"
+  [fetchFunction]="fetchFunction()"
+  [actions]="actions"
+  [refreshTable]="refreshTable"
+></app-table>

@@ -1,0 +1,57 @@
+<mat-progress-bar [mode]="isLoading ? 'indeterminate' : 'determinate'" value="0"></mat-progress-bar>
+<table
+  mat-table
+  [dataSource]="dataSource"
+  matSort
+  (matSortChange)="sortChange($event)"
+  aria-describedby="Path Points Table"
+>
+  @for (column of columns; track column) {
+    <ng-container [matColumnDef]="column.fieldName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sortable">
+        {{ column.displayName }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        @if (column.type === "array") {
+          <mat-chip-set>
+            @for (value of getValueOfFieldFormElement(element, column.fieldName); track value) {
+              <mat-chip-row>
+                {{ column.displayArrayElement!(value) }}
+                @if (column.removable === true) {
+                  <button matChipRemove (click)="column.removeAction?.(element, value)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                }
+              </mat-chip-row>
+            }
+          </mat-chip-set>
+        } @else {
+          {{ getValueOfFieldFormElement(element, column.fieldName) }}
+        }
+      </td>
+    </ng-container>
+  }
+
+  @if (actions.length !== 0) {
+    <ng-container [matColumnDef]="'actions'">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element" class="w-0">
+        <button mat-icon-button [matMenuTriggerFor]="actionsMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionsMenu="matMenu">
+          @for (action of actions; track action) {
+            <button mat-menu-item (click)="action.action(element)">
+              <mat-icon [color]="action.color">{{ action.icon }}</mat-icon>
+              {{ action.name }}
+            </button>
+          }
+        </mat-menu>
+      </td>
+    </ng-container>
+  }
+
+  <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons [length]="this.length"> </mat-paginator>

@@ -1,0 +1,28 @@
+@use "@angular/material" as mat;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* You can add global styles to this file, and also import other style files */
+
+.my-auto-force {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+@layer base {
+  :root {
+    --color-elevation-starter: white;
+  }
+
+  .dark {
+    --color-elevation-starter: #121212;
+  }
+}
+
+@import "ngx-toastr/toastr";
+
+@import "theme/theme";
+
+// TODO: Sync themes (dark/light between tailwind, angular material)
+// TODO: Add custom elevations

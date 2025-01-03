@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kumo
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    show-sql: true
+
+redis:
+  host: localhost
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+#  paths-to-match: /api/**
+
+kumo:
+  registration:
+    inviteBased: false
+  owner:
+    username: raresica1234
+
+
+spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

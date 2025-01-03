@@ -1,0 +1,18 @@
+<div class="flex">
+  <h1 class="my-auto-force">{{ title }}</h1>
+  <span class="flex-grow"></span>
+  <button *ngIf="addPathPointFeature" mat-icon-button (click)="addPathPoint()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button mat-icon-button (click)="searchPathPoint()">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+<hr class="mb-4 border-gray-400" />
+
+<app-table
+  [columns]="columns"
+  [fetchFunction]="fetchFunction()"
+  [actions]="actions"
+  [refreshTable]="refreshTable"
+></app-table>

@@ -1,0 +1,45 @@
+@use "@angular/material/index" as mat;
+
+@import "fixes";
+@import "toastr";
+@import "elevations";
+
+@include mat.core();
+
+$accent-light: mat.define-palette(mat.$orange-palette);
+$accent-dark: mat.define-palette(mat.$orange-palette, 300, 300, 500);
+
+$warn-light: mat.define-palette(mat.$red-palette);
+$warn-dark: mat.define-palette(mat.$red-palette, 300, 300, 500);
+
+$primary-light: mat.define-palette(mat.$blue-palette);
+$primary-dark: mat.define-palette(mat.$blue-palette, 300, 300, 500);
+
+$dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $primary-dark,
+      accent: $accent-dark,
+      warn: $warn-dark,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+
+$light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary-light,
+      accent: $accent-light,
+      warn: $warn-light,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+@include mat.all-component-themes($light-theme);
+
+.dark {
+  @include mat.all-component-themes($dark-theme);
+}
