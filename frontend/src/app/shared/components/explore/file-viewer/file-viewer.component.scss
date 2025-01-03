@@ -20,6 +20,16 @@
     md:h-24 md:w-24;
 }
 
+.file-card-image {
+  @apply flex h-32  w-32  flex-col justify-center
+  sm:h-12 sm:w-12
+  md:h-20 md:w-20;
+}
+
+.file-card-image > img {
+  @apply max-h-32 max-w-32;
+}
+
 .file-grid-icon {
   @apply h-32 w-32 text-9xl
   sm:h-12 sm:w-12 sm:text-5xl

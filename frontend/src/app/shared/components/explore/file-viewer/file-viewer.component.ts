@@ -16,8 +16,8 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './file-viewer.component.scss',
 })
 export class FileViewerComponent {
-  // TODO: automatic gap so elements fit nicely
-  // TODO: Cutoff for text that is too long
+  // TODO: align images
+
   @Input() files: ExplorerFileModel[] = [];
 
   constructor(private router: Router) {}

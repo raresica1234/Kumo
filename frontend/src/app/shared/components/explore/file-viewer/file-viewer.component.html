@@ -3,7 +3,9 @@
     <div class="file-card-container">
       <mat-card appearance="outlined" class="file-grid-card" (click)="navigateTo(file)">
         @if (file.type === "IMAGE") {
-          <img [attr.src]="getImageSourceFor(file) | secure | async" />
+          <div class="file-card-image">
+            <img [attr.src]="getImageSourceFor(file) | secure | async" />
+          </div>
         } @else {
           <mat-icon class="file-grid-icon" [class.mat-primary]="file.type === 'DIRECTORY'">
             @if (file.type === "DIRECTORY") {
