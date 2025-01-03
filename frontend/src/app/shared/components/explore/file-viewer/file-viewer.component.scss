@@ -1,28 +1,18 @@
-.file-grid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1em;
+.file-container {
+  @apply flex flex-row flex-wrap gap-4;
 }
 
 .file-grid-card {
-  width: 10rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @apply flex w-40 flex-col items-center
+    sm:w-20;
 }
 
 .file-grid-icon {
-  font-size: 8rem /* 96px */;
-  line-height: 1;
-  width: 8rem;
-  height: 8rem;
+  @apply h-32 w-32 text-9xl
+  sm:h-[3.75rem] sm:w-[3.75rem] sm:text-6xl;
 }
 
-.file-grid-filename {
-  width: 9rem;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: center;
+.file-grid-content {
+  @apply w-36 overflow-hidden text-ellipsis whitespace-nowrap p-0 text-center
+      sm:w-16 sm:text-xs;
 }
