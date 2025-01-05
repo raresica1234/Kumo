@@ -21,13 +21,13 @@
 }
 
 .file-card-image {
-  @apply flex h-32  w-32  flex-col justify-center
+  @apply flex h-32 w-32 flex-col justify-center p-2
   sm:h-12 sm:w-12
   md:h-20 md:w-20;
 }
 
 .file-card-image > img {
-  @apply max-h-32 max-w-32;
+  @apply h-full w-full object-contain;
 }
 
 .file-grid-icon {
