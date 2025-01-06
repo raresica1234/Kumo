@@ -16,10 +16,9 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './file-viewer.component.scss',
 })
 export class FileViewerComponent {
-  // TODO: align images - make sure the file-card-image is the same size as the file-grid-icon
-  //                      there's some issue with flex-shrink altering the file-grid-icon and content
   // TODO: load only images in view + a few more rows
   // TODO: pls let me middle click
+  // TODO: figure out a way to make the grid usable on mobile (the file name space is very small)
 
   @Input() files: ExplorerFileModel[] = [];
 
