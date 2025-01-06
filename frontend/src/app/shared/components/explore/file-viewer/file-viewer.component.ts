@@ -30,4 +30,9 @@ export class FileViewerComponent {
   getImageSourceFor(file: ExplorerFileModel) {
     return environment.basePath + '/api/file?path=' + encodeURIComponent(file.fullPath!);
   }
+
+  viewImage(file: ExplorerFileModel) {
+    if (!file.fullPath) return;
+    return 'view/' + EncoderUtil.encode(file.fullPath);
+  }
 }

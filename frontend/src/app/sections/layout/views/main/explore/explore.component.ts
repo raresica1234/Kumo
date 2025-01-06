@@ -15,7 +15,6 @@ import { EncoderUtil } from '../../../../../shared/utils/encoder-util';
 })
 export class ExploreComponent implements OnInit, OnDestroy {
   private currentPath = '';
-  private loading = true;
 
   files: ExplorerFileModel[] = [];
 
@@ -26,7 +25,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private explorerController: ExplorerControllerService,
-    private alertService: AlertService,
   ) {}
 
   ngOnInit() {

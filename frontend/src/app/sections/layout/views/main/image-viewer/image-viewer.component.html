@@ -1,0 +1,9 @@
+@if (currentPath === "") {
+  <div class="flex h-full w-full flex-row justify-center">
+    <img src="https://http.cat/404" />
+  </div>
+} @else {
+  <div class="h-full w-full">
+    <img [attr.src]="getImageSource() | secure | async" class="h-full w-full object-contain" />
+  </div>
+}

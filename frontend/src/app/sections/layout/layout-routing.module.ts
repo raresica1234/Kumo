@@ -10,6 +10,7 @@ import { ExplorationRoleComponent } from './views/admin/exploration-role/explora
 import { PermissionComponent } from './views/admin/permission/permission.component';
 import { UserExplorationRoleComponent } from './views/admin/user-exploration-role/user-exploration-role.component';
 import { ExploreComponent } from './views/main/explore/explore.component';
+import { ImageViewerComponent } from './views/main/image-viewer/image-viewer.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,15 @@ const routes: Routes = [
           {
             path: '**',
             component: ExploreComponent,
+          },
+        ],
+      },
+      {
+        path: 'view',
+        children: [
+          {
+            path: '**',
+            component: ImageViewerComponent,
           },
         ],
       },
