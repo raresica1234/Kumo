@@ -7,27 +7,25 @@ import { EncoderUtil } from '../../../utils/encoder-util';
 import { environment } from '../../../../../environments/environment';
 import { SecurePipe } from '../../../security/secure-pipe';
 import { AsyncPipe } from '@angular/common';
+import { NavigationHandlerDirective } from '../../../utils/navigation-directive';
 
 @Component({
   selector: 'app-file-viewer',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, SecurePipe, AsyncPipe],
+  imports: [MatCardModule, MatIconModule, SecurePipe, AsyncPipe, NavigationHandlerDirective],
   templateUrl: './file-viewer.component.html',
   styleUrl: './file-viewer.component.scss',
 })
 export class FileViewerComponent {
   // TODO: load only images in view + a few more rows
-  // TODO: pls let me middle click
   // TODO: figure out a way to make the grid usable on mobile (the file name space is very small)
 
   @Input() files: ExplorerFileModel[] = [];
 
-  constructor(private router: Router) {}
-
   navigateTo(file: ExplorerFileModel) {
     if (file.type !== 'DIRECTORY') return;
     if (!file.fullPath) return;
-    this.router.navigate(['explore/' + EncoderUtil.encode(file.fullPath)]);
+    return 'explore/' + EncoderUtil.encode(file.fullPath);
   }
 
   getImageSourceFor(file: ExplorerFileModel) {

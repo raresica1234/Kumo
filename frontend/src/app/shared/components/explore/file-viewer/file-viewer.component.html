@@ -1,7 +1,7 @@
 <div class="file-container">
   @for (file of files; track file) {
     <div class="file-card-container">
-      <mat-card appearance="outlined" class="file-grid-card" (click)="navigateTo(file)">
+      <mat-card navHandler appearance="outlined" class="file-grid-card" [url]="navigateTo(file)">
         @if (file.type === "IMAGE") {
           <div class="file-card-image">
             <img [attr.src]="getImageSourceFor(file) | secure | async" />
