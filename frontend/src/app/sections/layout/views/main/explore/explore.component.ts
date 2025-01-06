@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ExplorerControllerService, ExplorerFileModel } from '../../../../shared/api-models';
+import { ExplorerControllerService, ExplorerFileModel } from '../../../../../shared/api-models';
 import { Subscription } from 'rxjs';
-import { AlertService } from '../../../../shared/services/alert.service';
-import { FileViewerComponent } from '../../../../shared/components/explore/file-viewer/file-viewer.component';
-import { EncoderUtil } from '../../../../shared/utils/encoder-util';
+import { AlertService } from '../../../../../shared/services/alert.service';
+import { FileViewerComponent } from '../../../../../shared/components/explore/file-viewer/file-viewer.component';
+import { EncoderUtil } from '../../../../../shared/utils/encoder-util';
 
 @Component({
   selector: 'app-explore',

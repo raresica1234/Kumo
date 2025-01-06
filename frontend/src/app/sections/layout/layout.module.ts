@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from './views/home/home.component';
+import { HomeComponent } from './views/main/home/home.component';
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
 import { NavigationComponent } from '../../shared/components/navigation/navigation.component';
