@@ -12,6 +12,7 @@ import { GeneralService } from '../../services/general.service';
 import { Feature } from '../../models/features';
 import { NgIf } from '@angular/common';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { NavigationHandlerDirective } from '../../utils/navigation-directive';
 
 @Component({
   selector: 'app-navigation',
@@ -27,6 +28,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
     MatListModule,
     RouterOutlet,
     NgIf,
+    NavigationHandlerDirective,
   ],
 })
 export class NavigationComponent implements OnDestroy, OnInit {

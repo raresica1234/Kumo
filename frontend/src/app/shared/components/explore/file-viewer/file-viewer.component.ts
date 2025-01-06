@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { ExplorerFileModel } from '../../../api-models';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
 import { EncoderUtil } from '../../../utils/encoder-util';
 import { environment } from '../../../../../environments/environment';
 import { SecurePipe } from '../../../security/secure-pipe';
