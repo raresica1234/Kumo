@@ -14,6 +14,7 @@ import { environment } from '../../../../../../environments/environment';
   styleUrl: './image-viewer.component.scss',
 })
 export class ImageViewerComponent implements OnInit {
+  // TODO: if auth expires when an image is fetched, refresh token isn't called
   currentPath = '';
 
   private subscriptionManager = new Subscription();
@@ -28,6 +29,7 @@ export class ImageViewerComponent implements OnInit {
   }
 
   getImageSource() {
+    // TODO: the forward slash should not be required somehow
     return environment.basePath + '/api/file?path=' + encodeURIComponent('/' + this.currentPath);
   }
 }

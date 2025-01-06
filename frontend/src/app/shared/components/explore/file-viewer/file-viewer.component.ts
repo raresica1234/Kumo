@@ -18,6 +18,7 @@ import { NavigationHandlerDirective } from '../../../utils/navigation-directive'
 export class FileViewerComponent {
   // TODO: load only images in view + a few more rows
   // TODO: figure out a way to make the grid usable on mobile (the file name space is very small)
+  // TODO: if auth expires when an image is fetched, refresh token isn't called
 
   @Input() files: ExplorerFileModel[] = [];
 
