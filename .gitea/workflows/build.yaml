@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: "docker.rares.is/kumo-frontend:${{gitea.sha}},docker.rares.is/kumo-frontend:latest"
   build-and-publish-backend:
-    runs-on: ubuntu-latest
+    runs-on: maven-ubuntu 
     defaults:
       run:
         working-directory: ./backend
@@ -50,8 +50,8 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
-      - name: Install Maven
-        run: apt -y update && apt -y install maven
+      # - name: Install Maven
+      #   run: apt -y update && apt -y install maven
       - name: Build project
         run: mvn package -Pdeploy -T8
       - name: Set up Docker Buildx
