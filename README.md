@@ -1,6 +1,13 @@
 # Kumo
 ## Table of Content
-1. [Setup](#setup)
+- [Kumo](#kumo)
+  - [Table of Content](#table-of-content)
+  - [Setup](#setup)
+    - [Generating public and private keys for signing the JWTs](#generating-public-and-private-keys-for-signing-the-jwts)
+  - [Deploy](#deploy)
+    - [Building the frontend](#building-the-frontend)
+    - [Building the backend](#building-the-backend)
+    - [Running the project](#running-the-project)
 
 ## Setup
 - database & docker or w/o docker
