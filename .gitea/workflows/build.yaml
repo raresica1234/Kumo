@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - testing
+      - master
 
 jobs:
   build-and-publish-frontend:
@@ -49,6 +50,7 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
+          cache: 'maven'
       - name: Build project
         run: mvn package -Pdeploy -T8
       - name: Set up Docker Buildx
