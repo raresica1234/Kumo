@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - testing
+      - master
 
 jobs:
   build-and-publish-frontend:
@@ -52,7 +53,7 @@ jobs:
       - name: Install Maven
         run: apt -y update && apt -y install maven
       - name: Build project
-        run: mvn package -Pdeploy
+        run: mvn package -Pdeploy -T8
       - name: Set up Docker Buildx
         uses: https://github.com/docker/setup-buildx-action@v3
         with:
