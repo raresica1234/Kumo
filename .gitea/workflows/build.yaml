@@ -30,13 +30,13 @@ jobs:
           driver-opts: network=host
           config-inline: |
             [registry."docker.rares.is"]
-      - name: Build and push Docker image
-        uses: https://github.com/docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile-frontend
-          push: true
-          tags: "docker.rares.is/kumo-frontend:${{gitea.sha}},docker.rares.is/kumo-frontend:latest"
+      # - name: Build and push Docker image
+      #   uses: https://github.com/docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile-frontend
+      #     push: true
+      #     tags: "docker.rares.is/kumo-frontend:${{gitea.sha}},docker.rares.is/kumo-frontend:latest"
   build-and-publish-backend:
     runs-on: maven-ubuntu 
     defaults:
