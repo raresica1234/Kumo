@@ -38,7 +38,7 @@ jobs:
       #     push: true
       #     tags: "docker.rares.is/kumo-frontend:${{gitea.sha}},docker.rares.is/kumo-frontend:latest"
   build-and-publish-backend:
-    runs-on: maven-ubuntu 
+    runs-on: ubuntu-maven 
     defaults:
       run:
         working-directory: ./backend
