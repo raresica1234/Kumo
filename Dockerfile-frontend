@@ -1,7 +1,5 @@
-FROM ubuntu 
+FROM nginx:latest
 # look into alpine and see if it's smaller
-
-RUN apt-get -y update && apt-get -y install nginx
 
 COPY nginx/default /etc/nginx/sites-available/default
 
