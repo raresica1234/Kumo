@@ -16,7 +16,7 @@ import java.util.UUID;
 public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @Column(columnDefinition = "uuid")
     protected UUID uuid;
 
     @Override
