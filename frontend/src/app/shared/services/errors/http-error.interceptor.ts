@@ -38,6 +38,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
 };
 
 function isAuthorizationIssue(httpErrorResponse: HttpErrorResponse): boolean {
+  // TODO: add case where httpErrorResponse is blob for fileservice
   return httpErrorResponse.error.errorCode !== undefined && reservedErrors.includes(httpErrorResponse.error.errorCode);
 }
 

@@ -15,6 +15,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { UrlHandlingStrategy } from '@angular/router';
+import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, ErrorAlertComponent],
@@ -35,6 +36,13 @@ import { UrlHandlingStrategy } from '@angular/router';
       {
         provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
         useValue: { appearance: 'outline' },
+      },
+
+      {
+        provide: IMAGE_LOADER,
+        useValue: (config: ImageLoaderConfig) => {
+          return environment.basePath + `/api/file?path=${encodeURIComponent(config.src)}`;
+        },
       },
     ],
   ],

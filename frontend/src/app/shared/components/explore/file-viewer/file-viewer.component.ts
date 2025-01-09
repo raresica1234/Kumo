@@ -5,13 +5,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { EncoderUtil } from '../../../utils/encoder-util';
 import { environment } from '../../../../../environments/environment';
 import { SecurePipe } from '../../../security/secure-pipe';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { NavigationHandlerDirective } from '../../../utils/navigation-directive';
+import { ImageComponent } from '../../image/image.component';
 
 @Component({
   selector: 'app-file-viewer',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, SecurePipe, AsyncPipe, NavigationHandlerDirective],
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    SecurePipe,
+    AsyncPipe,
+    NavigationHandlerDirective,
+    NgOptimizedImage,
+    ImageComponent,
+  ],
   templateUrl: './file-viewer.component.html',
   styleUrl: './file-viewer.component.scss',
 })

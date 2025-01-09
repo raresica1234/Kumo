@@ -6,6 +6,7 @@ api/authenticationController.service.ts
 api/explorationRoleController.service.ts
 api/explorationUserRoleController.service.ts
 api/explorerController.service.ts
+api/fileController.service.ts
 api/pathPointController.service.ts
 api/permissionController.service.ts
 api/userController.service.ts

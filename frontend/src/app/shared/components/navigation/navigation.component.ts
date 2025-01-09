@@ -40,7 +40,7 @@ export class NavigationComponent implements OnDestroy, OnInit {
 
   username: string;
 
-  sidenav: boolean = true;
+  sidenav: boolean = true; // Store this in local storage
   isAdmin: boolean = false;
   getPathPoint: boolean = false;
   getExplorationRole: boolean = false;

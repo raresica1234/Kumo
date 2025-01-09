@@ -2,19 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EncoderUtil } from '../../../../../shared/utils/encoder-util';
 import { Subscription } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { SecurePipe } from '../../../../../shared/security/secure-pipe';
-import { environment } from '../../../../../../environments/environment';
+import { ImageComponent } from '../../../../../shared/components/image/image.component';
 
 @Component({
   selector: 'app-image-viewer',
   standalone: true,
-  imports: [AsyncPipe, SecurePipe],
+  imports: [ImageComponent],
   templateUrl: './image-viewer.component.html',
   styleUrl: './image-viewer.component.scss',
 })
 export class ImageViewerComponent implements OnInit {
-  // TODO: if auth expires when an image is fetched, refresh token isn't called
+  // TODO: figure out how to make this not require a forward slash
   currentPath = '';
 
   private subscriptionManager = new Subscription();
@@ -29,7 +27,6 @@ export class ImageViewerComponent implements OnInit {
   }
 
   getImageSource() {
-    // TODO: the forward slash should not be required somehow
-    return environment.basePath + '/api/file?path=' + encodeURIComponent('/' + this.currentPath);
+    return '/' + this.currentPath;
   }
 }

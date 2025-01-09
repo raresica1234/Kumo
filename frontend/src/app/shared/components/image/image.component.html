@@ -1,0 +1,7 @@
+<div #image class="flex h-full w-full justify-center">
+  @if (isLoaded) {
+    <img [attr.src]="imageSource" class="h-full w-full object-contain" />
+  } @else {
+    <mat-spinner class="h-full w-full" mode="indeterminate" />
+  }
+</div>

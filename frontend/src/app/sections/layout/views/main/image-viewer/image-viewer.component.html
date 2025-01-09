@@ -4,6 +4,6 @@
   </div>
 } @else {
   <div class="h-full w-full">
-    <img [attr.src]="getImageSource() | secure | async" class="h-full w-full object-contain" />
+    <app-image [imageUrl]="getImageSource()" class="h-full w-full" />
   </div>
 }
