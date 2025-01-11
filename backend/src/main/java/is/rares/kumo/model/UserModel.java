@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UserModel {
     @NotNull
     @Schema(description = "User id")
-    UUID id;
+    UUID uuid;
 
     @NotNull
     @Schema(description = "Username")
