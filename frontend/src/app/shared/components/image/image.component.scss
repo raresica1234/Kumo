@@ -1,3 +1,8 @@
 :host {
   @apply h-full w-full;
 }
+
+.spinner {
+  width: min(7rem, 100%) !important;
+  height: min(7rem, 100%) !important;
+}

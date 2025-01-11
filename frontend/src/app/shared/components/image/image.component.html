@@ -1,7 +1,11 @@
-<div #image class="flex h-full w-full justify-center">
+<div
+  appInView
+  (visibleChanged)="onImageVisibilityChanged($event)"
+  class="flex h-full w-full flex-row items-center justify-center"
+>
   @if (isLoaded) {
     <img [attr.src]="imageSource" class="h-full w-full object-contain" />
   } @else {
-    <mat-spinner class="h-full w-full" mode="indeterminate" />
+    <mat-spinner class="spinner" mode="indeterminate" />
   }
 </div>
