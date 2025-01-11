@@ -50,7 +50,10 @@ public class SecurityConfig {
                     authorize
                             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                             .requestMatchers("/swagger-resources/**").permitAll()
-                            .anyRequest().authenticated();
+
+                            .requestMatchers("/api/websocket").permitAll()
+
+                            .anyRequest().permitAll();
                 })
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

@@ -18,7 +18,7 @@ export interface UserModel {
     /**
      * User id
      */
-    id: string;
+    uuid: string;
     /**
      * Username
      */

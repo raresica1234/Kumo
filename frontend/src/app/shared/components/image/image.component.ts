@@ -3,6 +3,7 @@ import { FileControllerService } from '../../api-models';
 import { Subscription } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { InViewDirective } from '../../utils/in-view.directive';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-image',
@@ -20,7 +21,10 @@ export class ImageComponent implements OnDestroy {
 
   private subscriptionManager: Subscription = new Subscription();
 
-  constructor(private fileService: FileControllerService) {}
+  constructor(
+    private fileService: FileControllerService,
+    private websocketService: WebsocketService,
+  ) {}
 
   ngOnDestroy(): void {
     this.subscriptionManager.unsubscribe();
