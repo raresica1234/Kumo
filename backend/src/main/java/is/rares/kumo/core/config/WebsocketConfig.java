@@ -11,6 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     // TODO: make sure a user can only subscribe to his topics
+    // TODO: verify token for login into websocket
 
     @Value("${kumo.cors.origin:http://localhost:4200}")
     String origin;
