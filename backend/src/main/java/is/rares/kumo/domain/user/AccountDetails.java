@@ -8,12 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.util.Objects;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@Entity
 @Table(name = "account_details")
 public class AccountDetails extends BaseEntity {
     String firstName;

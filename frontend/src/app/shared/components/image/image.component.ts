@@ -32,7 +32,7 @@ export class ImageComponent implements OnDestroy {
 
   private loadImage() {
     if (this.isLoaded) return;
-    const sub = this.fileService.getFile(encodeURIComponent(this.imageUrl)).subscribe({
+    const sub = this.fileService.getThumbnail(encodeURIComponent(this.imageUrl)).subscribe({
       next: (value) => {
         const reader = new FileReader();
         reader.readAsDataURL(value);
