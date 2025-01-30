@@ -794,7 +794,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"uuid\": \"2b1f1166-12d0-41d2-a2d0-78f17ea3f370\",\n    \"explorationRoles\": [\"d94df344-c879-421c-83e1-b4d2addcf9fa\"]\n}",
+									"raw": "{\n    \"uuid\": \"39770837-3b8f-45bf-b91c-94f9ce4b60ad\",\n    \"explorationRoles\": [\"d94df344-c879-421c-83e1-b4d2addcf9fa\"]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -868,13 +868,19 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/explore",
+							"raw": "{{baseUrl}}/api/explore?path=%2FWIN_D",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"api",
 								"explore"
+							],
+							"query": [
+								{
+									"key": "path",
+									"value": "%2FWIN_D"
+								}
 							]
 						}
 					},
@@ -977,6 +983,94 @@
 					"listen": "test",
 					"script": {
 						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "File",
+			"item": [
+				{
+					"name": "Get File",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/file?path=%2FWIN_D%2Fsunflower.png",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"file"
+							],
+							"query": [
+								{
+									"key": "path",
+									"value": "%2FWIN_D%2Fsunflower.png"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/file/image?path=%2FWIN_D%2Fsunflower.png",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"file",
+								"image"
+							],
+							"query": [
+								{
+									"key": "path",
+									"value": "%2FWIN_D%2Fsunflower.png"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{jwtToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
 						"exec": [
 							""
 						]
