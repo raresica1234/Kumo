@@ -14,6 +14,7 @@ import { WebsocketService } from '../../services/websocket.service';
 })
 export class ImageComponent implements OnDestroy {
   @Input({ required: true }) imageUrl!: string;
+  @Input({ required: false }) width!: number;
 
   isLoaded: boolean = false;
 
@@ -32,7 +33,7 @@ export class ImageComponent implements OnDestroy {
 
   private loadImage() {
     if (this.isLoaded) return;
-    const sub = this.fileService.getThumbnail(encodeURIComponent(this.imageUrl)).subscribe({
+    const sub = this.fileService.getImage(encodeURIComponent(this.imageUrl), this.width).subscribe({
       next: (value) => {
         const reader = new FileReader();
         reader.readAsDataURL(value);

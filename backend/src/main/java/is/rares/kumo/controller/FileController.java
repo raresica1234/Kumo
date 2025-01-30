@@ -4,7 +4,7 @@ import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.security.services.CurrentUserService;
 import is.rares.kumo.service.content.FileService;
-import is.rares.kumo.service.content.ThumbnailService;
+import is.rares.kumo.service.content.ImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 public class FileController {
 
     private final FileService fileService;
-    private final ThumbnailService thumbnailService;
+    private final ImageService imageService;
     private final CurrentUserService currentUserService;
 
     @Authenticated
@@ -33,9 +33,9 @@ public class FileController {
 
     @Authenticated
     @HasTokenType
-    @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM, path = "/thumbnail")
-    public InputStreamResource getThumbnail(@RequestParam("path") String path) {
+    @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM, path = "/image")
+    public InputStreamResource getImage(@RequestParam("path") String path, @RequestParam(name = "width", defaultValue = "-1") int width) {
         var currentUser = currentUserService.getUser();
-        return thumbnailService.getThumbnail(path, currentUser);
+        return imageService.getImage(path, width, currentUser);
     }
 }

@@ -2,6 +2,7 @@ package is.rares.kumo.service.content;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.FileErrorCodes;
+import is.rares.kumo.domain.explore.ThumbnailSizeEnum;
 import is.rares.kumo.security.domain.CurrentUser;
 import is.rares.kumo.service.explore.ExplorerService;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -24,15 +27,15 @@ import javax.imageio.ImageIO;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ThumbnailService {
+public class ImageService {
     private final ExplorerService explorerService;
 
-    public InputStreamResource getThumbnail(String path, CurrentUser currentUser) {
+    public InputStreamResource getImage(String path, int width, CurrentUser currentUser) {
         if (path.isEmpty())
             throw new KumoException(FileErrorCodes.NOT_FOUND);
 
         String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
-        log.info("User {} requested file: {}", currentUser.getUsername(), decodedPath);
+        log.info("User {} requested image:{}: {}", currentUser.getUsername(), width, decodedPath);
 
         if (!explorerService.canAccessPath(decodedPath, currentUser))
             throw new KumoException(FileErrorCodes.NOT_FOUND);
@@ -43,15 +46,23 @@ public class ThumbnailService {
             throw new KumoException(FileErrorCodes.NOT_FOUND);
 
 
-        return createSmallThumbnail(decodedPath);
+        var thumbnailSize = ThumbnailSizeEnum.getThumbnailSize(width);
+
+        log.info("Scaling down image to {}", thumbnailSize.maxSize);
+
+        if (thumbnailSize == ThumbnailSizeEnum.ORIGINAL)
+            return getOriginalImage(decodedPath);
+
+
+        return createSmallThumbnail(decodedPath, thumbnailSize);
     }
 
-    private InputStreamResource createSmallThumbnail(String path) {
+    private InputStreamResource createSmallThumbnail(String path, ThumbnailSizeEnum thumbnailSize) {
         File imageFile = new File(path);
         try {
 			BufferedImage originalImage = ImageIO.read(imageFile);
 
-            BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, 200);
+            BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, thumbnailSize.maxSize);
 
             String[] split = path.split("\\.");
 
@@ -65,5 +76,19 @@ public class ThumbnailService {
             log.error("Could not open file {}", path);
             throw new KumoException(FileErrorCodes.NOT_FOUND);
 		}
+    }
+
+
+    private InputStreamResource getOriginalImage(String path) {
+        File file = new File(path);
+
+        FileInputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+            return new InputStreamResource(inputStream);
+        } catch (FileNotFoundException e) {
+            throw new KumoException(FileErrorCodes.NOT_FOUND);
+        }
+
     }
 }

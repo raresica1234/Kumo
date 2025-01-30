@@ -144,21 +144,26 @@ export class FileControllerService {
 
     /**
      * @param path 
+     * @param width 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getThumbnail(path: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<Blob>;
-    public getThumbnail(path: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpResponse<Blob>>;
-    public getThumbnail(path: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpEvent<Blob>>;
-    public getThumbnail(path: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<any> {
+    public getImage(path: string, width?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<Blob>;
+    public getImage(path: string, width?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpResponse<Blob>>;
+    public getImage(path: string, width?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpEvent<Blob>>;
+    public getImage(path: string, width?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<any> {
         if (path === null || path === undefined) {
-            throw new Error('Required parameter path was null or undefined when calling getThumbnail.');
+            throw new Error('Required parameter path was null or undefined when calling getImage.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (path !== undefined && path !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>path, 'path');
+        }
+        if (width !== undefined && width !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>width, 'width');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -181,7 +186,7 @@ export class FileControllerService {
         }
 
 
-        let localVarPath = `/api/file/thumbnail`;
+        let localVarPath = `/api/file/image`;
         return this.httpClient.request('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
