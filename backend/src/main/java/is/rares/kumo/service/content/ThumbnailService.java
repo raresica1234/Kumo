@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import is.rares.kumo.core.exceptions.KumoException;
@@ -91,10 +90,19 @@ public class ThumbnailService {
             return;
         }
 
+        File thumbnailFile = new File(computePathForContentHash(contentHash));
+        if (!thumbnailFile.exists()) {
+            log.debug("Thumbnail is missing, recreating {}:{}", path, thumbnailSize.maxSize);
+            createAndSaveThumbnail(path, thumbnailSize, contentHash);
+            return;
+        }
+
         Set<String> keys = redisTemplate.keys(THUMBNAIL_DOCUMENT_NAME + "*::" + thumbnailSize.maxSize + "::" + contentHash);
 
+        File imageFile = new File(path); 
+
         if (!keys.isEmpty()) 
-            if (useExistingThumbnail(keys.stream().findFirst().get(), path, thumbnailSize))
+            if (useExistingThumbnail(keys.stream().findFirst().get(), path, thumbnailSize, imageFile.lastModified()))
                 return;
 
         createAndSaveThumbnail(path, thumbnailSize, contentHash);
@@ -112,7 +120,6 @@ public class ThumbnailService {
 
         if (!FileUtils.createDirectories(folderPath))
             throw new RuntimeException(String.format("Could not create directory for thumbnail %s", folderPath));
-    
 
         try {
             File imageFile = new File(path);
@@ -144,7 +151,7 @@ public class ThumbnailService {
 
     }
 
-    private boolean useExistingThumbnail(String key, String path, ThumbnailSizeEnum thumbnailSize) {
+    private boolean useExistingThumbnail(String key, String path, ThumbnailSizeEnum thumbnailSize, long lastModified) {
         Thumbnail thumbnail = redisTemplate.opsForValue().get(key);
         if (thumbnail == null) {
             log.error("Using existing thumbnail for {}:{} failed, thumbnail not found in redis", path, thumbnailSize.maxSize);
@@ -152,9 +159,11 @@ public class ThumbnailService {
         }
 
         thumbnail.setPath(path);
+        thumbnail.setLastModifiedTimestamp(lastModified);
 
-        redisTemplate.opsForValue().set(key, thumbnail);
+        redisTemplate.opsForValue().set(getRedisKey(HashUtils.hashString(path), thumbnail.getSize(), thumbnail.getContentHash()), thumbnail);
 
+        log.debug("Thumbnail already exists for {}", path);
         return true;
     }
 
@@ -166,10 +175,10 @@ public class ThumbnailService {
         FileInputStream fileInputStream;
 		try {
 			fileInputStream = new FileInputStream(file);
-            log.debug("Thumbnail found in redis");
+            log.debug("Thumbnail found in redis {}", thumbnail.getPath());
             return new InputStreamResource(fileInputStream);
 		} catch (FileNotFoundException e) {
-            log.error("Thumbnail for path {} with content hash {} not found in thumbnail directory. Generating on the fly...", thumbnail.getPath(), thumbnail.getContentHash(), e);
+            log.error("Thumbnail for path {} with content hash {} not found in thumbnail directory. Generating on the fly...", thumbnail.getPath(), thumbnail.getContentHash());
             return createThumbnailOnDemand(thumbnail.getPath(), ThumbnailSizeEnum.getThumbnailSize(thumbnail.getSize()));
         }
     }
@@ -183,17 +192,25 @@ public class ThumbnailService {
 
 
     private Thumbnail getRedisThumbnail(String path, ThumbnailSizeEnum thumbnailSize) {
-        var hashedPath = DigestUtils.sha1DigestAsHex(path);
-        Set<String> keys = redisTemplate.keys(THUMBNAIL_DOCUMENT_NAME + hashedPath + "::" + thumbnailSize.maxSize + "::*");
+        var hashedPath = HashUtils.hashString(path);
+        var keyString = THUMBNAIL_DOCUMENT_NAME + hashedPath + "::" + thumbnailSize.maxSize + "*";
+        Set<String> keys = redisTemplate.keys(keyString);
 
         var results = keys.stream()
             .map(key -> redisTemplate.opsForValue().get(key))
             .toList(); 
 
+        if (results.isEmpty()) {
+            log.debug("Thumbnail not found in redis");
+            return null;
+        }
+
         for (var result : results) {
             if (checkIfThumbnailIsValid(path, result))
                 return result;
         }
+
+        log.debug("Last modified timestamp changed for {}", path);
 
         return null;
     }
@@ -202,5 +219,10 @@ public class ThumbnailService {
     private boolean checkIfThumbnailIsValid(String path, Thumbnail thumbnail) {
         var file = new File(path);
         return file.lastModified() == thumbnail.getLastModifiedTimestamp();
+    }
+
+
+    private String getRedisKey(String path, int width, String contentHash) {
+        return THUMBNAIL_DOCUMENT_NAME + path + "::" + width + "::" + contentHash;
     }
 }

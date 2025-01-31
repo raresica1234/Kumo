@@ -35,7 +35,7 @@ public class HashUtils {
                 len = input.read(buffer);
             }
 
-            return new HexBinaryAdapter().marshal(sha1.digest());
+            return new HexBinaryAdapter().marshal(sha1.digest()).toLowerCase();
         }
     }
 }
