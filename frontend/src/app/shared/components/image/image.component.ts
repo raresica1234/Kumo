@@ -3,6 +3,7 @@ import { FileControllerService } from '../../api-models';
 import { Subscription } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { InViewDirective } from '../../utils/in-view.directive';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-image',
@@ -13,6 +14,7 @@ import { InViewDirective } from '../../utils/in-view.directive';
 })
 export class ImageComponent implements OnDestroy {
   @Input({ required: true }) imageUrl!: string;
+  @Input({ required: false }) width!: number;
 
   isLoaded: boolean = false;
 
@@ -20,7 +22,10 @@ export class ImageComponent implements OnDestroy {
 
   private subscriptionManager: Subscription = new Subscription();
 
-  constructor(private fileService: FileControllerService) {}
+  constructor(
+    private fileService: FileControllerService,
+    private websocketService: WebsocketService,
+  ) {}
 
   ngOnDestroy(): void {
     this.subscriptionManager.unsubscribe();
@@ -28,7 +33,7 @@ export class ImageComponent implements OnDestroy {
 
   private loadImage() {
     if (this.isLoaded) return;
-    const sub = this.fileService.getFile(encodeURIComponent(this.imageUrl)).subscribe({
+    const sub = this.fileService.getImage(encodeURIComponent(this.imageUrl), this.width).subscribe({
       next: (value) => {
         const reader = new FileReader();
         reader.readAsDataURL(value);

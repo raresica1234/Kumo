@@ -3,7 +3,8 @@ package is.rares.kumo.controller;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasTokenType;
 import is.rares.kumo.security.services.CurrentUserService;
-import is.rares.kumo.service.FileService;
+import is.rares.kumo.service.content.FileService;
+import is.rares.kumo.service.content.ImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 public class FileController {
 
     private final FileService fileService;
+    private final ImageService imageService;
     private final CurrentUserService currentUserService;
 
     @Authenticated
@@ -29,4 +31,11 @@ public class FileController {
         return fileService.getFile(path, currentUser);
     }
 
+    @Authenticated
+    @HasTokenType
+    @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM, path = "/image")
+    public InputStreamResource getImage(@RequestParam("path") String path, @RequestParam(name = "width", defaultValue = "-1") int width) {
+        var currentUser = currentUserService.getUser();
+        return imageService.getImage(path, width, currentUser);
+    }
 }

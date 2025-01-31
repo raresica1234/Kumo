@@ -20,9 +20,11 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@stomp/stompjs": "^7.0.0",
     "ngx-toastr": "^18.0.0",
     "prettier-plugin-tailwindcss": "^0.5.9",
     "rxjs": "~7.8.0",
+    "sockjs-client": "^1.6.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

@@ -11,3 +11,4 @@ public class KumoApplication {
         SpringApplication.run(KumoApplication.class, args);
     }
 }
+

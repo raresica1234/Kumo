@@ -21,6 +21,7 @@ kumo:
     inviteBased: false
   owner:
     username: raresica1234
+  thumbnailDirectory: data
 
 
 spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

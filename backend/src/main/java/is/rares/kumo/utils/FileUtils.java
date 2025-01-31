@@ -13,6 +13,13 @@ public class FileUtils {
     }
 
 
+    public boolean createDirectories(String path) {
+        if (directoryExists(path))
+            return true;
+
+        return new File(path).mkdirs();
+    }
+
     public String getRealPath(String rootPath, String path) {
         if (path.startsWith(rootPath.substring(1))) return "/" + path;
         else return path;

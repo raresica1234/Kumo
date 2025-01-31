@@ -1,4 +1,4 @@
-package is.rares.kumo.service;
+package is.rares.kumo.service.content;
 
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.FileErrorCodes;

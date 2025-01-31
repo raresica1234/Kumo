@@ -22,9 +22,9 @@ export interface PageExplorationUserRoleModel {
     content?: Array<ExplorationUserRoleModel>;
     number?: number;
     sort?: SortObject;
+    numberOfElements?: number;
     first?: boolean;
     last?: boolean;
-    numberOfElements?: number;
     empty?: boolean;
 }
 

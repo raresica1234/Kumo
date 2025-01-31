@@ -4,7 +4,7 @@
       <mat-card navHandler appearance="outlined" class="file-grid-card" [url]="navigateTo(file)">
         @if (file.type === "IMAGE") {
           <div class="file-card-image">
-            <app-image navHandler [imageUrl]="file.fullPath!" [url]="viewImage(file)" />
+            <app-image navHandler [imageUrl]="file.fullPath!" [width]="150" [url]="viewImage(file)" />
           </div>
         } @else {
           <mat-icon class="file-grid-icon" [class.mat-primary]="file.type === 'DIRECTORY'">

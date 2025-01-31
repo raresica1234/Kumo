@@ -13,6 +13,8 @@ interface IpData {
   providedIn: 'root',
 })
 export class IpService {
+  // TODO: look into replacing this by using nginx's real ip
+
   private static API = 'http://ip-api.com/json/';
 
   constructor(private http: HttpClient) {}
