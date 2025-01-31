@@ -1,4 +1,4 @@
-package is.rares.kumo.domain.explore;
+package is.rares.kumo.domain.content;
 
 
 public enum ThumbnailSizeEnum {

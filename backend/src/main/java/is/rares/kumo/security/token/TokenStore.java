@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 public class TokenStore {
     private final TokenRepository tokenRepository;
 
-    private final RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String TOKEN_DOCUMENT_NAME = "token::";
 
     public TokenStore(TokenRepository tokenRepository,
-                      RedisTemplate<Object, Object> redisTemplate) {
+                      RedisTemplate<String, Object> redisTemplate) {
         this.tokenRepository = tokenRepository;
         this.redisTemplate = redisTemplate;
     }

@@ -1,21 +1,10 @@
 package is.rares.kumo.security;
 
-import is.rares.kumo.controller.AuthenticationController;
-import is.rares.kumo.security.annotation.NotAuthenticated;
-import is.rares.kumo.utils.DefaultUtils;
-import is.rares.kumo.utils.ReflectionUtils;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.boot.ApplicationArguments;
+import java.lang.reflect.Method;
+
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.type.AnnotatedTypeMetadata;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,12 +14,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import is.rares.kumo.controller.AuthenticationController;
+import is.rares.kumo.security.annotation.NotAuthenticated;
+import is.rares.kumo.utils.DefaultUtils;
+import is.rares.kumo.utils.ReflectionUtils;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
@@ -38,8 +36,6 @@ import java.util.Set;
 @Slf4j
 public class SecurityConfig {
     private final AuthorizationInterceptor authorizationInterceptor;
-    private final GenericApplicationContext applicationContext;
-    private final ApplicationArguments applicationArguments;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,9 +46,6 @@ public class SecurityConfig {
                     authorize
                             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                             .requestMatchers("/swagger-resources/**").permitAll()
-
-                            .requestMatchers("/api/websocket").permitAll()
-
                             .anyRequest().permitAll();
                 })
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

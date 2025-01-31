@@ -10,10 +10,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
   constructor(private websocketService: WebsocketService) {}
 
   ngOnInit() {
-    this.websocketService.connect();
+    // this.websocketService.connect();
   }
 
   ngOnDestroy() {
-    this.websocketService.disconnect();
+    // this.websocketService.disconnect();
   }
 }

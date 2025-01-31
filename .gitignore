@@ -30,3 +30,6 @@ yarn-error.log*
 
 # keystore
 backend/src/main/resources/keystore
+
+# generated junk
+data
