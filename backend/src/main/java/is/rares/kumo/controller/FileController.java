@@ -34,8 +34,12 @@ public class FileController {
     @Authenticated
     @HasTokenType
     @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM, path = "/image")
-    public InputStreamResource getImage(@RequestParam("path") String path, @RequestParam(name = "width", defaultValue = "-1") int width) {
+    public InputStreamResource getImage(
+            @RequestParam("path") String path,
+            @RequestParam(name = "width", defaultValue = "-1") int width,
+            @RequestParam(name = "original", defaultValue = "false") boolean original
+    ) {
         var currentUser = currentUserService.getUser();
-        return imageService.getImage(path, width, currentUser);
+        return imageService.getImage(path, width, original, currentUser);
     }
 }

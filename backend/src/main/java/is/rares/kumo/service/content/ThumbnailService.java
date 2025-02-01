@@ -19,8 +19,6 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.jose.jwk.ThumbprintURI;
-
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.FileErrorCodes;
 import is.rares.kumo.domain.content.Thumbnail;
@@ -52,7 +50,48 @@ public class ThumbnailService {
             return createThumbnailOnDemand(path, thumbnailSize);
         }
 
-        return getThumbnailFromFile(thumbnail);
+        return getThumbnailFromFile(thumbnail, thumbnailSize);
+    }
+
+
+    public InputStreamResource getOptimizedImage(String path) {
+        ThumbnailSizeEnum thumbnailSize = ThumbnailSizeEnum.ORIGINAL;
+        var thumbnail = getRedisThumbnail(path, thumbnailSize);
+
+
+        if (thumbnail == null) {
+            log.debug("Thumbnail {} not found in redis, creating on demand", path);
+            return createOptimizedImage(path, thumbnailSize);
+        }
+
+        return getThumbnailFromFile(thumbnail, thumbnailSize);
+    }
+
+    private InputStreamResource createOptimizedImage(String path, ThumbnailSizeEnum thumbnailSize) {
+        File imageFile = new File(path);
+        try {
+			BufferedImage originalImage = ImageIO.read(imageFile);
+
+            String[] split = path.split("\\.");
+
+            String extension = split[split.length - 1];
+
+            BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.SPEED, originalImage.getWidth(), originalImage.getHeight());
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(scaledImage, extension, outputStream);
+
+            CompletableFuture.runAsync(() -> cacheThumbnail(scaledImage, path, thumbnailSize), taskExecutor)
+                .exceptionally((e) -> {
+                    log.error("Could not create thumbnail of size {} for {}", thumbnailSize.maxSize, path, e);
+                    return null;
+            });
+
+            return new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
+		} catch (IOException e) {
+            log.error("Could not open file {}", path);
+            throw new KumoException(FileErrorCodes.NOT_FOUND);
+		}
     }
 
     private InputStreamResource createThumbnailOnDemand(String path, ThumbnailSizeEnum thumbnailSize) {
@@ -135,7 +174,7 @@ public class ThumbnailService {
             return;
         }
 
-        File thumbnailFile = new File(computePathForContentHash(contentHash));
+        File thumbnailFile = new File(computePathForContentHash(contentHash, thumbnailSize));
         if (!thumbnailFile.exists()) {
             log.debug("Thumbnail is missing, recreating {}:{}", path, thumbnailSize.maxSize);
             createAndSaveThumbnail(scaledImage, path, thumbnailSize, contentHash);
@@ -155,13 +194,15 @@ public class ThumbnailService {
     }
 
     private void createAndSaveThumbnail(BufferedImage scaledImage, String path, ThumbnailSizeEnum size, String contentHash) {
-        if (!FileUtils.createDirectories(thumbnailDirectoryPath)) {
+        String basePath = getBasePathForThumbnail(size);
+
+        if (!FileUtils.createDirectories(basePath)) {
             log.error("Thumbnail directory doesn't exist or invalid");
             return;
         }
 
   
-        String folderPath = thumbnailDirectoryPath + "/" + contentHash.substring(0, 2) + "/" + contentHash.substring(2, 4);
+        String folderPath = basePath + "/" + contentHash.substring(0, 2) + "/" + contentHash.substring(2, 4);
 
         if (!FileUtils.createDirectories(folderPath))
             throw new RuntimeException(String.format("Could not create directory for thumbnail %s", folderPath));
@@ -209,14 +250,14 @@ public class ThumbnailService {
         return true;
     }
 
-    private InputStreamResource getThumbnailFromFile(Thumbnail thumbnail) {
+    private InputStreamResource getThumbnailFromFile(Thumbnail thumbnail, ThumbnailSizeEnum size) {
         String path;
         if (thumbnail.isOriginalImage()) {
             path = thumbnail.getPath();
             log.debug("Using original image as thumbnail");
         }
         else
-            path = computePathForContentHash(thumbnail.getContentHash());
+            path = computePathForContentHash(thumbnail.getContentHash(), size);
 
         File file = new File(path);
 
@@ -232,8 +273,8 @@ public class ThumbnailService {
     }
 
 
-    private String computePathForContentHash(String contentHash) {
-        String folderPath = thumbnailDirectoryPath + "/" + contentHash.substring(0, 2) + "/" + contentHash.substring(2, 4);
+    private String computePathForContentHash(String contentHash, ThumbnailSizeEnum size) {
+        String folderPath = getBasePathForThumbnail(size) + "/" + contentHash.substring(0, 2) + "/" + contentHash.substring(2, 4);
 
         return folderPath + "/" + contentHash;
     }
@@ -272,5 +313,13 @@ public class ThumbnailService {
 
     private String getRedisKey(String path, int width, String contentHash) {
         return THUMBNAIL_DOCUMENT_NAME + path + "::" + width + "::" + contentHash;
+    }
+
+
+    private String getBasePathForThumbnail(ThumbnailSizeEnum thumbnailSize) {
+        if (thumbnailSize == ThumbnailSizeEnum.ORIGINAL)
+            return thumbnailDirectoryPath + "/original";
+        else
+            return thumbnailDirectoryPath + "/" + thumbnailSize.maxSize;
     }
 }

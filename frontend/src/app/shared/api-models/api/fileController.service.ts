@@ -145,13 +145,14 @@ export class FileControllerService {
     /**
      * @param path 
      * @param width 
+     * @param original 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getImage(path: string, width?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<Blob>;
-    public getImage(path: string, width?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpResponse<Blob>>;
-    public getImage(path: string, width?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpEvent<Blob>>;
-    public getImage(path: string, width?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<any> {
+    public getImage(path: string, width?: number, original?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<Blob>;
+    public getImage(path: string, width?: number, original?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpResponse<Blob>>;
+    public getImage(path: string, width?: number, original?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<HttpEvent<Blob>>;
+    public getImage(path: string, width?: number, original?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream', context?: HttpContext}): Observable<any> {
         if (path === null || path === undefined) {
             throw new Error('Required parameter path was null or undefined when calling getImage.');
         }
@@ -164,6 +165,10 @@ export class FileControllerService {
         if (width !== undefined && width !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>width, 'width');
+        }
+        if (original !== undefined && original !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>original, 'original');
         }
 
         let localVarHeaders = this.defaultHeaders;

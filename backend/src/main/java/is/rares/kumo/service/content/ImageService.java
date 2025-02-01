@@ -25,7 +25,7 @@ public class ImageService {
 
     private final ThumbnailService thumbnailService;
 
-    public InputStreamResource getImage(String path, int width, CurrentUser currentUser) {
+    public InputStreamResource getImage(String path, int width, boolean original, CurrentUser currentUser) {
         if (path.isEmpty())
             throw new KumoException(FileErrorCodes.NOT_FOUND);
 
@@ -43,8 +43,12 @@ public class ImageService {
 
         var thumbnailSize = ThumbnailSizeEnum.getThumbnailSize(width);
 
-        if (thumbnailSize == ThumbnailSizeEnum.ORIGINAL)
-            return getOriginalImage(decodedPath);
+        if (thumbnailSize == ThumbnailSizeEnum.ORIGINAL) {
+            if (original)
+                return getOriginalImage(decodedPath);
+            else
+                return thumbnailService.getOptimizedImage(decodedPath);
+        }
 
         return thumbnailService.getThumbnail(decodedPath, thumbnailSize);
     }
