@@ -46,7 +46,6 @@ public class ImageService {
         if (thumbnailSize == ThumbnailSizeEnum.ORIGINAL)
             return getOriginalImage(decodedPath);
 
-
         return thumbnailService.getThumbnail(decodedPath, thumbnailSize);
     }
 

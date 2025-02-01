@@ -19,6 +19,8 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.nimbusds.jose.jwk.ThumbprintURI;
+
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.FileErrorCodes;
 import is.rares.kumo.domain.content.Thumbnail;
@@ -58,16 +60,22 @@ public class ThumbnailService {
         try {
 			BufferedImage originalImage = ImageIO.read(imageFile);
 
-            BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, thumbnailSize.maxSize);
-
             String[] split = path.split("\\.");
 
             String extension = split[split.length - 1];
 
+            if (originalImage.getWidth() <= thumbnailSize.maxSize || originalImage.getHeight() <= thumbnailSize.maxSize) {
+                log.debug("Image is smaller than thumbnail requested, serving image");
+                return handleImageSmallerThanThumbnail(path, originalImage, extension, thumbnailSize);
+    
+            }
+
+            BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, thumbnailSize.maxSize);
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ImageIO.write(scaledImage, extension, outputStream);
 
-            CompletableFuture.runAsync(() -> cacheThumbnail(path, thumbnailSize), taskExecutor)
+            CompletableFuture.runAsync(() -> cacheThumbnail(scaledImage, path, thumbnailSize), taskExecutor)
                 .exceptionally((e) -> {
                     log.error("Could not create thumbnail of size {} for {}", thumbnailSize.maxSize, path, e);
                     return null;
@@ -80,8 +88,45 @@ public class ThumbnailService {
 		}
     }
 
+    private InputStreamResource handleImageSmallerThanThumbnail(String path, BufferedImage originalImage, String extension, ThumbnailSizeEnum thumbnailSize) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageIO.write(originalImage, extension, outputStream);
 
-    private void cacheThumbnail(String path, ThumbnailSizeEnum thumbnailSize) {
+        CompletableFuture.runAsync(() -> storeOriginalImageAsThumbnail(path, thumbnailSize), taskExecutor)
+            .exceptionally((e) -> {
+                log.error("Could not store original image as thumbnail for size {} for {}", thumbnailSize.maxSize, path, e);
+                return null;
+            });
+        
+
+        return new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
+    }
+
+
+    private void storeOriginalImageAsThumbnail(String path, ThumbnailSizeEnum thumbnailSize) {
+        String contentHash;
+        try {
+            contentHash = HashUtils.hashFileContent(path);
+        } catch (Exception e) {
+            log.error("Could not create content hash for file {}", path, e);
+            return;
+        }
+
+        File image = new File(path);
+
+        Thumbnail thumbnail = new Thumbnail();
+        thumbnail.setContentHash(contentHash);
+        thumbnail.setSize(thumbnailSize.maxSize);
+        thumbnail.setPath(path);
+        thumbnail.setOriginalImage(true);
+        thumbnail.setLastModifiedTimestamp(image.lastModified());
+
+        String redisKey = getRedisKey(path, thumbnailSize.maxSize, contentHash);
+
+        redisTemplate.opsForValue().set(redisKey, thumbnail);
+    }
+
+    private void cacheThumbnail(BufferedImage scaledImage, String path, ThumbnailSizeEnum thumbnailSize) {
         String contentHash;
         try {
             contentHash = HashUtils.hashFileContent(path);
@@ -93,7 +138,7 @@ public class ThumbnailService {
         File thumbnailFile = new File(computePathForContentHash(contentHash));
         if (!thumbnailFile.exists()) {
             log.debug("Thumbnail is missing, recreating {}:{}", path, thumbnailSize.maxSize);
-            createAndSaveThumbnail(path, thumbnailSize, contentHash);
+            createAndSaveThumbnail(scaledImage, path, thumbnailSize, contentHash);
             return;
         }
 
@@ -105,11 +150,11 @@ public class ThumbnailService {
             if (useExistingThumbnail(keys.stream().findFirst().get(), path, thumbnailSize, imageFile.lastModified()))
                 return;
 
-        createAndSaveThumbnail(path, thumbnailSize, contentHash);
+        createAndSaveThumbnail(scaledImage, path, thumbnailSize, contentHash);
 
     }
 
-    private void createAndSaveThumbnail(String path, ThumbnailSizeEnum size, String contentHash) {
+    private void createAndSaveThumbnail(BufferedImage scaledImage, String path, ThumbnailSizeEnum size, String contentHash) {
         if (!FileUtils.createDirectories(thumbnailDirectoryPath)) {
             log.error("Thumbnail directory doesn't exist or invalid");
             return;
@@ -124,9 +169,6 @@ public class ThumbnailService {
         try {
             File imageFile = new File(path);
             File outputFile = new File(folderPath + "/" + contentHash);
-			BufferedImage originalImage = ImageIO.read(imageFile);
-
-            BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, size.maxSize);
 
             String[] split = path.split("\\.");
 
@@ -168,7 +210,13 @@ public class ThumbnailService {
     }
 
     private InputStreamResource getThumbnailFromFile(Thumbnail thumbnail) {
-        String path = computePathForContentHash(thumbnail.getContentHash());
+        String path;
+        if (thumbnail.isOriginalImage()) {
+            path = thumbnail.getPath();
+            log.debug("Using original image as thumbnail");
+        }
+        else
+            path = computePathForContentHash(thumbnail.getContentHash());
 
         File file = new File(path);
 
@@ -218,7 +266,7 @@ public class ThumbnailService {
 
     private boolean checkIfThumbnailIsValid(String path, Thumbnail thumbnail) {
         var file = new File(path);
-        return file.lastModified() == thumbnail.getLastModifiedTimestamp();
+        return file.exists() && file.lastModified() == thumbnail.getLastModifiedTimestamp();
     }
 
 

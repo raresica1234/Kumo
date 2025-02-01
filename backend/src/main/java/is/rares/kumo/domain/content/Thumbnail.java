@@ -6,6 +6,7 @@ import lombok.Data;
 public class Thumbnail {
     String path;
     String contentHash;
-    long lastModifiedTimestamp;
-    int size; 
+    long lastModifiedTimestamp; 
+    int size;
+    boolean originalImage = false;
 }
