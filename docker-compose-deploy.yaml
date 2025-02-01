@@ -8,9 +8,19 @@ services:
       - backend
   backend:
     image: kumo_backend
+    # Recommended to run with a user, this way the mounting 
+    # volume won't have to be owned to root
+    # user: <id>:<guid> 
     depends_on:
       - postgres
       - redis
+    volumes:
+      - /path/to/files:/path/to/files # This is where your files will be mounted
+      - kumo-data:/data # This is for kumo's data such as thumbnails
+    
+    # Thumbnails don't need to be backed up regularely, kumo 
+    # will recreate them if they go missing, but do add a volume
+    # so that the thumbnails don't get recreated for container recreation
   postgres:
     image: postgres:14.1-alpine
     environment:
@@ -18,8 +28,20 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=kumo
     volumes: 
-      - ./db:/var/lib/postgresql/data
+      - kumo-db:/var/lib/postgresql/data # this should be backed up regularely
   redis:
     image: redis
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
+
+
+volumes:
+  kumo-db:
+    driver: local
+
+  # In the case where a volume like this is used for thumbnails
+  # and a user is specified for backend, you will need to manually chown everything
+  # otherwise kumo won't be able to create any thumbnails
+  kumo-thumbnail:
+    driver: local
+
