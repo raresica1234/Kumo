@@ -70,7 +70,7 @@ public class ThumbnailService {
     private InputStreamResource createOptimizedImage(String path, ThumbnailSizeEnum thumbnailSize) {
         File imageFile = new File(path);
         try {
-			BufferedImage originalImage = ImageIO.read(imageFile);
+            BufferedImage originalImage = ImageIO.read(imageFile);
 
             String[] split = path.split("\\.");
 
@@ -85,19 +85,19 @@ public class ThumbnailService {
                 .exceptionally((e) -> {
                     log.error("Could not create thumbnail of size {} for {}", thumbnailSize.maxSize, path, e);
                     return null;
-            });
+                });
 
             return new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
-		} catch (IOException e) {
+        } catch (IOException e) {
             log.error("Could not open file {}", path);
             throw new KumoException(FileErrorCodes.NOT_FOUND);
-		}
+        }
     }
 
     private InputStreamResource createThumbnailOnDemand(String path, ThumbnailSizeEnum thumbnailSize) {
         File imageFile = new File(path);
         try {
-			BufferedImage originalImage = ImageIO.read(imageFile);
+            BufferedImage originalImage = ImageIO.read(imageFile);
 
             String[] split = path.split("\\.");
 
@@ -106,7 +106,7 @@ public class ThumbnailService {
             if (originalImage.getWidth() <= thumbnailSize.maxSize || originalImage.getHeight() <= thumbnailSize.maxSize) {
                 log.debug("Image is smaller than thumbnail requested, serving image");
                 return handleImageSmallerThanThumbnail(path, originalImage, extension, thumbnailSize);
-    
+
             }
 
             BufferedImage scaledImage = Scalr.resize(originalImage, Scalr.Method.BALANCED, thumbnailSize.maxSize);
@@ -118,13 +118,13 @@ public class ThumbnailService {
                 .exceptionally((e) -> {
                     log.error("Could not create thumbnail of size {} for {}", thumbnailSize.maxSize, path, e);
                     return null;
-            });
+                });
 
             return new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
-		} catch (IOException e) {
+        } catch (IOException e) {
             log.error("Could not open file {}", path);
             throw new KumoException(FileErrorCodes.NOT_FOUND);
-		}
+        }
     }
 
     private InputStreamResource handleImageSmallerThanThumbnail(String path, BufferedImage originalImage, String extension, ThumbnailSizeEnum thumbnailSize) throws IOException {
@@ -136,7 +136,7 @@ public class ThumbnailService {
                 log.error("Could not store original image as thumbnail for size {} for {}", thumbnailSize.maxSize, path, e);
                 return null;
             });
-        
+
 
         return new InputStreamResource(new ByteArrayInputStream(outputStream.toByteArray()));
     }
@@ -201,7 +201,7 @@ public class ThumbnailService {
             return;
         }
 
-  
+
         String folderPath = basePath + "/" + contentHash.substring(0, 2) + "/" + contentHash.substring(2, 4);
 
         if (!FileUtils.createDirectories(folderPath))
@@ -227,10 +227,10 @@ public class ThumbnailService {
 
             redisTemplate.opsForValue().set(redisKey, thumbnail);
             log.debug("Saved thumbnail for {}:{} in redis", path, size.maxSize);
-		} catch (IOException e) {
+        } catch (IOException e) {
             log.error("Could not open file {}", path);
             throw new KumoException(FileErrorCodes.NOT_FOUND);
-		}
+        }
 
     }
 
@@ -262,11 +262,11 @@ public class ThumbnailService {
         File file = new File(path);
 
         FileInputStream fileInputStream;
-		try {
-			fileInputStream = new FileInputStream(file);
+        try {
+            fileInputStream = new FileInputStream(file);
             log.debug("Thumbnail found in redis {}", thumbnail.getPath());
             return new InputStreamResource(fileInputStream);
-		} catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             log.error("Thumbnail for path {} with content hash {} not found in thumbnail directory. Generating on the fly...", thumbnail.getPath(), thumbnail.getContentHash());
             return createThumbnailOnDemand(thumbnail.getPath(), ThumbnailSizeEnum.getThumbnailSize(thumbnail.getSize()));
         }
