@@ -50,7 +50,7 @@ public class ThumbnailService {
             return createThumbnailOnDemand(path, thumbnailSize);
         }
 
-        return getThumbnailFromFile(thumbnail, thumbnailSize);
+        return getThumbnailFromFile(thumbnail, thumbnailSize, false);
     }
 
 
@@ -64,7 +64,7 @@ public class ThumbnailService {
             return createOptimizedImage(path, thumbnailSize);
         }
 
-        return getThumbnailFromFile(thumbnail, thumbnailSize);
+        return getThumbnailFromFile(thumbnail, thumbnailSize, true);
     }
 
     private InputStreamResource createOptimizedImage(String path, ThumbnailSizeEnum thumbnailSize) {
@@ -250,7 +250,7 @@ public class ThumbnailService {
         return true;
     }
 
-    private InputStreamResource getThumbnailFromFile(Thumbnail thumbnail, ThumbnailSizeEnum size) {
+    private InputStreamResource getThumbnailFromFile(Thumbnail thumbnail, ThumbnailSizeEnum size, boolean optimizedImage) {
         String path;
         if (thumbnail.isOriginalImage()) {
             path = thumbnail.getPath();
@@ -268,7 +268,10 @@ public class ThumbnailService {
             return new InputStreamResource(fileInputStream);
         } catch (FileNotFoundException e) {
             log.error("Thumbnail for path {} with content hash {} not found in thumbnail directory. Generating on the fly...", thumbnail.getPath(), thumbnail.getContentHash());
-            return createThumbnailOnDemand(thumbnail.getPath(), ThumbnailSizeEnum.getThumbnailSize(thumbnail.getSize()));
+            if (optimizedImage)
+                return createOptimizedImage(thumbnail.getPath(), size);
+            else
+                return createThumbnailOnDemand(thumbnail.getPath(), size);
         }
     }
 
