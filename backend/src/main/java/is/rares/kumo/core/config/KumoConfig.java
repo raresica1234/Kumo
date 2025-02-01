@@ -21,4 +21,7 @@ public class KumoConfig {
 
     @Value("${kumo.owner.email:}") // null default
     String ownerEmail;
+
+    @Value("${kumo.thumbnailDirectory:/data}")
+    String thumbnailDirectoryPath;
 }

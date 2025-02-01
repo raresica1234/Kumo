@@ -7,18 +7,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.FileErrorCodes;
 import is.rares.kumo.domain.content.Thumbnail;
@@ -36,11 +40,9 @@ public class ThumbnailService {
     // Key definition: thumbnail::sha1(filename)::size::sha1(content)
     private static final String THUMBNAIL_DOCUMENT_NAME = "thumbnail::";
 
+    private final KumoConfig kumoConfig;
     private final RedisTemplate<String, Thumbnail> redisTemplate;
     private final TaskExecutor taskExecutor;
-
-    @Value("${kumo.thumbnailDirectory:data}")
-    private String thumbnailDirectoryPath;
 
     public InputStreamResource getThumbnail(String path, ThumbnailSizeEnum thumbnailSize) {
         var thumbnail = getRedisThumbnail(path, thumbnailSize);
@@ -174,7 +176,7 @@ public class ThumbnailService {
             return;
         }
 
-        File thumbnailFile = new File(computePathForContentHash(contentHash, thumbnailSize));
+        File thumbnailFile = new File(getPathForContentHash(contentHash, thumbnailSize));
         if (!thumbnailFile.exists()) {
             log.debug("Thumbnail is missing, recreating {}:{}", path, thumbnailSize.maxSize);
             createAndSaveThumbnail(scaledImage, path, thumbnailSize, contentHash);
@@ -244,7 +246,7 @@ public class ThumbnailService {
         thumbnail.setPath(path);
         thumbnail.setLastModifiedTimestamp(lastModified);
 
-        redisTemplate.opsForValue().set(getRedisKey(HashUtils.hashString(path), thumbnail.getSize(), thumbnail.getContentHash()), thumbnail);
+        redisTemplate.opsForValue().set(getRedisKey(path, thumbnail.getSize(), thumbnail.getContentHash()), thumbnail);
 
         log.debug("Thumbnail already exists for {}", path);
         return true;
@@ -257,7 +259,7 @@ public class ThumbnailService {
             log.debug("Using original image as thumbnail");
         }
         else
-            path = computePathForContentHash(thumbnail.getContentHash(), size);
+            path = getPathForContentHash(thumbnail.getContentHash(), size);
 
         File file = new File(path);
 
@@ -276,12 +278,17 @@ public class ThumbnailService {
     }
 
 
-    private String computePathForContentHash(String contentHash, ThumbnailSizeEnum size) {
-        String folderPath = getBasePathForThumbnail(size) + "/" + contentHash.substring(0, 2) + "/" + contentHash.substring(2, 4);
-
-        return folderPath + "/" + contentHash;
+    private String getPathForContentHash(String contentHash, ThumbnailSizeEnum size) {
+        return getDirectoryForContentHash(contentHash, size) + "/" + contentHash;
     }
 
+    private String getDirectoryForContentHash(String contentHash, ThumbnailSizeEnum size) {
+        return getBaseDirectoryForContentHash(contentHash, size) + "/" + contentHash.substring(2, 4);
+    }
+
+    private String getBaseDirectoryForContentHash(String contentHash, ThumbnailSizeEnum size) {
+        return getBasePathForThumbnail(size) + "/" + contentHash.substring(0, 2);
+    }
 
     private Thumbnail getRedisThumbnail(String path, ThumbnailSizeEnum thumbnailSize) {
         var hashedPath = HashUtils.hashString(path);
@@ -315,14 +322,85 @@ public class ThumbnailService {
 
 
     private String getRedisKey(String path, int width, String contentHash) {
-        return THUMBNAIL_DOCUMENT_NAME + path + "::" + width + "::" + contentHash;
+        return THUMBNAIL_DOCUMENT_NAME + HashUtils.hashString(path) + "::" + width + "::" + contentHash;
     }
 
 
     private String getBasePathForThumbnail(ThumbnailSizeEnum thumbnailSize) {
         if (thumbnailSize == ThumbnailSizeEnum.ORIGINAL)
-            return thumbnailDirectoryPath + "/original";
+            return kumoConfig.getThumbnailDirectoryPath() + "/original";
         else
-            return thumbnailDirectoryPath + "/" + thumbnailSize.maxSize;
+            return kumoConfig.getThumbnailDirectoryPath() + "/" + thumbnailSize.maxSize;
+    }
+
+
+    public void runGarbageCollection() {
+        long startTime = System.currentTimeMillis();
+
+        int decoupledThumbnails = 0;
+        int decoupledThumbnailFiles = 0;
+        log.info("Running thumbnail garbage collection job");
+
+        var keys = redisTemplate.keys(THUMBNAIL_DOCUMENT_NAME + "*");
+
+        log.debug("Checking {} redis thumbnails...", keys.size());
+
+        for (var key : keys) {
+            var thumbnail = redisTemplate.opsForValue().get(key);
+            var file = new File(thumbnail.getPath());
+
+            var thumbnailSize = ThumbnailSizeEnum.getThumbnailSize(thumbnail.getSize());
+            var thumbnailPath = getPathForContentHash(thumbnail.getContentHash(), thumbnailSize);
+            var thumbnailFile = new File(thumbnailPath);
+
+            if (!file.exists() || thumbnail.getLastModifiedTimestamp() != file.lastModified() 
+                    || (!thumbnail.isOriginalImage() && !thumbnailFile.exists())) {
+                redisTemplate.delete(key);
+                decoupledThumbnails++;
+                continue;
+            }
+        }
+
+        log.debug("Finished checking redis thumbnails");
+
+        for (var thumbnailSize : ThumbnailSizeEnum.values()) {
+            var path = Path.of(getBasePathForThumbnail(thumbnailSize));
+
+            List<String> thumbnailNames = new ArrayList<>();
+            try {
+                FileUtils.getFileNamesInDirectoryRecursive(thumbnailNames, path);
+            } catch(NoSuchFileException exception) {
+                log.info("No thumbnails for size {}", thumbnailSize.toString());
+                continue;
+            } catch(IOException exception) {
+                log.error("Error occured when processing thumbnail size {}", thumbnailSize.toString(), exception); 
+                continue;
+            }
+
+            log.debug("Checking {} thumbnails for size {}", thumbnailNames.size(), thumbnailSize.toString());
+
+            for (var thumbnailName : thumbnailNames) {
+                var thumbnailKeys = redisTemplate.keys(THUMBNAIL_DOCUMENT_NAME + "*" + thumbnailName);
+                if (thumbnailKeys.isEmpty()) {
+                    var thumbnailPath = getPathForContentHash(thumbnailName, thumbnailSize);
+                    var file = new File(thumbnailPath);
+
+                    file.delete();
+
+                    var contentHashDirectory = getDirectoryForContentHash(thumbnailName, thumbnailSize);
+                    if (FileUtils.removeDirectoryIfEmpty(contentHashDirectory)) {
+                        FileUtils.removeDirectoryIfEmpty(getBaseDirectoryForContentHash(thumbnailName, thumbnailSize));
+                    }
+                    decoupledThumbnailFiles++;
+                }
+            }
+
+            log.debug("Finished checking thumbnails for size {}", thumbnailSize.toString());
+        }
+        
+        var timeElapsed = System.currentTimeMillis() - startTime;
+        log.info("Removed {} decoupled thumbnails from redis", decoupledThumbnails);
+        log.info("Removed {} decoupled thumbnails from data folder", decoupledThumbnailFiles);
+        log.info("Thumbnail garbage collection job finished, took {} seconds", timeElapsed / 1000.0f);
     }
 }
