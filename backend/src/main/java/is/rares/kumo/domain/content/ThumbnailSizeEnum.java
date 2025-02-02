@@ -3,9 +3,8 @@ package is.rares.kumo.domain.content;
 
 public enum ThumbnailSizeEnum {
     ORIGINAL(-1),
-    MEDIUM(300),
-    SMALL(150),
-    EXTRA_SMALL(50);
+    FILE_EXPLORER_GRID(128)
+    ;
 
 
     ThumbnailSizeEnum(int maxSize) {
