@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -22,6 +24,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import is.rares.kumo.controller.responses.admin.ThumbnailStatusResponse;
 import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.FileErrorCodes;
@@ -402,5 +405,50 @@ public class ThumbnailService {
         log.info("Removed {} decoupled thumbnails from redis", decoupledThumbnails);
         log.info("Removed {} decoupled thumbnails from data folder", decoupledThumbnailFiles);
         log.info("Thumbnail garbage collection job finished, took {} seconds", timeElapsed / 1000.0f);
+    }
+
+    public ThumbnailStatusResponse getThumbnailStatus() {
+        Map<ThumbnailSizeEnum, Integer> thumbnailCounts = new HashMap<>();
+        Map<ThumbnailSizeEnum, Long> thumbnailSpace = new HashMap<>();
+
+        var totalThumbnailCount = 0;
+        long totalSpaceUsed = 0;
+
+        for (var thumbnailSizeEnum : ThumbnailSizeEnum.values()) {
+            var path = Path.of(getBasePathForThumbnail(thumbnailSizeEnum));
+            List<String> thumbnailNames = new ArrayList<>();
+
+            long thumbnailSize = 0;
+
+            try {
+                FileUtils.getFileFullNamesInDirectoryRecursive(thumbnailNames, path);
+            } catch(NoSuchFileException exception) {
+                log.info("No thumbnails for size {}", thumbnailSizeEnum.toString());
+            } catch(IOException exception) {
+                log.error("Error occured when processing thumbnail size {}", thumbnailSizeEnum.toString(), exception); 
+            }
+
+            for (var thumbnailPath : thumbnailNames) {
+                File file = new File(thumbnailPath);
+                if (file.isFile())
+                    thumbnailSize += file.length();
+            }
+
+            thumbnailCounts.put(thumbnailSizeEnum, thumbnailNames.size());
+            totalThumbnailCount += thumbnailNames.size();
+
+            thumbnailSpace.put(thumbnailSizeEnum, thumbnailSize);
+            totalSpaceUsed += thumbnailSize;
+        }
+
+
+        var result = new ThumbnailStatusResponse();
+        result.setTotalThumbnailCount(totalThumbnailCount);
+        result.setThumbnailCounts(thumbnailCounts);
+        result.setTotalSpaceUsed(totalSpaceUsed);
+        result.setThumbnailSpace(thumbnailSpace);
+        result.setRedisThumbnailEntries(redisTemplate.keys(THUMBNAIL_DOCUMENT_NAME + "*").size());
+
+        return result;
     }
 }

@@ -19,5 +19,6 @@ export * from './registerInviteResponse';
 export * from './registerRequest';
 export * from './setUserExplorationRolesRequest';
 export * from './sortObject';
+export * from './thumbnailStatusResponse';
 export * from './tokenDataResponse';
 export * from './userModel';

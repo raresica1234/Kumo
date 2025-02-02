@@ -1,3 +1,5 @@
+export * from './adminController.service';
+import { AdminControllerService } from './adminController.service';
 export * from './authenticationController.service';
 import { AuthenticationControllerService } from './authenticationController.service';
 export * from './explorationRoleController.service';
@@ -14,4 +16,4 @@ export * from './permissionController.service';
 import { PermissionControllerService } from './permissionController.service';
 export * from './userController.service';
 import { UserControllerService } from './userController.service';
-export const APIS = [AuthenticationControllerService, ExplorationRoleControllerService, ExplorationUserRoleControllerService, ExplorerControllerService, FileControllerService, PathPointControllerService, PermissionControllerService, UserControllerService];
+export const APIS = [AdminControllerService, AuthenticationControllerService, ExplorationRoleControllerService, ExplorationUserRoleControllerService, ExplorerControllerService, FileControllerService, PathPointControllerService, PermissionControllerService, UserControllerService];

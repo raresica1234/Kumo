@@ -388,6 +388,81 @@
 			]
 		},
 		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get Thumbnail Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/thumbnailStatus",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"thumbnailStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Run Thumbnail Garbage Collection Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/thumbnailGarbageCollection",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"thumbnailGarbageCollection"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{jwtToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
 			"name": "Exploring",
 			"item": [
 				{
@@ -1023,12 +1098,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/file/image?path=%2FWIN_D%2Fsunflower.png",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/api/file/image?path=%2FWIN_D%2Fsunflower.png&width=128",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"file",
@@ -1038,6 +1111,15 @@
 								{
 									"key": "path",
 									"value": "%2FWIN_D%2Fsunflower.png"
+								},
+								{
+									"key": "original",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "width",
+									"value": "128"
 								}
 							]
 						}

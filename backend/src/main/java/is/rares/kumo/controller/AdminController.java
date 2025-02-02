@@ -2,11 +2,13 @@ package is.rares.kumo.controller;
 
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import is.rares.kumo.controller.responses.BooleanResponse;
+import is.rares.kumo.controller.responses.admin.ThumbnailStatusResponse;
 import is.rares.kumo.security.annotation.Authenticated;
 import is.rares.kumo.security.annotation.HasAuthority;
 import is.rares.kumo.security.annotation.HasTokenType;
@@ -28,5 +30,13 @@ public class AdminController {
     public BooleanResponse runThumbnailGarbageCollection() {
         adminService.runThumbnailGarbageCollection();
         return new BooleanResponse(true);
+    }
+
+    @Authenticated
+    @HasTokenType
+    @HasAuthority(Feature.ADMIN)
+    @GetMapping(path = "/thumbnailStatus", produces = MediaType.APPLICATION_JSON)
+    public ThumbnailStatusResponse getThumbnailStatus() {
+        return adminService.getThumbnailStatus();
     }
 }

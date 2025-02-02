@@ -1,1 +1,19 @@
-<p>admin-home works!</p>
+<h1>Thumbnails</h1>
+<hr />
+<div>
+  <h3>Total thumbnails: {{ thumbnailStatusData?.totalThumbnailCount }}</h3>
+  <h3>Total thumbnails in redis: {{ thumbnailStatusData?.redisThumbnailEntries }}</h3>
+  <h3>Total space used: {{ thumbnailStatusData?.totalSpaceUsed }}</h3>
+</div>
+<table mat-table>
+  <tr mat-header-row>
+    <td>Type</td>
+    <td>Count</td>
+    <td>Size</td>
+  </tr>
+  <tr mat-row>
+    <td>asd</td>
+    <td>asd</td>
+    <td>asd</td>
+  </tr>
+</table>

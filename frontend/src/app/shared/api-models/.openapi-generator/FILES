@@ -1,6 +1,7 @@
 .gitignore
 README.md
 api.module.ts
+api/adminController.service.ts
 api/api.ts
 api/authenticationController.service.ts
 api/explorationRoleController.service.ts
@@ -36,6 +37,7 @@ model/registerInviteResponse.ts
 model/registerRequest.ts
 model/setUserExplorationRolesRequest.ts
 model/sortObject.ts
+model/thumbnailStatusResponse.ts
 model/tokenDataResponse.ts
 model/userModel.ts
 param.ts

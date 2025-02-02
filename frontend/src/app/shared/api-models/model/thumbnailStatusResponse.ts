@@ -11,9 +11,11 @@
  */
 
 
-export interface SortObject { 
-    unsorted?: boolean;
-    sorted?: boolean;
-    empty?: boolean;
+export interface ThumbnailStatusResponse { 
+    totalThumbnailCount?: number;
+    thumbnailCounts?: { [key: string]: number; };
+    redisThumbnailEntries?: number;
+    totalSpaceUsed?: number;
+    thumbnailSpace?: { [key: string]: number; };
 }
 

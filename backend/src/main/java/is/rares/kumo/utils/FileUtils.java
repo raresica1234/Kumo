@@ -47,6 +47,18 @@ public class FileUtils {
         return result;
     }
 
+    public List<String> getFileFullNamesInDirectoryRecursive(List<String> result, Path dir) throws IOException {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+            for (Path path : stream) {
+                if (path.toFile().isDirectory()) {
+                    getFileFullNamesInDirectoryRecursive(result, path);
+                } else {
+                    result.add(path.toAbsolutePath().toString());
+                }
+            }
+        }
+        return result;
+    }
     public boolean removeDirectoryIfEmpty(String path) {
         Path dir = Paths.get(path);
 
