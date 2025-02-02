@@ -19,10 +19,13 @@ public enum ThumbnailSizeEnum {
         if (width == -1)
             return ThumbnailSizeEnum.ORIGINAL;
 
+
         var values = ThumbnailSizeEnum.values();
-        for (int i = values.length - 2; i >= 0; i--)
+        for (int i = values.length - 1; i >= 1; i--) {
+            System.out.println("Checking " + values[i].toString());
             if (values[i].maxSize >= width)
                 return values[i];
+        }
         
         return ThumbnailSizeEnum.ORIGINAL;
     }
