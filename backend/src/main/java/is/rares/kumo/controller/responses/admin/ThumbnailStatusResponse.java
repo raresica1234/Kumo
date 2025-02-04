@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ThumbnailStatusResponse {
     private int totalThumbnailCount;
-    private Map<ThumbnailSizeEnum, Integer> thumbnailCounts;
+    private Map<String, Integer> thumbnailCounts;
     private int redisThumbnailEntries;
     private long totalSpaceUsed;
-    private Map<ThumbnailSizeEnum, Long> thumbnailSpace;
+    private Map<String, Long> thumbnailSpace;
 }

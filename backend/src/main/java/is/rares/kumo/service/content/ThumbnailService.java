@@ -408,8 +408,8 @@ public class ThumbnailService {
     }
 
     public ThumbnailStatusResponse getThumbnailStatus() {
-        Map<ThumbnailSizeEnum, Integer> thumbnailCounts = new HashMap<>();
-        Map<ThumbnailSizeEnum, Long> thumbnailSpace = new HashMap<>();
+        Map<String, Integer> thumbnailCounts = new HashMap<>();
+        Map<String, Long> thumbnailSpace = new HashMap<>();
 
         var totalThumbnailCount = 0;
         long totalSpaceUsed = 0;
@@ -434,10 +434,10 @@ public class ThumbnailService {
                     thumbnailSize += file.length();
             }
 
-            thumbnailCounts.put(thumbnailSizeEnum, thumbnailNames.size());
+            thumbnailCounts.put(thumbnailSizeEnum.toString(), thumbnailNames.size());
             totalThumbnailCount += thumbnailNames.size();
 
-            thumbnailSpace.put(thumbnailSizeEnum, thumbnailSize);
+            thumbnailSpace.put(thumbnailSizeEnum.toString(), thumbnailSize);
             totalSpaceUsed += thumbnailSize;
         }
 
