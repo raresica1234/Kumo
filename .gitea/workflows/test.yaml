@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-maven
     defaults:
       run:
-        working-directory: kumo/backend
+        working-directory: ./backend
     steps:
       - name: Checkout repository
         uses: https://github.com/actions/checkout@v4
