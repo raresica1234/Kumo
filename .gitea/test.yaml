@@ -1,0 +1,23 @@
+name: Test kumo backend
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-maven
+    defaults:
+      run:
+        working-directory: kumo/backend
+    steps:
+      - name: Checkout repository
+        uses: https://github.com/actions/checkout@v4
+      - name: Setup Java
+        uses: https://github.com/actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+          cache: 'maven'
+      - name: Test project
+        run: mvn clean test
