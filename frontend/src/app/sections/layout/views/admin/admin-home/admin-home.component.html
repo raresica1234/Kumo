@@ -1,7 +1,32 @@
-<h1>Thumbnails</h1>
+<h1>Admin Stats</h1>
 <hr />
-<div>
-  <h3>Total thumbnails: {{ thumbnailStatusData?.totalThumbnailCount }}</h3>
-  <h3>Total thumbnails in redis: {{ thumbnailStatusData?.redisThumbnailEntries }}</h3>
-  <h3>Total space used: {{ getSize(thumbnailStatusData?.totalSpaceUsed) }}</h3>
+<div class="mt-4">
+  <mat-card appearance="raised">
+    <mat-card-header>
+      <mat-card-title>Thumbnail information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Total thumbnails: {{ thumbnailStatusData?.totalThumbnailCount }}</p>
+      <p>Total thumbnails in redis: {{ thumbnailStatusData?.redisThumbnailEntries }}</p>
+      <p>Total space used: {{ getSize(thumbnailStatusData?.totalSpaceUsed) }}</p>
+      <p>
+        Thumbnails counts:
+        <mat-chip-set>
+          @for (thumbnailType of Object.keys(thumbnailStatusData!.thumbnailCounts!); track thumbnailStatusData) {
+            <mat-chip>{{ thumbnailType }}: {{ thumbnailStatusData!.thumbnailCounts?.[thumbnailType] }}</mat-chip>
+          }
+        </mat-chip-set>
+      </p>
+      <p>
+        Thumbnails size:
+        <mat-chip-set>
+          @for (thumbnailType of Object.keys(thumbnailStatusData!.thumbnailSpace!); track thumbnailStatusData) {
+            <mat-chip
+              >{{ thumbnailType }}: {{ getSize(thumbnailStatusData!.thumbnailSpace?.[thumbnailType]) }}</mat-chip
+            >
+          }
+        </mat-chip-set>
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>

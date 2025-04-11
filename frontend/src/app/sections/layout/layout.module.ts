@@ -11,6 +11,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatChip, MatChipSet } from '@angular/material/chips';
 
 @NgModule({
   declarations: [LayoutComponent, HomeComponent, AdminHomeComponent, PathPointComponent],
@@ -23,6 +25,12 @@ import { MatIconModule } from '@angular/material/icon';
     TableComponent,
     MatButtonModule,
     MatIconModule,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatCardHeader,
+    MatChipSet,
+    MatChip,
   ],
   bootstrap: [LayoutComponent],
 })

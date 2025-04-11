@@ -3,7 +3,6 @@ import { BaseComponent } from '../../../../../shared/components/base.component';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AdminControllerService, ThumbnailStatusResponse } from '../../../../../shared/api-models';
-import ColumnDefinition from '../../../../../shared/models/table/column-definition';
 import { FileUtils } from '../../../../../shared/utils/file-utils';
 
 @Component({
@@ -43,4 +42,6 @@ export class AdminHomeComponent extends BaseComponent implements OnInit, OnDestr
     if (size) return FileUtils.displaySize(size);
     else return '';
   }
+
+  protected readonly Object = Object;
 }
