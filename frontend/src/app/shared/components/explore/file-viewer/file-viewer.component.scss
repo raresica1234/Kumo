@@ -45,9 +45,7 @@
 }
 
 .file-list-container {
-  padding: 0 !important;
-  margin: 0 !important;
-  @apply min-h-full w-full;
+  @apply min-h-full w-full flex-grow;
 }
 
 .file-list-content-container {

@@ -1,0 +1,24 @@
+<div class="pb-4">
+  @switch (fileViewerSettings?.viewType) {
+    @case (FileViewType.LIST) {
+      <button mat-mini-fab [matMenuTriggerFor]="viewMenu" color="primary">
+        <mat-icon>view_list</mat-icon>
+      </button>
+    }
+    @case (FileViewType.GRID) {
+      <button mat-mini-fab [matMenuTriggerFor]="viewMenu" color="primary">
+        <mat-icon>grid_view</mat-icon>
+      </button>
+    }
+  }
+  <mat-menu #viewMenu="matMenu" class="w-24">
+    <button mat-menu-item (click)="changeView(FileViewType.LIST)">
+      <mat-icon>view_list</mat-icon>
+      List
+    </button>
+    <button mat-menu-item (click)="changeView(FileViewType.GRID)">
+      <mat-icon>grid_view</mat-icon>
+      Grid
+    </button>
+  </mat-menu>
+</div>

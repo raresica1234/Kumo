@@ -6,11 +6,13 @@ import { EncoderUtil } from '../../../utils/encoder-util';
 import { NavigationHandlerDirective } from '../../../utils/navigation-directive';
 import { ImageComponent } from '../../image/image.component';
 import { MatDivider } from '@angular/material/divider';
+import FileViewerSettings from '../../../models/explore/file-viewer-settings';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-file-viewer',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, NavigationHandlerDirective, ImageComponent, MatDivider],
+  imports: [MatCardModule, MatIconModule, NavigationHandlerDirective, ImageComponent, MatDivider, MatProgressSpinner],
   templateUrl: './file-viewer.component.html',
   styleUrl: './file-viewer.component.scss',
 })
@@ -19,8 +21,7 @@ export class FileViewerComponent {
   // TODO: if auth expires when an image is fetched, refresh token isn't called
 
   @Input() files: ExplorerFileModel[] = [];
-
-  useGridView: boolean = false;
+  @Input() fileViewerSettings!: FileViewerSettings;
 
   navigateTo(file: ExplorerFileModel) {
     if (file.type !== 'DIRECTORY') return;

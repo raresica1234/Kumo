@@ -2,14 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ExplorerControllerService, ExplorerFileModel } from '../../../../../shared/api-models';
 import { Subscription } from 'rxjs';
-import { AlertService } from '../../../../../shared/services/alert.service';
 import { FileViewerComponent } from '../../../../../shared/components/explore/file-viewer/file-viewer.component';
 import { EncoderUtil } from '../../../../../shared/utils/encoder-util';
+import FileViewerSettings from '../../../../../shared/models/explore/file-viewer-settings';
+import { FileViewerSettingsComponent } from '../../../../../shared/components/explore/file-viewer-settings/file-viewer-settings.component';
 
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [FileViewerComponent],
+  imports: [FileViewerComponent, FileViewerSettingsComponent],
   templateUrl: './explore.component.html',
   styleUrl: './explore.component.scss',
 })
@@ -17,6 +18,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   private currentPath = '';
 
   files: ExplorerFileModel[] = [];
+  fileViewerSettings!: FileViewerSettings;
 
   private subscriptionManager = new Subscription();
 
@@ -48,5 +50,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptionManager.unsubscribe();
+  }
+
+  onSettingsChanged(settings: FileViewerSettings) {
+    this.fileViewerSettings = settings;
   }
 }

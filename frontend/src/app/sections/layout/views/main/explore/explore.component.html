@@ -3,5 +3,8 @@
     <img src="https://http.cat/404" />
   </div>
 } @else {
-  <app-file-viewer [files]="files" />
+  <div class="flex min-h-full flex-col">
+    <app-file-viewer-settings (settingsChanged)="onSettingsChanged($event)" />
+    <app-file-viewer [files]="files" [fileViewerSettings]="fileViewerSettings" class="flex flex-1 flex-col" />
+  </div>
 }

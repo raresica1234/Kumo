@@ -1,4 +1,6 @@
-@if (useGridView) {
+@if (fileViewerSettings == undefined) {
+  <mat-spinner />
+} @else if (fileViewerSettings.viewType === "GRID") {
   <div class="grid-container">
     @for (file of files; track file) {
       <div class="file-grid-container">
@@ -23,7 +25,7 @@
   </div>
 } @else {
   <mat-card class="file-list-container">
-    <mat-card-content class="h-full w-full">
+    <mat-card-content class="min-h-full w-full">
       @for (file of files; track file) {
         <div class="file-list-content-container" navHandler [url]="navigateTo(file)">
           <div>
