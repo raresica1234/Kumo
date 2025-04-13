@@ -1,4 +1,4 @@
-.file-container {
+.grid-container {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
@@ -10,7 +10,7 @@
   }
 }
 
-.file-card-container {
+.file-grid-container {
   @apply flex max-w-40 justify-center sm:max-w-20 md:max-w-28;
 }
 
@@ -20,13 +20,13 @@
     md:h-24 md:w-24;
 }
 
-.file-card-image {
+.file-grid-image {
   @apply flex h-28 w-32 flex-col justify-center pb-2 pt-4
   sm:h-10 sm:w-12 sm:pb-0 sm:pt-2
   md:h-16 md:w-20 md:pb-0 md:pt-2;
 }
 
-.file-card-image > img {
+.file-grid-image > img {
   @apply h-full w-full object-contain;
 }
 
@@ -42,4 +42,35 @@
       md:w-24 md:px-2 md:text-sm;
 
   @apply pb-2 sm:pb-1 #{!important};
+}
+
+.file-list-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  @apply min-h-full w-full;
+}
+
+.file-list-content-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  @apply flex flex-row;
+}
+
+.file-list-image {
+  //@apply flex h-28 w-32 flex-col justify-center pb-2 pt-4
+  //sm:h-10 sm:w-12 sm:pb-0 sm:pt-2
+  //md:h-16 md:w-20 md:pb-0 md:pt-2;
+  @apply h-12 w-12 pb-2 pt-2;
+}
+
+.file-list-image > img {
+  @apply h-full w-full object-contain;
+}
+
+.file-list-icon {
+  @apply h-12 w-12 text-5xl;
+}
+
+.file-list-name {
+  @apply flex flex-col justify-center pl-5;
 }

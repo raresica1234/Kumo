@@ -1,22 +1,54 @@
-<div class="file-container">
-  @for (file of files; track file) {
-    <div class="file-card-container">
-      <mat-card navHandler appearance="outlined" class="file-grid-card" [url]="navigateTo(file)">
-        @if (file.type === "IMAGE") {
-          <div class="file-card-image">
-            <app-image navHandler [imageUrl]="file.fullPath!" [width]="128" [url]="viewImage(file)" />
-          </div>
-        } @else {
-          <mat-icon class="file-grid-icon" [class.mat-primary]="file.type === 'DIRECTORY'">
-            @if (file.type === "DIRECTORY") {
-              folder
+@if (useGridView) {
+  <div class="grid-container">
+    @for (file of files; track file) {
+      <div class="file-grid-container">
+        <mat-card navHandler appearance="outlined" class="file-grid-card" [url]="navigateTo(file)">
+          @if (file.type === "IMAGE") {
+            <div class="file-grid-image">
+              <app-image navHandler [imageUrl]="file.fullPath!" [width]="128" [url]="viewImage(file)" />
+            </div>
+          } @else {
+            <mat-icon class="file-grid-icon" [class.mat-primary]="file.type === 'DIRECTORY'">
+              @if (file.type === "DIRECTORY") {
+                folder
+              } @else {
+                insert_drive_file
+              }
+            </mat-icon>
+          }
+          <mat-card-content class="file-grid-content">{{ file.name }}</mat-card-content>
+        </mat-card>
+      </div>
+    }
+  </div>
+} @else {
+  <mat-card class="file-list-container">
+    <mat-card-content class="h-full w-full">
+      @for (file of files; track file) {
+        <div class="file-list-content-container" navHandler [url]="navigateTo(file)">
+          <div>
+            @if (file.type === "IMAGE") {
+              <div class="file-list-image">
+                <app-image navHandler [imageUrl]="file.fullPath!" [width]="24" [url]="viewImage(file)" />
+              </div>
             } @else {
-              insert_drive_file
+              <mat-icon class="file-list-icon" [class.mat-primary]="file.type === 'DIRECTORY'">
+                @if (file.type === "DIRECTORY") {
+                  folder
+                } @else {
+                  insert_drive_file
+                }
+              </mat-icon>
             }
-          </mat-icon>
+          </div>
+          <div class="file-list-name">
+            {{ file.name }}
+          </div>
+        </div>
+        @if ($index + 1 < files.length) {
+          <mat-divider />
         }
-        <mat-card-content class="file-grid-content">{{ file.name }}</mat-card-content>
-      </mat-card>
-    </div>
-  }
-</div>
+      }
+    </mat-card-content>
+  </mat-card>
+}
