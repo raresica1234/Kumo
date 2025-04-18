@@ -3,7 +3,8 @@ package is.rares.kumo.domain.content;
 
 public enum ThumbnailSizeEnum {
     ORIGINAL(-1),
-    FILE_EXPLORER_GRID(128)
+    FILE_EXPLORER_GRID(150), // real size 128
+    FILE_EXPLORER_LIST(30) // real size 24
     ;
 
 
