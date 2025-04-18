@@ -30,8 +30,7 @@ public class FileUtils {
     }
 
     public String getRealPath(String rootPath, String path) {
-        if (path.startsWith(rootPath.substring(1))) return "/" + path;
-        else return path;
+        return Paths.get(path).toAbsolutePath().normalize().toString();
     }
 
     public List<String> getFileNamesInDirectoryRecursive(List<String> result, Path dir) throws IOException {

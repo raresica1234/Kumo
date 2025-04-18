@@ -1,5 +1,19 @@
 package is.rares.kumo.service.explore;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.PathPointErrorCodes;
 import is.rares.kumo.domain.explore.PathPoint;
@@ -8,17 +22,11 @@ import is.rares.kumo.model.explore.PathPointModel;
 import is.rares.kumo.repository.explore.PathPointRepository;
 import is.rares.kumo.utils.FileUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class PathPointService {
+    private final KumoConfig kumoConfig;
     private final PathPointRepository pathPointRepository;
     private final PathPointMapping pathPointMapping;
 
@@ -30,8 +38,7 @@ public class PathPointService {
     }
 
     public PathPointModel create(PathPointModel pathPointModel) {
-        if (!FileUtils.directoryExists(pathPointModel.getPath()))
-            throw new KumoException(PathPointErrorCodes.PATH_DOES_NOT_EXIST);
+        validatePathExistsAndIsAllowed(pathPointModel.getPath());
 
         var optional = pathPointRepository.findByPathAndRoot(pathPointModel.getPath(), pathPointModel.isRoot());
         if (optional.isPresent())
@@ -45,8 +52,7 @@ public class PathPointService {
     }
 
     public PathPointModel update(PathPointModel pathPointModel) {
-        if (!FileUtils.directoryExists(pathPointModel.getPath()))
-            throw new KumoException(PathPointErrorCodes.PATH_DOES_NOT_EXIST);
+        validatePathExistsAndIsAllowed(pathPointModel.getPath());
 
         if (pathPointModel.getUuid() == null)
             throw new KumoException(PathPointErrorCodes.ID_MISSING);
@@ -86,5 +92,20 @@ public class PathPointService {
     public List<PathPoint> getAllRootPathPoints() {
         return pathPointRepository.findByRootTrue();
     }
+
+
+    private void validatePathExistsAndIsAllowed(String path) {
+        if (!FileUtils.directoryExists(path))
+            throw new KumoException(PathPointErrorCodes.PATH_DOES_NOT_EXIST);
+
+		try {
+			Path basePath = Paths.get(path).toRealPath(LinkOption.NOFOLLOW_LINKS).normalize();
+
+            if (!basePath.startsWith(kumoConfig.getMediaPath()))
+                throw new KumoException(PathPointErrorCodes.ACCESS_DENIED);
+		} catch (IOException e) {
+            throw new KumoException(PathPointErrorCodes.PATH_DOES_NOT_EXIST);
+		}
+    }   
 }
 

@@ -24,4 +24,7 @@ public class KumoConfig {
 
     @Value("${kumo.thumbnailDirectory:/data}")
     String thumbnailDirectoryPath;
+
+    @Value("${kumo.mediaPath:/}")
+    String mediaPath;
 }

@@ -22,6 +22,7 @@ kumo:
   owner:
     username: raresica1234
   thumbnailDirectory: data
+  mediaPath: /WIN_D
 
 
 spring.data.redis.repositories.enabled: false # Disables autoscanning of repositories

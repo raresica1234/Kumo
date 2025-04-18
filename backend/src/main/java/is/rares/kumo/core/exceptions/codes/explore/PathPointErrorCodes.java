@@ -1,16 +1,17 @@
 package is.rares.kumo.core.exceptions.codes.explore;
 
+import org.springframework.http.HttpStatus;
+
 import is.rares.kumo.core.exceptions.codes.BaseErrorCode;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 public enum PathPointErrorCodes implements BaseErrorCode {
     DUPLICATE_PATH_POINT("1", HttpStatus.CONFLICT, "Path point already exists"),
     ID_MISSING("2", HttpStatus.BAD_REQUEST, "Id is missing"),
     NOT_FOUND("3", HttpStatus.NOT_FOUND, "Path point not found"),
-    PATH_DOES_NOT_EXIST("4", HttpStatus.NOT_FOUND, "Path does not exist")
-
+    PATH_DOES_NOT_EXIST("4", HttpStatus.NOT_FOUND, "Path does not exist"),
+    ACCESS_DENIED("5", HttpStatus.FORBIDDEN, "Path not in media paths")
     ;
 
     private final String errorCode;

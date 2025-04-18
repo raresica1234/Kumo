@@ -1,5 +1,20 @@
 package is.rares.kumo.service.explore;
 
+import java.io.File;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import is.rares.kumo.core.config.KumoConfig;
 import is.rares.kumo.core.exceptions.KumoException;
 import is.rares.kumo.core.exceptions.codes.explore.ExplorerErrorCodes;
 import is.rares.kumo.domain.explore.Permission;
@@ -10,14 +25,6 @@ import is.rares.kumo.service.UserService;
 import is.rares.kumo.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -27,27 +34,36 @@ public class ExplorerService {
     private final ExplorationRoleService explorationRoleService;
     private final UserService userService;
     private final ExplorerMapping explorerMapping;
+    private final KumoConfig kumoConfig;
 
     // TODO: Don't display folders which don't have a read permission in linux
 
     public List<ExplorerFileModel> explore(String path, CurrentUser currentUser) {
         String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
         log.info("User {} is exploring path: {}", currentUser.getUsername(), decodedPath);
-        if (decodedPath.isEmpty()) {
-            var pathPoints = getRootPathPoints(currentUser);
-            pathPoints.sort(Comparator.comparing(ExplorerFileModel::getName));
-            return pathPoints;
-        }
+
+        if (decodedPath.isEmpty())
+            return getRootPathPoints(currentUser);
+
         return explorePath(decodedPath, currentUser);
     }
 
     private List<ExplorerFileModel> explorePath(String path, CurrentUser currentUser) {
+        Path actualPath;
+
+        try {
+            actualPath = Paths.get(kumoConfig.getMediaPath(), path).toAbsolutePath().normalize();
+        } catch (InvalidPathException exception) {
+            log.error("Could not get path for {} and {}", kumoConfig.getMediaPath(), path);
+            throw new KumoException(ExplorerErrorCodes.NOT_FOUND);
+        }
+
         var isUserOwner = userService.isUserOwner(currentUser);
 
         if (isUserOwner)
-            return explorePathForOwner(path);
+            return explorePathForOwner(actualPath.toString());
 
-        return explorePathForUser(path, currentUser);
+        return explorePathForUser(actualPath.toString(), currentUser);
     }
 
     private List<ExplorerFileModel> explorePathForUser(String path, CurrentUser currentUser) {
@@ -57,8 +73,7 @@ public class ExplorerService {
         // Ensure root path point exists
         var rootPermission = permissionList.stream()
                 .filter(permission -> permission.isRead() && permission.getPathPoint().isRoot())
-                .filter(permission -> path.startsWith(permission.getPathPoint().getPath())
-                        || path.startsWith(permission.getPathPoint().getPath().substring(1)))
+                .filter(permission -> path.startsWith(permission.getPathPoint().getPath()))
                 .findFirst()
                 .orElseThrow(() -> new KumoException(ExplorerErrorCodes.NOT_FOUND));
 
@@ -106,18 +121,22 @@ public class ExplorerService {
 
         // Check path point starts with path or remove the leading slash
         var rootPathPoint = pathPoints.stream()
-                .filter(pathPoint -> path.startsWith(pathPoint.getPath()) || path.startsWith(pathPoint.getPath().substring(1)))
+                .filter(pathPoint -> path.startsWith(pathPoint.getPath()))
                 .findFirst()
                 .orElseThrow(() -> new KumoException(ExplorerErrorCodes.NOT_FOUND));
 
         String realPath = FileUtils.getRealPath(rootPathPoint.getPath(), path);
 
+        System.out.println(realPath);
 
         File directory = new File(realPath);
         if (!directory.exists() || !directory.isDirectory())
             throw new KumoException(ExplorerErrorCodes.NOT_FOUND);
 
         File[] contents = directory.listFiles();
+
+        System.out.println(contents.length);
+
         var files = applySorting(contents);
         return explorerMapping.mapFilesToModelForOwner(files);
     }
@@ -140,8 +159,7 @@ public class ExplorerService {
         if (isUserOwner)
             return getRootPathPointsForOwner();
 
-        return getRootPathPointsForUser(currentUser);
-    }
+        return getRootPathPointsForUser(currentUser);    }
 
     private List<ExplorerFileModel> getRootPathPointsForUser(CurrentUser currentUser) {
         var roles = explorationRoleService.getByUserUuid(currentUser.getId());
@@ -149,15 +167,33 @@ public class ExplorerService {
                 .filter(permission -> permission.isRead() && permission.getPathPoint().isRoot())
                 .toList();
 
-        return explorerMapping.mapPermissionsToModel(rootPathPermissions);
+        var mediaPath = Paths.get(kumoConfig.getMediaPath()).toAbsolutePath().normalize();
+        
+        var hasMediaAsRootPathPoint = rootPathPermissions.stream()
+            .anyMatch(permission -> Paths.get(permission.getPathPoint().getPath()).normalize().equals(mediaPath));
+
+        if (hasMediaAsRootPathPoint)
+            return explorePathForUser(kumoConfig.getMediaPath(), currentUser);
+
+        var result = explorerMapping.mapPermissionsToModel(rootPathPermissions);
+        result.sort(Comparator.comparing(ExplorerFileModel::getName));
+        return result; 
     }
 
     private List<ExplorerFileModel> getRootPathPointsForOwner() {
         var pathPoints = pathPointService.getAllRootPathPoints();
-        // TODO: decide if want to filter out root path points or not
-        //  based on the ones that are in subdirectories of other root ones
 
-        return explorerMapping.mapPathPointsToModel(pathPoints);
+        var mediaPath = Paths.get(kumoConfig.getMediaPath()).toAbsolutePath().normalize();
+
+        var hasMediaAsRootPathPoint = pathPoints.stream()
+            .anyMatch(pathPoint -> Paths.get(pathPoint.getPath()).normalize().equals(mediaPath));
+
+        if (hasMediaAsRootPathPoint)
+            return explorePathForOwner(kumoConfig.getMediaPath());
+
+        var result = explorerMapping.mapPathPointsToModel(pathPoints);
+        result.sort(Comparator.comparing(ExplorerFileModel::getName));
+        return result;
     }
 
     public boolean canAccessPath(String path, CurrentUser currentUser) {
@@ -172,8 +208,7 @@ public class ExplorerService {
         // Ensure root path point exists
         var rootPermissionOptional = permissionList.stream()
                 .filter(permission -> permission.isRead() && permission.getPathPoint().isRoot())
-                .filter(permission -> path.startsWith(permission.getPathPoint().getPath())
-                        || path.startsWith(permission.getPathPoint().getPath().substring(1)))
+                .filter(permission -> path.startsWith(permission.getPathPoint().getPath()))
                 .findFirst();
 
         if (rootPermissionOptional.isEmpty())
@@ -199,7 +234,7 @@ public class ExplorerService {
 
         // Check path point starts with path or remove the leading slash
         var rootPathPointOptional = pathPoints.stream()
-                .filter(pathPoint -> path.startsWith(pathPoint.getPath()) || path.startsWith(pathPoint.getPath().substring(1)))
+                .filter(pathPoint -> path.startsWith(pathPoint.getPath()))
                 .findFirst();
 
         if (rootPathPointOptional.isEmpty())
